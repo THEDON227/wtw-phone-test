@@ -495,14 +495,10 @@ function renderEventCard(event) {
 function renderVenueCard(venue) {
   var city = currentCity();
   return '<article class="venue-card">' +
-    '<div class="venue-media" style="--img:url(\'' + venue.image + '\')">' +
-      '<div class="event-badges"><span class="badge">Verified venue</span><span class="badge">Request access</span></div>' +
-    '</div>' +
+    '<div class="venue-media" style="--img:url(\'' + venue.image + '\')"></div>' +
     '<div class="venue-content">' +
-      '<span class="badge">Verified</span>' +
       '<h3>' + venue.name + '</h3>' +
-      '<p>' + city.name + '<br>' + venue.vibe + '<br>Peak time: ' + venue.peak + '<br>Crowd: ' + venue.crowd + '</p>' +
-      '<button class="btn btn-primary" type="button" onclick="openModal(\'Request Access\')">Request Access</button>' +
+      '<p>' + city.name + '<br>' + venue.vibe + '</p>' +
     '</div>' +
   '</article>';
 }
