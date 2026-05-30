@@ -151,18 +151,17 @@ footer{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--sof
 .hero-panel:before{content:"";position:absolute;inset:auto -40px -40px auto;width:200px;height:200px;border-radius:50%;background:var(--accent);opacity:.1;filter:blur(28px)}
 .hero-panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
 .hero-panel-head b{letter-spacing:4px;text-transform:uppercase;font-size:11px;color:rgba(255,255,255,.7)}
-.wave-score{font-family:'Playfair Display',serif;font-size:76px;line-height:.9;color:var(--accent);letter-spacing:-4px}
 .panel-caption{color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-size:10px;font-weight:800}
-.mini-tracks{display:grid;gap:10px;margin-top:18px}
-.mini-track{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
-.mini-track .thumb{width:48px;height:48px;border-radius:14px;background-image:var(--img);background-size:cover;background-position:center}
-.mini-track b{display:block;font-size:13px}
-.mini-track span{display:block;margin-top:4px;color:var(--soft);font-size:11px;letter-spacing:1px;text-transform:uppercase}
-.mini-track .price{color:var(--gold);font-weight:900;font-size:13px}
-.hero-panel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
-.metric{border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px;background:rgba(255,255,255,.03)}
-.metric strong{display:block;font-size:22px;line-height:1;color:#fff}
-.metric span{display:block;margin-top:7px;color:var(--soft);font-size:10px;letter-spacing:1.8px;text-transform:uppercase}
+.panel-title{display:flex;flex-direction:column;gap:4px}
+.panel-title strong{display:block;font-size:18px;letter-spacing:3px;text-transform:uppercase}
+.panel-title span{display:block;color:var(--soft);font-size:10px;letter-spacing:2px;text-transform:uppercase}
+.hero-panel-grid{display:grid;gap:10px;margin-top:18px}
+.pick-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.pick-row .thumb{width:48px;height:48px;border-radius:14px;background-image:var(--img);background-size:cover;background-position:center}
+.pick-row b{display:block;font-size:13px}
+.pick-row span{display:block;margin-top:4px;color:var(--soft);font-size:10px;letter-spacing:1px;text-transform:uppercase}
+.pick-row .price{color:var(--gold);font-weight:900;font-size:13px}
+.pick-row .btn{padding:10px 12px;font-size:9px}
 .filter-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
 .filter-chip{height:42px;padding:0 15px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035);color:var(--text);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:900;cursor:pointer;transition:transform .25s ease,background .25s ease,border-color .25s ease}
 .filter-chip.active{background:var(--accent);color:#001015;border-color:transparent;box-shadow:0 0 24px color-mix(in srgb,var(--accent) 24%, transparent)}
@@ -176,12 +175,14 @@ footer{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--sof
 .event-body{padding:18px}
 .event-body h3{font-family:'Playfair Display',serif;font-size:28px;line-height:.96;letter-spacing:-1px;text-transform:uppercase;margin-bottom:10px}
 .event-meta{color:var(--muted);line-height:1.7;font-size:13px}
-.event-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0 14px}
+.event-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0 14px}
 .stat{border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px;background:rgba(255,255,255,.025)}
 .stat b{display:block;font-size:16px;line-height:1}
 .stat span{display:block;margin-top:6px;color:var(--soft);font-size:10px;letter-spacing:1.6px;text-transform:uppercase}
 .event-actions{display:flex;flex-wrap:wrap;gap:10px}
 .event-actions .btn{flex:1 1 0;min-width:0}
+.ticket-btn{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 70%, #ffffff 10%));color:#001015;box-shadow:0 0 22px color-mix(in srgb,var(--accent) 28%, transparent)}
+.ticket-btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
 .venue-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .venue-card{border:1px solid rgba(255,255,255,.1);border-radius:24px;overflow:hidden;background:rgba(255,255,255,.03);min-height:320px;display:flex;flex-direction:column}
 .venue-media{aspect-ratio:4/3;background-image:var(--img);background-size:cover;background-position:center;position:relative}
@@ -195,6 +196,15 @@ footer{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--sof
 .split-card p{color:var(--muted);line-height:1.7;font-size:13px}
 .split-card .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .split-card .mini-stats .kpi{padding:12px}
+.vip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.vip-card{border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:20px;background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(0,0,0,.2));display:flex;flex-direction:column;gap:12px}
+.vip-card .badge{width:max-content}
+.vip-card h3{font-family:'Playfair Display',serif;font-size:28px;line-height:.98;text-transform:uppercase}
+.vip-card p{color:var(--muted);line-height:1.7;font-size:13px}
+.vip-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.vip-meta div{border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px;background:rgba(255,255,255,.02)}
+.vip-meta strong{display:block;font-size:15px;line-height:1}
+.vip-meta span{display:block;margin-top:6px;color:var(--soft);font-size:10px;letter-spacing:1.6px;text-transform:uppercase}
 .tool-grid{display:grid;grid-template-columns:minmax(0,1fr) 430px;gap:18px;align-items:stretch}
 .tool-copy{border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:28px;background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,.015))}
 .tool-copy h2{margin-bottom:12px}
@@ -221,10 +231,10 @@ footer{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--sof
 .footer-copy span{display:block;margin-top:6px;color:var(--soft);font-size:11px;letter-spacing:2px;text-transform:uppercase}
 @media(max-width:980px){
   .hero-grid,.tool-grid{grid-template-columns:1fr}
-  .trend-grid,.venue-grid,.trust-grid,.audience-grid,.split-grid{grid-template-columns:1fr 1fr}
+  .trend-grid,.venue-grid,.trust-grid,.audience-grid,.split-grid,.vip-grid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:640px){
-  .trend-grid,.venue-grid,.trust-grid,.audience-grid,.split-grid,.hero-panel-grid,.kpi-grid,.event-stats,.split-card .mini-stats{grid-template-columns:1fr}
+  .trend-grid,.venue-grid,.trust-grid,.audience-grid,.split-grid,.hero-panel-grid,.kpi-grid,.event-stats,.split-card .mini-stats,.vip-grid{grid-template-columns:1fr}
   .hero-search{grid-template-columns:1fr}
   .section{padding:56px 0}
   .hero-copy .subhead{font-size:13px;letter-spacing:1.5px}
@@ -276,29 +286,18 @@ footer{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--sof
         </div>
       </div>
       <aside class="hero-panel">
-        <div class="hero-panel-head"><b id="panelTitle">Curated Tonight</b><span class="panel-caption">WTW Score</span></div>
-        <div class="wave-score" id="score">92</div>
-        <div class="panel-caption" id="peak">12:15AM - 1:30AM</div>
-        <div class="hero-panel-grid">
-          <div class="metric"><strong id="mood">VIP Rooftop</strong><span>Tonight mood</span></div>
-          <div class="metric"><strong id="ticketsCount">6</strong><span>Curated picks</span></div>
-          <div class="metric"><strong id="vipState">Open</strong><span>VIP tables</span></div>
+        <div class="hero-panel-head">
+          <div class="panel-title"><strong id="panelTitle">Tonight's Picks</strong><span>Curated Tonight</span></div>
+          <span class="panel-caption" id="panelCaption">Curated Tonight</span>
         </div>
-        <div class="mini-tracks" id="liveList"></div>
+        <div class="hero-panel-grid" id="liveList"></div>
       </aside>
     </div>
   </section>
-  <section class="wrap section" id="city">
-    <div class="section-head">
-      <div><div class="kicker">City</div><h2>Explore nightlife by city.</h2></div>
-      <p>Switch cities from the top-right selector to view events, venues, guest lists, and VIP tables curated for that city.</p>
-    </div>
-    <div class="city-market" id="cityMarket"></div>
-  </section>
   <section class="wrap section" id="events">
     <div class="section-head">
-      <div><div class="kicker">Trending Tonight</div><h2>Curated picks.</h2></div>
-      <p>Buy tickets, join guest lists, and request VIP tables from trusted venues without hunting across disconnected pages.</p>
+      <div><div class="kicker">Trending Tonight</div><h2>This Week's Events</h2></div>
+      <p>Buy tickets first, then move into guest lists and VIP tables from the same premium flow.</p>
     </div>
     <div class="trend-grid" id="eventsGrid"></div>
   </section>
@@ -309,6 +308,13 @@ footer{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--sof
     </div>
     <div class="filter-row" id="categoryRow"></div>
   </section>
+  <section class="wrap section" id="tables">
+    <div class="section-head">
+      <div><div class="kicker">VIP Tables</div><h2>Reserve the room.</h2></div>
+      <p>Simple table cards with clear starting prices, capacity, and request access paths.</p>
+    </div>
+    <div class="vip-grid" id="vipGrid"></div>
+  </section>
   <section class="wrap section" id="venues">
     <div class="section-head">
       <div><div class="kicker">Featured Venues</div><h2>Verified rooms.</h2></div>
@@ -316,7 +322,7 @@ footer{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--sof
     </div>
     <div class="venue-grid" id="venuesGrid"></div>
   </section>
-  <section class="wrap section" id="tables">
+  <section class="wrap section" id="paths">
     <div class="section-head">
       <div><div class="kicker">Three Paths</div><h2>Buyer first. Operators next.</h2></div>
       <p>Keep the homepage focused on guests while giving promoters and venue owners a clear doorway into the marketplace.</p>
@@ -358,13 +364,13 @@ footer{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--sof
   </section>
   <section class="wrap section" id="trust">
     <div class="section-head">
-      <div><div class="kicker">Trust</div><h2>Clear access, no guesswork.</h2></div>
-      <p>Marketplace guardrails that keep the experience premium and explicit.</p>
+      <div><div class="kicker">Trust</div><h2>Verified access.</h2></div>
+      <p>Clear checks that keep the marketplace premium, explicit, and easy to trust.</p>
     </div>
     <div class="trust-grid">
       <div class="trust-card"><b>Verified venues</b><p>Listings are curated and checked before they reach the marketplace.</p></div>
       <div class="trust-card"><b>Secure checkout</b><p>Ticketing and request flows are built to feel reliable.</p></div>
-      <div class="trust-card"><b>Venue confirmation pending</b><p>Access is requested and confirmed, not assumed.</p></div>
+      <div class="trust-card"><b>Guest list confirmation</b><p>Guest list status stays explicit before you arrive.</p></div>
       <div class="trust-card"><b>Privacy first</b><p>Guest details stay limited to what the request requires.</p></div>
       <div class="trust-card"><b>Access subject to venue approval</b><p>Every request stays subject to venue review and availability.</p></div>
     </div>
@@ -413,7 +419,7 @@ function $(id) { return document.getElementById(id); }
 function currentCity() { return cities[current]; }
 function toggleCity() { $('cityMenu').classList.toggle('open'); }
 document.addEventListener('click', function(e) { if (!e.target.closest('.city-select')) $('cityMenu').classList.remove('open'); });
-function setCategory(cat) { activeCategory = cat; renderCategoryChips(); renderCityMarket(); renderTrending(); renderVenues(); renderPreview(); }
+function setCategory(cat) { activeCategory = cat; renderCategoryChips(); renderTrending(); renderVenues(); renderVipGrid(); renderPreview(); }
 function matchesSearch(event, query) {
   if (!query) return true;
   var hay = [event.name, event.venue, event.time, event.price, event.badge, event.guestList, event.vip, String(event.score), String(event.going)].join(' ').toLowerCase();
@@ -452,25 +458,26 @@ function renderCityMenu() {
 }
 function renderEventCard(event) {
   var city = currentCity();
+  var day = String(event.time || '').split(' ')[0] || 'Tonight';
   return '<article class="event-card">' +
     '<div class="event-media" style="--img:url(\'' + event.image + '\')">' +
       '<div class="event-badges">' +
         '<span class="badge">' + event.badge + '</span>' +
+        '<span class="badge">' + day + '</span>' +
         '<span class="badge">' + city.name + '</span>' +
-        '<span class="badge">Wave ' + event.score + '</span>' +
       '</div>' +
     '</div>' +
     '<div class="event-body">' +
       '<h3>' + event.name + '</h3>' +
-      '<div class="event-meta">' + event.venue + '<br>' + city.name + ' · ' + event.time + ' · ' + event.badge + '</div>' +
+      '<div class="event-meta">' + event.venue + '<br>' + city.name + ' · Doors ' + event.time + ' · 21+</div>' +
       '<div class="event-stats">' +
-        '<div class="stat"><b>' + event.price + '</b><span>Ticket</span></div>' +
-        '<div class="stat"><b>' + event.score + '</b><span>Wave score</span></div>' +
+        '<div class="stat"><b>' + event.price + '</b><span>Price</span></div>' +
+        '<div class="stat"><b>' + event.score + '</b><span>WTW score</span></div>' +
         '<div class="stat"><b>' + event.going + '</b><span>Going</span></div>' +
         '<div class="stat"><b>' + event.demand + '</b><span>Demand</span></div>' +
       '</div>' +
       '<div class="event-actions">' +
-        '<button class="btn btn-primary" type="button" onclick="openModal(\'Buy Ticket\')">Buy Ticket</button>' +
+        '<button class="btn ticket-btn" type="button" onclick="openModal(\'Buy Ticket\')">GET TICKETS →</button>' +
         '<button class="btn btn-outline" type="button" onclick="openModal(\'Join Guest List\')">Guest List</button>' +
         '<button class="btn btn-gold" type="button" onclick="openModal(\'Request VIP Table\')">VIP Table</button>' +
       '</div>' +
@@ -491,30 +498,27 @@ function renderVenueCard(venue) {
     '</div>' +
   '</article>';
 }
-function renderCityMarket() {
-  var city = currentCity();
-  var trending = filteredEvents().slice(0, 2);
-  var vip = filteredEvents().filter(function(event) { return event.badge === 'VIP Tables' || event.vip !== 'Open'; }).slice(0, 2);
-  var guest = filteredEvents().filter(function(event) { return event.badge === 'Guest Lists' || event.categories.indexOf('Guest Lists') !== -1; }).slice(0, 2);
-  var venues = city.venues.slice(0, 2);
-  function rows(items, emptyLabel, kind) {
-    if (!items.length) return '<div class="market-row"><div class="market-thumb" style="--img:none;background:rgba(255,255,255,.06)"></div><div><b>' + emptyLabel + '</b><span>Try a different city or filter</span></div><div class="price">' + kind + '</div></div>';
-    return items.map(function(item) {
-      if (kind === 'Access') return '<div class="market-row"><div class="market-thumb" style="--img:url(\'' + item.image + '\')"></div><div><b>' + item.name + '</b><span>' + item.vibe + ' · Peak ' + item.peak + '</span></div><div class="price">Access</div></div>';
-      var detail = kind === 'VIP' ? item.vip : item.guestList;
-      return '<div class="market-row"><div class="market-thumb" style="--img:url(\'' + item.image + '\')"></div><div><b>' + item.name + '</b><span>' + item.venue + ' · ' + detail + '</span></div><div class="price">' + item.price + '</div></div>';
-    }).join('');
-  }
-  $('cityMarket').innerHTML = [
-    '<article class="market-cluster"><div class="kicker">Trending Tonight</div><h3>' + city.name + '</h3><p>Curated picks for guests who want a fast route into the night.</p><div class="market-list">' + rows(trending, 'No matching events', 'Tonight') + '</div></article>',
-    '<article class="market-cluster"><div class="kicker">Featured Venues</div><h3>Verified rooms</h3><p>Trusted venues with clear vibe, peak time, and crowd type.</p><div class="market-list">' + rows(venues, 'No venues found', 'Access') + '</div></article>',
-    '<article class="market-cluster"><div class="kicker">VIP Tables</div><h3>Reserve the room</h3><p>Table demand for the current city, without promising guaranteed entry.</p><div class="market-list">' + rows(vip, 'No VIP tables found', 'VIP') + '</div></article>',
-    '<article class="market-cluster"><div class="kicker">Guest Lists</div><h3>Access requests</h3><p>Guest list status for the current city and current filter.</p><div class="market-list">' + rows(guest, 'No guest lists found', 'Guest') + '</div></article>'
-  ].join('');
-}
 function renderTrending() {
   var list = filteredEvents().slice(0, 6);
   $('eventsGrid').innerHTML = list.length ? list.map(renderEventCard).join('') : '<article class="event-card"><div class="event-body"><h3>No matches</h3><div class="event-meta">Try a different category or search term.</div></div></article>';
+}
+function renderVipGrid() {
+  var list = filteredEvents().filter(function(event) {
+    return event.badge === 'VIP Tables' || event.vip !== 'Open' || event.categories.indexOf('VIP Tables') !== -1;
+  }).slice(0, 3);
+  if (!list.length) list = currentCity().events.slice(0, 3);
+  $('vipGrid').innerHTML = list.map(function(event) {
+    return '<article class="vip-card">' +
+      '<span class="badge">Verified table</span>' +
+      '<h3>' + event.venue + '</h3>' +
+      '<p>' + currentCity().name + ' · ' + event.badge + ' · ' + event.time + '</p>' +
+      '<div class="vip-meta">' +
+        '<div><strong>' + event.price + '</strong><span>Starting price</span></div>' +
+        '<div><strong>' + event.going + '</strong><span>Capacity</span></div>' +
+      '</div>' +
+      '<button class="btn btn-gold" type="button" onclick="openModal(\'Request VIP Table\')">Request Table</button>' +
+    '</article>';
+  }).join('');
 }
 function renderVenues() {
   var query = $('searchInput').value.trim().toLowerCase();
@@ -530,16 +534,12 @@ function renderPreview() {
   var list = filteredEvents().slice(0, 3);
   $('heroCity').textContent = city.name;
   $('heroMood').textContent = city.tag;
-  $('panelTitle').textContent = 'Curated Tonight';
+  $('heroCopy').textContent = 'Buy tickets, join guest lists, and request VIP tables from trusted nightlife venues in ' + city.name + '.';
+  $('panelTitle').textContent = "Tonight's Picks";
   $('brandCitySuffix').textContent = city.name.toUpperCase();
-  $('score').textContent = city.score;
-  $('peak').textContent = city.peak;
-  $('mood').textContent = city.mood;
-  $('ticketsCount').textContent = String(city.events.length);
-  $('vipState').textContent = city.vipStatus || 'Open';
-  $('guestSignal').textContent = list.length ? 'Open' : 'Quiet';
+  $('panelCaption').textContent = 'Curated tonight';
   $('liveList').innerHTML = list.map(function(event) {
-    return '<div class="mini-track"><div class="thumb" style="--img:url(\'' + event.image + '\')"></div><div><b>' + event.name + '</b><span>' + event.venue + ' · ' + event.guestList + ' · VIP ' + event.vip + '</span></div><div class="price">' + event.price + '</div></div>';
+    return '<div class="pick-row"><div class="thumb" style="--img:url(\'' + event.image + '\')"></div><div><b>' + event.name + '</b><span>' + event.venue + ' · ' + event.badge + ' · ' + event.price + '</span></div><button class="btn ticket-btn" type="button" onclick="openModal(\'Buy Ticket\')">Get Tickets</button></div>';
   }).join('');
 }
 function setCity(key) {
@@ -550,14 +550,14 @@ function setCity(key) {
   document.documentElement.style.setProperty('--hero', 'url(\'' + c.hero + '\')');
   renderCityMenu();
   renderCategoryChips();
-  renderCityMarket();
   renderTrending();
+  renderVipGrid();
   renderVenues();
   renderPreview();
 }
 function openModal(title) { $('modalTitle').textContent = title; $('modal').classList.add('open'); }
 function closeModal() { $('modal').classList.remove('open'); }
-$('searchInput').addEventListener('input', function() { renderCityMarket(); renderTrending(); renderVenues(); renderPreview(); });
+$('searchInput').addEventListener('input', function() { renderTrending(); renderVipGrid(); renderVenues(); renderPreview(); });
 setCity('nyc');
 </script>
 </body>
