@@ -585,5 +585,31 @@ $('searchInput').addEventListener('input', function() { renderTrending(); render
 setCity('nyc');
 sanitizeHero();
 </script>
+<script>
+(function(){
+  function cleanHeroBug(){
+    document.querySelectorAll('*').forEach(function(el){
+      const txt = (el.innerText || '').trim();
+      const r = el.getBoundingClientRect();
+
+      if (txt === 'VERIFIED' && r.width > window.innerWidth * 0.4) {
+        el.style.display = 'none';
+      }
+
+      if ((txt.includes('Peak time:') || txt.includes('Crowd:')) && r.top < window.innerHeight * 0.9) {
+        el.style.display = 'none';
+      }
+
+      if (txt === 'REQUEST ACCESS' && r.width > window.innerWidth * 0.5) {
+        el.style.display = 'none';
+      }
+    });
+  }
+
+  window.addEventListener('load', cleanHeroBug);
+  setTimeout(cleanHeroBug, 300);
+  setTimeout(cleanHeroBug, 1000);
+})();
+</script>
 </body>
 </html>
