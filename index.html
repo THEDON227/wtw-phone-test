@@ -246,6 +246,29 @@ footer{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--sof
   .footer-wrap{display:block}
 }
 </style>
+
+<style>
+/* WTW emergency fix: hide broken venue detail overlay leaking into hero */
+.hero .venue-detail,
+.hero .venue-overlay,
+.hero .detail-overlay,
+.hero .access-overlay,
+.hero .verified-bar,
+.hero [class*="verified"],
+.hero [class*="request"],
+.hero [class*="venue-detail"],
+.hero [class*="overlay"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.hero {
+  overflow: hidden !important;
+}
+</style>
+
 </head>
 <body>
 
