@@ -252,13 +252,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
         <div class="brand-sub">PRIVATE NIGHTLIFE ACCESS</div>
       </div>
     </a>
-    <nav class="nav">
-      <a class="nav-link active" href="events.html">Discover</a>
-      <a class="nav-link" href="index.html#venues">Places</a>
-      <a class="nav-link" href="index.html#tables">Tables</a>
-      <a class="nav-link" href="index.html">Hosts</a>
-      <a class="nav-link" href="index.html">Partners</a>
-    </nav>
+    <nav class="nav"><a class="nl on" href="events.html">Events</a><a class="nl" href="indulge.html">Indulge</a><a class="nl" href="pass.html">Wave Pass</a><a class="nl" href="partners.html">Partners</a></nav>
     <div class="header-right">
       <div class="city-select" onclick="openCityModal()">
         <div class="city-dot" id="headerDot"></div>
@@ -759,7 +753,9 @@ function processLogo(){
 if(document.readyState==='complete') processLogo();
 else window.addEventListener('load',processLogo);
 
-applyCity('nyc');
+// Read city from URL param if present (e.g. events.html?city=miami)
+const _urlCity = new URLSearchParams(window.location.search).get('city');
+applyCity((_urlCity && CITIES[_urlCity]) ? _urlCity : 'nyc');
 
 // Style first filter tab on load
 window.addEventListener('load',function(){
