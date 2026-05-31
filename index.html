@@ -52,48 +52,172 @@ body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:
 /* ── HEADER ── */
 header{
   position:sticky;top:0;z-index:100;
-  background:rgba(8,11,15,0.92);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);
+  background:rgba(6,8,11,0.96);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
 }
 .header-inner{
-  display:flex;align-items:center;gap:32px;
-  padding:0 48px;height:68px;max-width:1280px;margin:0 auto;
+  display:flex;align-items:center;gap:28px;
+  padding:0 48px;height:72px;max-width:1280px;margin:0 auto;
 }
-@media(max-width:768px){.header-inner{padding:0 20px;gap:16px}}
-.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;cursor:pointer}
-.brand-logo{position:relative;width:42px;height:42px}
-.brand-logo svg{width:100%;height:100%}
-.brand-text{}
-.brand-name{font-size:13px;font-weight:800;letter-spacing:0.5px;color:var(--text);line-height:1;white-space:nowrap}
-.brand-sub{font-size:8px;font-weight:600;letter-spacing:3px;color:var(--accent);margin-top:3px;opacity:0.8}
-.nav{display:flex;align-items:center;gap:4px;flex:1}
-@media(max-width:900px){.nav{display:none}}
+@media(max-width:768px){.header-inner{padding:0 20px;gap:14px}}
+
+/* BRAND / LOGO */
+.brand{
+  display:flex;align-items:center;gap:14px;
+  flex-shrink:0;cursor:pointer;
+  text-decoration:none;
+}
+.brand-logo{
+  position:relative;
+  width:52px;height:52px;
+  flex-shrink:0;
+}
+.brand-logo svg{
+  width:100%;height:100%;
+  transition:filter 0.4s ease;
+  filter:drop-shadow(0 0 8px var(--logo-glow,rgba(0,194,209,0.35)))
+         drop-shadow(0 0 20px var(--logo-glow-far,rgba(0,194,209,0.12)));
+}
+.brand:hover .brand-logo svg{
+  filter:drop-shadow(0 0 12px var(--logo-glow,rgba(0,194,209,0.55)))
+         drop-shadow(0 0 28px var(--logo-glow-far,rgba(0,194,209,0.2)));
+}
+.brand-text{display:flex;flex-direction:column;gap:3px}
+.brand-name{
+  font-size:14px;font-weight:800;
+  letter-spacing:1.5px;color:var(--text);
+  line-height:1;white-space:nowrap;
+  font-family:'Inter',sans-serif;
+}
+.brand-sub{
+  font-size:7px;font-weight:700;
+  letter-spacing:3.5px;
+  color:var(--accent);
+  opacity:0.65;
+  white-space:nowrap;
+  text-transform:uppercase;
+  transition:color 0.4s;
+}
+
+/* NAV */
+.nav{display:flex;align-items:center;gap:1px;flex:1}
+@media(max-width:1000px){.nav{display:none}}
 .nav-link{
-  font-size:12px;font-weight:600;letter-spacing:0.3px;
-  color:var(--text-muted);padding:8px 14px;border-radius:8px;
-  cursor:pointer;transition:all 0.18s;white-space:nowrap;
+  font-size:11px;font-weight:600;letter-spacing:0.4px;
+  color:rgba(240,237,232,0.45);
+  padding:7px 13px;border-radius:7px;
+  cursor:pointer;transition:all 0.16s;white-space:nowrap;
+  position:relative;
 }
-.nav-link:hover{color:var(--text);background:var(--surface-hover)}
-.header-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.nav-link::after{
+  content:'';
+  position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
+  width:0;height:1px;background:var(--accent);
+  transition:width 0.2s ease;border-radius:1px;
+}
+.nav-link:hover{
+  color:rgba(240,237,232,0.9);
+  background:rgba(255,255,255,0.04);
+}
+.nav-link:hover::after{width:60%}
+
+/* HEADER RIGHT */
+.header-right{
+  display:flex;align-items:center;gap:8px;
+  margin-left:auto;flex-shrink:0;
+}
+
+/* CITY SELECTOR */
 .city-select{
   display:flex;align-items:center;gap:8px;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:10px;padding:8px 14px;cursor:pointer;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;padding:8px 14px;cursor:pointer;
   transition:all 0.18s;
 }
-.city-select:hover{border-color:var(--accent-border);background:var(--accent-muted)}
-.city-select-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
-.city-select-label{font-size:12px;font-weight:600;letter-spacing:0.5px;color:var(--text)}
-.city-select-chevron{font-size:10px;color:var(--text-dim);margin-left:2px}
+.city-select:hover{
+  border-color:var(--accent-border);
+  background:rgba(255,255,255,0.06);
+}
+.city-select-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);flex-shrink:0;
+  box-shadow:0 0 5px var(--accent);
+}
+.city-select-label{
+  font-size:11px;font-weight:700;
+  letter-spacing:0.8px;color:var(--text);
+}
+.city-select-chevron{
+  font-size:9px;color:rgba(240,237,232,0.3);margin-left:1px;
+}
+
+/* GET THE APP BUTTON */
 .btn-app{
   background:var(--accent);color:#050a0b;
-  font-size:12px;font-weight:700;letter-spacing:0.5px;
-  padding:9px 20px;border-radius:10px;border:none;
+  font-size:11px;font-weight:700;letter-spacing:0.8px;
+  padding:9px 20px;border-radius:8px;border:none;
   cursor:pointer;font-family:'Inter',sans-serif;
-  transition:opacity 0.18s;white-space:nowrap;
+  transition:all 0.18s;white-space:nowrap;
+  box-shadow:0 0 12px var(--logo-glow,rgba(0,194,209,0.2));
 }
-.btn-app:hover{opacity:0.88}
+.btn-app:hover{
+  opacity:0.9;
+  box-shadow:0 0 20px var(--logo-glow,rgba(0,194,209,0.35));
+}
+
+/* CITY MODAL — premium dark glass */
+.modal-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.85);z-index:500;
+  align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.modal-bg.open{display:flex}
+.modal-sheet{
+  background:rgba(10,12,16,0.98);
+  border-top-left-radius:20px;border-top-right-radius:20px;
+  padding:16px 0 44px;width:100%;max-width:440px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  border-left:1px solid rgba(255,255,255,0.05);
+  border-right:1px solid rgba(255,255,255,0.05);
+  max-height:68vh;overflow-y:auto;
+  box-shadow:0 -20px 60px rgba(0,0,0,0.6);
+}
+.modal-handle{
+  width:32px;height:3px;border-radius:2px;
+  background:rgba(255,255,255,0.1);
+  margin:0 auto 18px;
+}
+.modal-title{
+  font-size:9px;font-weight:700;letter-spacing:4px;
+  color:rgba(240,237,232,0.22);text-align:center;
+  margin-bottom:10px;text-transform:uppercase;
+}
+.city-option{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 24px;cursor:pointer;
+  margin:0 8px 1px;border-radius:10px;
+  transition:background 0.14s;
+}
+.city-option:hover{background:rgba(255,255,255,0.04)}
+.co-dot{
+  width:7px;height:7px;border-radius:50%;flex-shrink:0;
+}
+.co-info{flex:1}
+.co-name{
+  font-size:14px;font-weight:600;
+  color:rgba(240,237,232,0.7);
+  margin-bottom:3px;letter-spacing:0.2px;
+}
+.co-mood{
+  font-size:10px;font-weight:500;
+  color:rgba(240,237,232,0.25);
+  letter-spacing:0.3px;
+}
+.co-check{font-size:13px;font-weight:700;flex-shrink:0}
 
 /* ── HERO ── */
 .hero{
@@ -425,31 +549,7 @@ footer{
   padding:4px 10px;border-radius:20px;
 }
 
-/* MODALS */
-.modal-bg{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,0.92);z-index:500;
-  align-items:flex-end;justify-content:center;
-}
-.modal-bg.open{display:flex}
-.modal-sheet{
-  background:#0c0f13;
-  border-top-left-radius:24px;border-top-right-radius:24px;
-  padding:20px 0 48px;width:100%;max-width:520px;
-  border-top:1px solid var(--border);max-height:70vh;overflow-y:auto;
-}
-.modal-handle{width:36px;height:3px;border-radius:2px;background:rgba(255,255,255,0.12);margin:0 auto 20px}
-.modal-title{font-size:10px;font-weight:700;letter-spacing:4px;color:var(--text-dim);text-align:center;margin-bottom:12px}
-.city-option{
-  display:flex;align-items:center;gap:14px;
-  padding:15px 28px;cursor:pointer;border-radius:12px;
-  margin:0 10px 2px;transition:background 0.15s;
-}
-.city-option:hover{background:rgba(255,255,255,0.04)}
-.co-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.co-name{flex:1;font-size:15px;font-weight:500;color:rgba(240,237,232,0.65)}
-.co-mood{font-size:11px;color:var(--text-dim)}
-.co-check{font-size:14px;font-weight:700}
+/* REQUEST MODAL */
 
 .request-bg{
   display:none;position:fixed;inset:0;
@@ -522,25 +622,42 @@ footer{
 <header>
   <div class="header-inner">
     <div class="brand" onclick="scrollTop()">
-      <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="42" height="42" rx="10" fill="rgba(0,194,209,0.08)"/>
-        <path d="M8 28L14 16L18 24L21 18L24 24L28 16L34 28" stroke="#00C2D1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
-        <path d="M10 26L15 17L19 23L21 19L23 23L27 17L32 26" stroke="#00C2D1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M19 12L21 8L23 12" stroke="#00C2D1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <div class="brand-logo">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="52" height="52" rx="12" fill="rgba(0,194,209,0.06)"/>
+          <!-- Outer glow wave -->
+          <path d="M7 34L14 18L19 28L23 20L26 26L29 20L33 28L38 18L45 34"
+            stroke="var(--accent)" stroke-width="1.2"
+            stroke-linecap="round" stroke-linejoin="round" opacity="0.18"/>
+          <!-- Main wave -->
+          <path d="M9 32L15 19L20 27L24 20L26 25L28 20L32 27L37 19L43 32"
+            stroke="var(--accent)" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+          <!-- Bold center wave -->
+          <path d="M11 31L16 21L21 28L24 21L26 26L28 21L31 28L36 21L41 31"
+            stroke="var(--accent)" stroke-width="2.8"
+            stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Signal spike top center -->
+          <path d="M24 18L26 10L28 18"
+            stroke="var(--accent)" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="26" cy="10" r="2" fill="var(--accent)" opacity="0.9"/>
+        </svg>
+      </div>
       <div class="brand-text">
         <div class="brand-name">WHERE'S THE WAVE</div>
-        <div class="brand-sub">NIGHTLIFE INTELLIGENCE</div>
+        <div class="brand-sub">PRIVATE NIGHTLIFE ACCESS</div>
       </div>
     </div>
+
     <nav class="nav">
-      <div class="nav-link">Events</div>
-      <div class="nav-link">Venues</div>
-      <div class="nav-link">VIP Tables</div>
-      <div class="nav-link">Promoters</div>
-      <div class="nav-link">Venue Owners</div>
-      <div class="nav-link">Trust</div>
+      <div class="nav-link" onclick="document.getElementById('events').scrollIntoView({behavior:'smooth'})">Discover</div>
+      <div class="nav-link" onclick="document.getElementById('venues').scrollIntoView({behavior:'smooth'})">Places</div>
+      <div class="nav-link" onclick="document.getElementById('tables').scrollIntoView({behavior:'smooth'})">Tables</div>
+      <div class="nav-link" onclick="openRequest()">Hosts</div>
+      <div class="nav-link" onclick="openRequest()">Partners</div>
     </nav>
+
     <div class="header-right">
       <div class="city-select" onclick="openCityModal()">
         <div class="city-select-dot" id="headerDot"></div>
@@ -960,6 +1077,9 @@ function applyCity(k) {
   document.documentElement.style.setProperty('--accent-border', hexToRgba(c.accent, 0.22));
   document.documentElement.style.setProperty('--bg', c.bg);
   document.body.style.background = c.bg;
+  // Logo glow — city-specific, subtle not neon
+  document.documentElement.style.setProperty('--logo-glow', hexToRgba(c.accent, 0.4));
+  document.documentElement.style.setProperty('--logo-glow-far', hexToRgba(c.accent, 0.12));
 
   // Hero BG
   document.getElementById('heroBg').style.backgroundImage = `url('${c.bgImg}')`;
@@ -1053,8 +1173,8 @@ function applyCity(k) {
   // City modal
   document.getElementById('cityOptionsList').innerHTML = Object.entries(CITIES).map(([k2, v]) => `
     <div class="city-option" onclick="applyCity('${k2}');closeCityModal()">
-      <div class="co-dot" style="background:${v.accent}"></div>
-      <div>
+      <div class="co-dot" style="background:${v.accent};box-shadow:0 0 6px ${v.accent}88"></div>
+      <div class="co-info">
         <div class="co-name" style="${k2===cur?`color:${v.accent}`:''}">${v.name}</div>
         <div class="co-mood">${v.mood.split('.')[0]}</div>
       </div>
