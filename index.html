@@ -80,8 +80,7 @@ header{
   object-fit:contain;
   display:block;
   transition:filter 0.5s ease,transform 0.3s ease;
-  /* mix-blend-mode removes the black background from the PNG */
-  mix-blend-mode:screen;
+  mix-blend-mode:lighten;
   filter:
     drop-shadow(0 0 8px var(--logo-glow,rgba(0,194,209,0.6)))
     drop-shadow(0 0 22px var(--logo-glow-far,rgba(0,194,209,0.2)))
