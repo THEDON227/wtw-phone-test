@@ -78,7 +78,6 @@ header{
   object-fit:contain;
   display:block;
   transition:filter 0.5s ease,transform 0.3s ease;
-  mix-blend-mode:screen;
   filter:
     drop-shadow(0 0 10px var(--logo-glow,rgba(0,194,209,0.65)))
     drop-shadow(0 0 26px var(--logo-glow-far,rgba(0,194,209,0.22)));
@@ -1186,6 +1185,39 @@ function submitRequest() {
   document.getElementById('reqSuccess').style.display='block';
   setTimeout(closeRequest, 4000);
 }
+
+// Remove black background from logo using canvas pixel processing
+function processLogo() {
+  const img = document.getElementById('wtwLogo');
+  if (!img) return;
+  function strip(image) {
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const w = image.naturalWidth || 400;
+      const h = image.naturalHeight || 400;
+      canvas.width = w;
+      canvas.height = h;
+      ctx.drawImage(image, 0, 0, w, h);
+      const data = ctx.getImageData(0, 0, w, h);
+      const px = data.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const brightness = (px[i] + px[i+1] + px[i+2]) / 3;
+        if (brightness < 45) {
+          px[i+3] = 0;
+        } else if (brightness < 90) {
+          px[i+3] = Math.round((brightness - 45) / 45 * 255);
+        }
+      }
+      ctx.putImageData(data, 0, 0);
+      image.src = canvas.toDataURL('image/png');
+    } catch(e) { console.warn('Logo processing failed', e); }
+  }
+  if (img.complete && img.naturalWidth) strip(img);
+  else img.addEventListener('load', function(){ strip(img); });
+}
+if (document.readyState === 'complete') processLogo();
+else window.addEventListener('load', processLogo);
 
 applyCity('nyc');
 </script>
