@@ -746,7 +746,7 @@ function updateOrderSummary(){
 
 function proceedCheckout(){
   const type=selectedTicketType;
-  if(type==='gl') { alert('You're on the guest list. Confirmation sent to your phone. Access subject to venue confirmation at the door.'); closeTicketModal(); return; }
+  if(type==='gl') { alert('You\'re on the guest list. Confirmation sent to your phone. Access subject to venue confirmation at the door.'); closeTicketModal(); return; }
   if(type==='vip') { alert('VIP Table Request submitted. A WTW host will follow up within 24 hours. Access subject to venue confirmation.'); closeTicketModal(); return; }
   alert('Redirecting to secure checkout. Stripe + Apple Pay available at checkout.');
   closeTicketModal();
