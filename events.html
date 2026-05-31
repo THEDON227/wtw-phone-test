@@ -229,6 +229,39 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 .ticket-legal{font-size:10px;color:var(--text-dim);text-align:center;line-height:1.65;margin-top:14px}
 .btn-full{width:100%;padding:16px;font-size:13px;font-weight:800;letter-spacing:1px;border-radius:11px;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.18s}
 
+/* ── PHASE 2 ADDITIONS ── */
+
+/* featured card skeleton base */
+.fc-image{background:rgba(255,255,255,0.03)}
+
+/* wave score trust subtext */
+.wave-score-sub{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;align-self:center}
+
+/* featured card CTA hierarchy */
+.fc-ctas .btn-outline{opacity:0.78;padding:13px 18px}
+.fc-ctas .btn-ghost{opacity:0.52;padding:13px 14px;font-size:10px}
+
+/* pricing stack on event cards */
+.ec-price-stack{display:flex;flex-direction:column;gap:4px}
+.ec-price-row{display:flex;align-items:baseline;gap:6px}
+.ec-price-label{font-size:9px;font-weight:700;letter-spacing:0.8px;color:var(--text-dim);text-transform:uppercase;min-width:56px}
+.ec-price-val{font-size:12px;font-weight:800;color:var(--text)}
+.ec-price-val.accent{color:var(--accent)}
+.ec-price-val.free{color:#22c55e}
+
+/* luxury meta — editorial vertical stack, uppercase typography */
+.ec-meta{flex-direction:column;gap:5px}
+.ec-meta-item{font-size:11px;font-weight:600;letter-spacing:0.6px;color:var(--text-muted);text-transform:uppercase}
+.ec-meta-dot{display:none}
+
+/* mobile filter scroll hint */
+.filter-bar{position:relative}
+.filter-bar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:48px;background:linear-gradient(to right,transparent,rgba(8,11,15,0.98));pointer-events:none;z-index:1}
+@media(max-width:768px){.filter-inner{-webkit-overflow-scrolling:touch}}
+
+/* mobile featured card image height */
+@media(max-width:768px){.featured-card .fc-image img{min-height:220px}}
+
 /* ── PROMO BANNER ── */
 .promo-banner{background:linear-gradient(135deg,rgba(0,194,209,0.1) 0%,rgba(0,194,209,0.03) 100%);border:1px solid rgba(0,194,209,0.2);border-radius:20px;padding:40px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;margin-bottom:64px}
 @media(max-width:768px){.promo-banner{grid-template-columns:1fr}}
@@ -517,7 +550,7 @@ function renderFeatured(){
     <div class="fc-content">
       <div>
         <div class="fc-meta-top">
-          <div class="wave-score"><span class="wave-score-num" style="color:${c.p}">${feat.wave}</span><span style="color:${c.p}">% WAVE SCORE</span></div>
+          <div class="wave-score"><span class="wave-score-num" style="color:${c.p}">${feat.wave}</span><span style="color:${c.p}">% WAVE</span><span class="wave-score-sub">CURATED BY WTW</span></div>
           ${feat.status==='limited'?'<span class="badge badge-limited">SELLING FAST</span>':''}
         </div>
         <div class="fc-title">${feat.title}</div>
@@ -579,21 +612,21 @@ function renderGrid(){
       <div class="ec-body">
         <div class="ec-cats">
           ${e.tags.map(t=>`<span class="ec-cat" style="color:${c.p};background:${hexToRgba(c.p,0.1)};border-color:${hexToRgba(c.p,0.25)}">${t}</span>`).join('')}
-          <span class="ec-cat-neutral">${e.age}</span>
         </div>
         <div class="ec-title">${e.title}</div>
         <div class="ec-venue">${e.venue} · ${e.neighborhood}</div>
         <div class="ec-meta">
-          <div class="ec-meta-item"><span class="ec-meta-icon">📅</span>${e.date}</div>
-          <div class="ec-meta-item"><span class="ec-meta-icon">🕐</span>${e.time}</div>
-          <div class="ec-meta-item"><span class="ec-meta-icon">👔</span>${e.dresscode}</div>
+          <div class="ec-meta-item">${e.date} · ${e.time}</div>
+          <div class="ec-meta-dot"></div>
+          <div class="ec-meta-item">${e.dresscode}</div>
         </div>
         <div class="ec-footer">
-          <div class="ec-price">
-            <div class="ec-price-from">FROM</div>
-            <div class="ec-price-num" style="color:${c.p}">$${e.price}</div>
+          <div class="ec-price-stack">
+            <div class="ec-price-row"><span class="ec-price-label">TICKETS</span><span class="ec-price-val accent" style="color:${c.p}">$${e.price}</span></div>
+            ${e.glPrice===0?`<div class="ec-price-row"><span class="ec-price-label">GUEST LIST</span><span class="ec-price-val free">FREE</span></div>`:e.glPrice?`<div class="ec-price-row"><span class="ec-price-label">GUEST LIST</span><span class="ec-price-val accent" style="color:${c.p}">$${e.glPrice}</span></div>`:''}
+            ${e.vipMin?`<div class="ec-price-row"><span class="ec-price-label">VIP FROM</span><span class="ec-price-val">$${e.vipMin.toLocaleString()}</span></div>`:''}
           </div>
-          <button class="ec-cta" onclick="openTicketModal(${e.id})" style="background:${c.p}">GET TICKETS</button>
+          <button class="ec-cta" onclick="openTicketModal(${e.id})" style="background:${c.p}">${e.status==='guestlist'?'JOIN LIST':'GET TICKETS'}</button>
         </div>
       </div>
     </div>`;
