@@ -21,7 +21,7 @@ nav.mn{display:flex;align-items:center;gap:1px;flex:1}@media(max-width:1000px){n
 .nl:hover{color:rgba(240,237,232,0.9);background:rgba(255,255,255,0.04)}
 .nl.on{color:var(--accent)}.nl.on::after{content:"";position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:60%;height:1px;background:var(--accent);border-radius:1px}
 .hr{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
-.cs{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 14px;cursor:pointer}
+.cs{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 14px;cursor:pointer;transition:border-color 0.18s}
 .cs:hover{border-color:var(--ab)}.cd{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 5px var(--accent)}
 .cl{font-size:11px;font-weight:700;letter-spacing:0.8px;color:var(--tx)}.cv{font-size:9px;color:var(--td)}
 .bapp{background:var(--accent);color:#050a0b;font-size:11px;font-weight:700;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-family:Inter,sans-serif}
@@ -108,6 +108,22 @@ footer{padding:40px 0 32px;border-top:1px solid var(--bd);margin-top:80px}
 /* modal handle+title (support for JS-rendered modal) */
 .modal-handle{width:32px;height:3px;border-radius:2px;background:rgba(255,255,255,0.1);margin:0 auto 18px}
 .modal-title{font-size:9px;font-weight:700;letter-spacing:4px;color:rgba(240,237,232,0.22);text-align:center;margin-bottom:10px}
+
+/* ── .footer-simple utility (staged for future markup cleanup) ── */
+/* Matches inline styles currently used on pass/indulge/partners footers.  */
+/* Not yet applied to any HTML — purely available for future use.          */
+.footer-simple{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding:40px 0 32px;border-top:1px solid var(--border,var(--bd));margin-top:80px}
+.footer-simple-legal{font-size:11px;color:var(--text-dim,var(--td));line-height:1.65}
+.footer-simple-badges{display:flex;gap:8px}
+.footer-badge{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--accent);background:var(--accent-muted,var(--am));border:1px solid var(--accent-border,var(--ab));padding:4px 10px;border-radius:20px}
+/* ── canonical component spec (reference for new pages) ── */
+/* btn-primary  : background accent, 11px/800, pad 13px 26px, radius 9px   */
+/* btn-outline  : transparent, border rgba(255,255,255,0.15), same size     */
+/* btn-ghost    : no border/bg, text-muted, same size                       */
+/* btn-app      : header CTA, 11px/700, pad 9px 20px, radius 8px           */
+/* section pad  : var(--space-xl) 0  (80px top/bottom)                     */
+/* eyebrow      : 10px/700, letter-spacing 4px, var(--accent)              */
+/* section-title: Playfair Display, clamp(28px,3.5vw,42px), weight 800     */
 </style>
 </head>
 <body>

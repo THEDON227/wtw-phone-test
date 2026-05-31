@@ -62,7 +62,7 @@ body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:
 
 /* ── HEADER ── */
 header{
-  position:sticky;top:0;z-index:100;
+  position:sticky;top:0;z-index:var(--z-header);
   background:rgba(6,8,11,0.97);
   border-bottom:1px solid rgba(255,255,255,0.06);
 }
@@ -639,6 +639,22 @@ footer{
 .city-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 5px var(--accent);flex-shrink:0}
 .city-label{font-size:11px;font-weight:700;letter-spacing:0.8px;color:var(--text)}
 .city-chevron{font-size:9px;color:var(--text-dim);margin-left:1px}
+
+/* ── .footer-simple utility (staged for future markup cleanup) ── */
+/* Matches inline styles currently used on pass/indulge/partners footers.  */
+/* Not yet applied to any HTML — purely available for future use.          */
+.footer-simple{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding:40px 0 32px;border-top:1px solid var(--border,var(--bd));margin-top:80px}
+.footer-simple-legal{font-size:11px;color:var(--text-dim,var(--td));line-height:1.65}
+.footer-simple-badges{display:flex;gap:8px}
+.footer-badge{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--accent);background:var(--accent-muted,var(--am));border:1px solid var(--accent-border,var(--ab));padding:4px 10px;border-radius:20px}
+/* ── canonical component spec (reference for new pages) ── */
+/* btn-primary  : background accent, 11px/800, pad 13px 26px, radius 9px   */
+/* btn-outline  : transparent, border rgba(255,255,255,0.15), same size     */
+/* btn-ghost    : no border/bg, text-muted, same size                       */
+/* btn-app      : header CTA, 11px/700, pad 9px 20px, radius 8px           */
+/* section pad  : var(--space-xl) 0  (80px top/bottom)                     */
+/* eyebrow      : 10px/700, letter-spacing 4px, var(--accent)              */
+/* section-title: Playfair Display, clamp(28px,3.5vw,42px), weight 800     */
 </style>
 </head>
 <body>
