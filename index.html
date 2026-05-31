@@ -26,6 +26,17 @@ body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:
   --text:#F0EDE8;
   --text-muted:rgba(240,237,232,0.55);
   --text-dim:rgba(240,237,232,0.28);
+  /* logo glow (was only a var() fallback — now canonical) */
+  --logo-glow:rgba(0,194,209,0.55);
+  --logo-glow-far:rgba(0,194,209,0.18);
+  /* short-name aliases for cross-page compat */
+  --am:var(--accent-muted);--ab:var(--accent-border);--sf:var(--surface);
+  --bd:var(--border);--tx:var(--text);--tm:var(--text-muted);--td:var(--text-dim);
+  --lg:var(--logo-glow);--lf:var(--logo-glow-far);
+  /* spacing */
+  --space-xs:8px;--space-sm:16px;--space-md:24px;--space-lg:48px;--space-xl:80px;--space-2xl:120px;
+  /* z-index */
+  --z-base:1;--z-sticky:100;--z-header:200;--z-overlay:300;--z-modal:400;--z-toast:500;
 }
 
 /* ── HERO BG ── */
@@ -613,6 +624,21 @@ footer{
 
 /* UTILS */
 .divider{height:1px;background:var(--border);margin:0}
+
+/* ── WTW PHASE 0 SHARED UTILITIES ── */
+/* empty state */
+.empty-state{text-align:center;padding:80px 40px;border:1px solid rgba(255,255,255,0.07);border-radius:20px}
+.empty-state-icon{font-size:48px;margin-bottom:20px;opacity:0.4}
+.empty-state-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text,var(--tx,#F0EDE8));margin-bottom:10px}
+.empty-state-sub{font-size:14px;color:var(--text-muted,var(--tm,rgba(240,237,232,0.55)));margin-bottom:24px;line-height:1.65}
+
+/* btn-outline alias (.btn-secondary is the canonical index.html class) */
+.btn-outline{background:transparent;color:var(--text);font-size:12px;font-weight:600;letter-spacing:0.5px;padding:13px 28px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.18s;white-space:nowrap}
+.btn-outline:hover{border-color:rgba(255,255,255,0.3);background:var(--surface-hover)}
+/* city selector class aliases (other pages use .city-dot / .city-label / .city-chevron) */
+.city-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 5px var(--accent);flex-shrink:0}
+.city-label{font-size:11px;font-weight:700;letter-spacing:0.8px;color:var(--text)}
+.city-chevron{font-size:9px;color:var(--text-dim);margin-left:1px}
 </style>
 </head>
 <body>

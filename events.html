@@ -23,6 +23,10 @@ body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:
   --text-dim:rgba(240,237,232,0.28);
   --logo-glow:rgba(0,194,209,0.55);
   --logo-glow-far:rgba(0,194,209,0.18);
+  /* spacing */
+  --space-xs:8px;--space-sm:16px;--space-md:24px;--space-lg:48px;--space-xl:80px;--space-2xl:120px;
+  /* z-index */
+  --z-base:1;--z-sticky:100;--z-header:200;--z-overlay:300;--z-modal:400;--z-toast:500;
 }
 .wrap{max-width:1280px;margin:0 auto;padding:0 48px}
 @media(max-width:768px){.wrap{padding:0 20px}}
@@ -238,6 +242,13 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 .footer-legal{font-size:11px;color:var(--text-dim);line-height:1.65}
 .footer-badges{display:flex;gap:8px;flex-wrap:wrap}
 .f-badge{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--accent);background:var(--accent-muted);border:1px solid var(--accent-border);padding:4px 10px;border-radius:20px}
+
+/* ── WTW PHASE 0 SHARED UTILITIES ── */
+/* empty state */
+.empty-state{text-align:center;padding:80px 40px;border:1px solid rgba(255,255,255,0.07);border-radius:20px}
+.empty-state-icon{font-size:48px;margin-bottom:20px;opacity:0.4}
+.empty-state-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text,var(--tx,#F0EDE8));margin-bottom:10px}
+.empty-state-sub{font-size:14px;color:var(--text-muted,var(--tm,rgba(240,237,232,0.55)));margin-bottom:24px;line-height:1.65}
 </style>
 </head>
 <body>

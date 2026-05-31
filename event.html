@@ -6,7 +6,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-:root{--accent:#00C2D1;--am:rgba(0,194,209,0.1);--ab:rgba(0,194,209,0.22);--bg:#080b0f;--sf:rgba(255,255,255,0.03);--bd:rgba(255,255,255,0.08);--tx:#F0EDE8;--tm:rgba(240,237,232,0.55);--td:rgba(240,237,232,0.28);--lg:rgba(0,194,209,0.55);--lf:rgba(0,194,209,0.18)}
+:root{--accent:#00C2D1;--am:rgba(0,194,209,0.1);--ab:rgba(0,194,209,0.22);--bg:#080b0f;--sf:rgba(255,255,255,0.03);--bd:rgba(255,255,255,0.08);--tx:#F0EDE8;--tm:rgba(240,237,232,0.55);--td:rgba(240,237,232,0.28);--lg:rgba(0,194,209,0.55);--lf:rgba(0,194,209,0.18);--accent-muted:var(--am);--accent-border:var(--ab);--surface:var(--sf);--surface-hover:rgba(255,255,255,0.05);--border:var(--bd);--text:var(--tx);--text-muted:var(--tm);--text-dim:var(--td);--logo-glow:var(--lg);--logo-glow-far:var(--lf);--space-xs:8px;--space-sm:16px;--space-md:24px;--space-lg:48px;--space-xl:80px;--space-2xl:120px;--z-base:1;--z-sticky:100;--z-header:200;--z-overlay:300;--z-modal:400;--z-toast:500;}
 .w{max-width:1280px;margin:0 auto;padding:0 48px}@media(max-width:768px){.w{padding:0 20px}}
 header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bottom:1px solid var(--bd)}
 .hi{display:flex;align-items:center;gap:28px;padding:0 48px;height:92px;max-width:1280px;margin:0 auto}@media(max-width:768px){.hi{padding:0 20px;height:72px;gap:14px}}
@@ -99,6 +99,15 @@ footer{padding:40px 0 32px;border-top:1px solid var(--bd);margin-top:80px}
 .rcv{font-size:11px;color:var(--td);margin-bottom:10px}
 .rcf{display:flex;align-items:center;justify-content:space-between}
 
+/* ── WTW PHASE 0 SHARED UTILITIES ── */
+/* empty state */
+.empty-state{text-align:center;padding:80px 40px;border:1px solid rgba(255,255,255,0.07);border-radius:20px}
+.empty-state-icon{font-size:48px;margin-bottom:20px;opacity:0.4}
+.empty-state-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text,var(--tx,#F0EDE8));margin-bottom:10px}
+.empty-state-sub{font-size:14px;color:var(--text-muted,var(--tm,rgba(240,237,232,0.55)));margin-bottom:24px;line-height:1.65}
+/* modal handle+title (support for JS-rendered modal) */
+.modal-handle{width:32px;height:3px;border-radius:2px;background:rgba(255,255,255,0.1);margin:0 auto 18px}
+.modal-title{font-size:9px;font-weight:700;letter-spacing:4px;color:rgba(240,237,232,0.22);text-align:center;margin-bottom:10px}
 </style>
 </head>
 <body>
