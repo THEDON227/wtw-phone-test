@@ -536,10 +536,7 @@ function applyCity(k){
       <div class="co-info"><div class="co-name" style="${k2===cur?`color:${v.p}`:''}">${v.name}</div></div>
       ${k2===cur?`<span class="co-check" style="color:${v.p}">✓</span>`:''}
     </div>`).join('');
-  const _evts=ALL_EVENTS[k]||[];
-  const _gl=_evts.filter(e=>e.cats.includes('guestlist')).length;
-  const _prem=_evts.some(e=>e.vipMin>=500);
-  document.getElementById('citySignal').innerHTML=`<div class="cs-eyebrow">TONIGHT IN ${c.short}</div><div class="cs-stats"><div class="cs-stat">${_evts.length} curated nights</div><div class="cs-stat">${_gl} guest list${_gl!==1?'s':''} open</div>${_prem?'<div class="cs-stat">Premium access available</div>':''}</div>`;
+  document.getElementById('citySignal').innerHTML=`<div class="cs-eyebrow">WTW ACCESS</div><div class="cs-stats"><div class="cs-stat">Verified venues only</div><div class="cs-stat">Tickets, guest lists &amp; tables</div><div class="cs-stat">Confirmed before you arrive</div></div>`;
   renderFeatured();
   renderGrid();
 }
