@@ -266,7 +266,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 .ec-meta-item{font-size:11px;font-weight:600;letter-spacing:0.6px;color:var(--text-muted);text-transform:uppercase}
 .ec-meta-dot{display:none}
 
-/* mobile filter scroll hint — position:sticky already a containing block, no position:relative needed */
+/* mobile filter scroll hint — keep sticky positioning */
 .filter-bar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:48px;background:linear-gradient(to right,transparent,rgba(8,11,15,0.98));pointer-events:none;z-index:1}
 @media(max-width:768px){.filter-inner{-webkit-overflow-scrolling:touch}}
 
