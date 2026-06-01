@@ -279,10 +279,18 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 .cs-stats{display:flex;flex-direction:column;gap:10px}
 .cs-stat{font-size:13px;color:var(--text-muted);font-weight:500;line-height:1.4}
 
-/* events hero — cinematic background treatment matching homepage */
-.events-hero{position:relative;background:url('https://wheresthewave.lovable.app/assets/hero-nyc-BocCk24q.jpg') center 25% / cover no-repeat}
+/* events hero — cinematic background, set dynamically per city via JS */
+.events-hero{position:relative;background-size:cover;background-position:center 25%;background-repeat:no-repeat;background-image:url('https://wheresthewave.lovable.app/assets/hero-nyc-BocCk24q.jpg')}
 .events-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,11,15,0.55) 0%,rgba(8,11,15,0.65) 25%,rgba(8,11,15,0.88) 60%,#080b0f 100%)}
 .events-hero .wrap{position:relative;z-index:1}
+
+/* city typography personalities */
+.city-nyc .eh-title{font-size:clamp(42px,6vw,76px);letter-spacing:-3px;line-height:0.93}
+.city-miami .eh-title{font-family:'Inter',sans-serif;font-size:clamp(38px,5.5vw,68px);letter-spacing:-1px;line-height:0.96;font-weight:900}
+.city-la .eh-title{font-size:clamp(36px,5vw,64px);letter-spacing:-2px;line-height:1.0;font-weight:700}
+.city-atl .eh-title{font-family:'Inter',sans-serif;font-size:clamp(40px,5.5vw,70px);letter-spacing:-2px;line-height:0.94;font-weight:900}
+.city-houston .eh-title{font-size:clamp(38px,5vw,66px);letter-spacing:-2px;line-height:0.96;font-style:italic}
+.city-nj .eh-title{font-size:clamp(36px,5vw,62px);letter-spacing:-1.5px;line-height:1.0}
 
 /* mobile featured card image height */
 @media(max-width:768px){.featured-card .fc-image img{min-height:220px}}
@@ -354,8 +362,8 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 <div class="events-hero">
   <div class="wrap">
     <div class="eh-eyebrow" id="heroEyebrow">NEW YORK · TONIGHT</div>
-    <h1 class="eh-title">Events</h1>
-    <p class="eh-sub">Curated tonight across rooftops, lounges, guest lists, and premium rooms.</p>
+    <h1 class="eh-title" id="heroTitle">New York<br>Events</h1>
+    <p class="eh-sub" id="heroSub">Premium access to the city&#39;s most exclusive nights. Every event curated, every venue verified, every entry confirmed before you arrive.</p>
     <div class="eh-controls">
       <div class="search-bar">
         <span class="search-icon">⌕</span>
@@ -474,12 +482,12 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 
 <script>
 const CITIES={
-  nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT'},
-  miami:{name:'Miami',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT'},
-  la:{name:'Los Angeles',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT'},
-  atl:{name:'Atlanta',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT'},
-  houston:{name:'Houston',short:'HOUSTON',p:'#C8922A',bg:'#080600',eyebrow:'HOUSTON · TONIGHT'},
-  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT'},
+  nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT',bodyClass:'city-nyc',bgImg:'https://wheresthewave.lovable.app/assets/hero-nyc-BocCk24q.jpg',headline:'New York<br>Events',subcopy:'Premium access to the city\'s most exclusive nights. Every event curated, every venue verified, every entry confirmed before you arrive.'},
+  miami:{name:'Miami',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1600&q=80&auto=format&fit=crop',headline:'Miami<br>Nightlife',subcopy:'South Beach\'s most electric nights, curated and confirmed. From rooftop to after-hours — access the city\'s best without the search.'},
+  la:{name:'Los Angeles',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1600&q=80&auto=format&fit=crop',headline:'Los Angeles<br>Events',subcopy:'West Hollywood\'s most exclusive rooms, without the runaround. Verified access to where the city actually goes.'},
+  atl:{name:'Atlanta',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1600&q=80&auto=format&fit=crop',headline:'Atlanta<br>Nights',subcopy:'Buckhead to Westside — Atlanta\'s premier nightlife, curated and confirmed. Premium access to the city\'s most iconic rooms.'},
+  houston:{name:'Houston',short:'HOUSTON',p:'#C8922A',bg:'#080600',eyebrow:'HOUSTON · TONIGHT',bodyClass:'city-houston',bgImg:'https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=1600&q=80&auto=format&fit=crop',headline:'Houston<br>Events',subcopy:'From Midtown lounges to late-night rooms — premium access to Houston\'s most refined verified evenings.'},
+  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1600&q=80&auto=format&fit=crop',headline:'New Jersey<br>Events',subcopy:'Premium curated nights — from downtown rooftops to dinner lounges. Verified access, confirmed before you arrive.'},
 };
 
 const ALL_EVENTS={
@@ -526,6 +534,10 @@ function applyCity(k){
   document.documentElement.style.setProperty('--logo-glow',hexToRgba(c.p,0.55));
   document.documentElement.style.setProperty('--logo-glow-far',hexToRgba(c.p,0.18));
   document.body.style.background=c.bg;
+  document.body.className=c.bodyClass;
+  document.querySelector('.events-hero').style.backgroundImage=`url('${c.bgImg}')`;
+  document.getElementById('heroTitle').innerHTML=c.headline;
+  document.getElementById('heroSub').textContent=c.subcopy;
   document.getElementById('headerDot').style.background=c.p;
   document.getElementById('headerCity').textContent=c.name;
   document.getElementById('heroEyebrow').textContent=c.eyebrow;
