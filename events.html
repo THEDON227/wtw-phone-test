@@ -273,7 +273,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 /* city signal panel — hero right column */
 .events-hero .wrap{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:start}
 @media(max-width:900px){.events-hero .wrap{grid-template-columns:1fr}}
-.city-signal{grid-column:2;grid-row:1/span 5;align-self:center;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px 28px;min-width:220px}
+.city-signal{grid-column:2;grid-row:1/span 4;align-self:center;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px 28px;min-width:220px}
 @media(max-width:900px){.city-signal{grid-column:1;grid-row:auto;margin-top:20px;min-width:0}}
 .cs-eyebrow{font-size:9px;font-weight:700;letter-spacing:3px;color:var(--accent);margin-bottom:16px;text-transform:uppercase}
 .cs-stats{display:flex;flex-direction:column;gap:10px}
@@ -350,7 +350,6 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
     <div class="eh-eyebrow" id="heroEyebrow">NEW YORK · TONIGHT</div>
     <h1 class="eh-title">Events</h1>
     <p class="eh-sub">Curated tonight across rooftops, lounges, guest lists, and premium rooms.</p>
-    <div class="city-signal" id="citySignal"></div>
     <div class="eh-controls">
       <div class="search-bar">
         <span class="search-icon">⌕</span>
@@ -363,6 +362,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
         <option value="week">This Week</option>
       </select>
     </div>
+    <div class="city-signal" id="citySignal"></div>
   </div>
 </div>
 
@@ -531,7 +531,7 @@ function applyCity(k){
       ${k2===cur?`<span class="co-check" style="color:${v.p}">✓</span>`:''}
     </div>`).join('');
   const _evts=ALL_EVENTS[k]||[];
-  const _gl=_evts.filter(e=>e.glPrice===0).length;
+  const _gl=_evts.filter(e=>e.cats.includes('guestlist')).length;
   const _prem=_evts.some(e=>e.vipMin>=500);
   document.getElementById('citySignal').innerHTML=`<div class="cs-eyebrow">TONIGHT IN ${c.short}</div><div class="cs-stats"><div class="cs-stat">${_evts.length} curated nights</div><div class="cs-stat">${_gl} guest list${_gl!==1?'s':''} open</div>${_prem?'<div class="cs-stat">Premium access available</div>':''}</div>`;
   renderFeatured();
