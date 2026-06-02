@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Where's The Wave — Browse curated nightlife events, rooftops, guest lists, and VIP experiences in your city.">
-<title>Events — Where's The Wave</title>
+<title>All Events — Where's The Wave</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -395,24 +395,15 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 <div class="events-main">
   <div class="wrap">
 
-    <!-- FEATURED EVENT -->
-    <div class="section-row">
-      <div>
-        <div class="section-eyebrow">CURATED PICK</div>
-        <div class="section-title">Featured Tonight</div>
-      </div>
-    </div>
-    <div class="featured-card" id="featuredCard"></div>
-
     <!-- EVENT GRID -->
     <div class="section-row" id="allEventsSection" style="margin-top:0">
       <div>
         <div class="section-eyebrow" id="gridEyebrow">ALL EVENTS</div>
-        <div class="section-title">Events in <span id="gridCity">New York</span></div>
+        <div class="section-title">All Events in <span id="gridCity">New York</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <span class="section-sub" id="resultCount">Showing 6 events</span>
-        <button class="see-all" onclick="showAllEvents()">See All Events →</button>
+        <button class="see-all" onclick="backToEvents()">← Back to Events</button>
       </div>
     </div>
     <div class="events-grid" id="eventsGrid"></div>
@@ -639,8 +630,8 @@ function applyCity(k){
   document.body.style.background=c.bg;
   document.body.className=c.bodyClass;
   document.querySelector('.events-hero').style.backgroundImage=`url('${c.bgImg}')`;
-  document.getElementById('heroTitle').innerHTML=c.headline;
-  document.getElementById('heroSub').textContent=c.subcopy;
+  document.getElementById('heroTitle').innerHTML=`All Events in<br>${c.label||c.name}`;
+  document.getElementById('heroSub').textContent='The complete WTW signal for this market: curated rooms, rooftops, guest lists, tables, and late-night access in one organized view.';
   document.getElementById('headerDot').style.background=c.p;
   document.getElementById('headerCity').textContent=c.label||c.name;
   document.getElementById('heroEyebrow').textContent=c.eyebrow;
@@ -651,14 +642,17 @@ function applyCity(k){
       <div class="co-info"><div class="co-name" style="${k2===cur?`color:${v.p}`:''}">${v.label||v.name}</div></div>
       ${k2===cur?`<span class="co-check" style="color:${v.p}">✓</span>`:''}
     </div>`).join('');
-  renderFeatured();
   renderGrid();
 }
 
 function showAllEvents(){
+  renderGrid();
+  document.getElementById('allEventsSection')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function backToEvents(){
   try{localStorage.setItem('wtwSelectedCity',cur);}catch(e){}
-  const fullCitySlug={nyc:'nyc',nj:'nj',miami:'florida',atl:'georgia',la:'california',dallas:'texas'}[cur]||cur;
-  window.location.href=`all-events.html?city=${fullCitySlug}`;
+  window.location.href=`events.html?city=${cur}`;
 }
 
 function getEvents(){
@@ -746,8 +740,7 @@ function renderFeatured(){
 
 function renderGrid(){
   const c=CITIES[cur];
-  const allEvents=filterAndSort(getEvents());
-  const events=allEvents.slice(0,9);
+  const events=filterAndSort(getEvents());
   const grid=document.getElementById('eventsGrid');
   const empty=document.getElementById('emptyState');
   const count=document.getElementById('resultCount');
@@ -760,7 +753,7 @@ function renderGrid(){
   }
   grid.style.display='grid';
   empty.style.display='none';
-  count.textContent=`Showing ${events.length} curated event${events.length!==1?'s':''}${allEvents.length>events.length?` of ${allEvents.length}`:''}`;
+  count.textContent=`Showing ${events.length} event${events.length!==1?'s':''}`;
   grid.innerHTML=events.map(e=>{
     const isSaved=savedEvents.has(e.id);
     const statusClass=e.status==='limited'?'status-limited':e.status==='guestlist'?'status-gl':'status-avail';
@@ -954,9 +947,13 @@ function toggleSave(id,el,e){
   else{savedEvents.add(id);el.textContent='♥';el.classList.add('saved');}
 }
 
-// Read city from URL param if present (e.g. events.html?city=miami)
-const _urlCity = new URLSearchParams(window.location.search).get('city');
-applyCity((_urlCity && CITIES[_urlCity]) ? _urlCity : 'nyc');
+// Read city from URL param if present (e.g. all-events.html?city=florida)
+const CITY_ALIASES={florida:'miami',georgia:'atl',california:'la',texas:'dallas','new-jersey':'nj',newjersey:'nj','new-york':'nyc',newyork:'nyc'};
+const _urlCityRaw = new URLSearchParams(window.location.search).get('city');
+let _storedCity='';
+try{_storedCity=localStorage.getItem('wtwSelectedCity')||'';}catch(e){}
+const _cityKey = (_urlCityRaw||_storedCity||'nyc').toLowerCase();
+applyCity(CITIES[_cityKey] ? _cityKey : CITY_ALIASES[_cityKey] || 'nyc');
 
 // Style first filter tab on load
 window.addEventListener('load',function(){
