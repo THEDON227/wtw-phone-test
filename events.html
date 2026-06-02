@@ -10,7 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-body::before{content:'WTW';position:fixed;right:clamp(-80px,-4vw,-24px);bottom:clamp(40px,8vh,120px);font-family:'Playfair Display',serif;font-size:clamp(170px,24vw,420px);font-weight:900;line-height:0.82;letter-spacing:-0.08em;color:var(--accent);opacity:0.018;filter:blur(0.3px) drop-shadow(0 0 56px var(--logo-glow));mix-blend-mode:screen;pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;right:clamp(-140px,-8vw,-40px);bottom:clamp(24px,6vh,96px);width:clamp(340px,42vw,760px);aspect-ratio:1;background:var(--wtw-logo-watermark) center/contain no-repeat;opacity:0.024;filter:blur(0.25px) drop-shadow(0 0 68px var(--logo-glow));mix-blend-mode:screen;pointer-events:none;z-index:0}
 :root{
   --accent:#00C2D1;
   --accent-muted:rgba(0,194,209,0.1);
@@ -469,12 +469,12 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 
 <script>
 const CITIES={
+  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1800&q=80&auto=format&fit=crop',headline:'New Jersey Events',subcopy:'Premium local nightlife, rooftops, and dinner lounges curated with verified access before you arrive.'},
   nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT',bodyClass:'city-nyc',bgImg:'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=1800&q=80&auto=format&fit=crop',headline:'New York Events',subcopy:'An editorial view of tonight\'s verified rooms, guest lists, and table access. Curated for the city\'s most selective nights.'},
   miami:{name:'Miami',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1800&q=80&auto=format&fit=crop',headline:'Miami Events',subcopy:'Celebrity rooms, rooftops, and late-night access curated with concierge-level confidence before you arrive.'},
-  la:{name:'Los Angeles',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'Los Angeles Events',subcopy:'A quiet, verified map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
-  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1800&q=80&auto=format&fit=crop',headline:'New Jersey Events',subcopy:'Premium local nightlife, rooftops, and dinner lounges curated with verified access before you arrive.'},
-  dallas:{name:'Dallas',short:'DALLAS',p:'#D6A94A',bg:'#090704',eyebrow:'DALLAS · TONIGHT',bodyClass:'city-dallas',bgImg:'https://images.unsplash.com/photo-1545470348-9717d1e4ac85?w=1800&q=80&auto=format&fit=crop',headline:'Dallas Events',subcopy:'Upscale lounges, sports-weekend rooms, and skyline tables curated for Dallas nights with polish.'},
   atl:{name:'Atlanta',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1800&q=80&auto=format&fit=crop',headline:'Atlanta Events',subcopy:'Buckhead tables, Midtown lounges, Afrobeats rooms, and late Southern nightlife curated with WTW signal.'},
+  la:{name:'Los Angeles',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'Los Angeles Events',subcopy:'A quiet, verified map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
+  dallas:{name:'Dallas',short:'DALLAS',p:'#D6A94A',bg:'#090704',eyebrow:'DALLAS · TONIGHT',bodyClass:'city-dallas',bgImg:'https://images.unsplash.com/photo-1545470348-9717d1e4ac85?w=1800&q=80&auto=format&fit=crop',headline:'Dallas Events',subcopy:'Upscale lounges, sports-weekend rooms, and skyline tables curated for Dallas nights with polish.'},
 };
 
 const ALL_EVENTS={
@@ -559,6 +559,8 @@ function hexToRgba(hex,a){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.sli
 
 function applyCity(k){
   const c=CITIES[k]; cur=k;
+  const logo=document.getElementById('wtwLogo');
+  if(logo) document.documentElement.style.setProperty('--wtw-logo-watermark',`url("${logo.src}")`);
   document.documentElement.style.setProperty('--accent',c.p);
   document.documentElement.style.setProperty('--accent-muted',hexToRgba(c.p,0.1));
   document.documentElement.style.setProperty('--accent-border',hexToRgba(c.p,0.22));
