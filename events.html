@@ -59,30 +59,30 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 .btn-app:hover{opacity:0.88}
 
 /* ── EVENTS HERO ── */
-.events-hero{background:linear-gradient(to bottom,rgba(0,194,209,0.04) 0%,transparent 100%);border-bottom:1px solid var(--border);padding:52px 0 40px}
-.eh-eyebrow{font-size:10px;font-weight:700;letter-spacing:5px;color:var(--accent);margin-bottom:14px}
-.eh-title{font-family:'Playfair Display',serif;font-size:clamp(38px,5vw,64px);font-weight:900;color:var(--text);letter-spacing:-2px;margin-bottom:12px;line-height:1.0}
-.eh-sub{font-size:15px;color:var(--text-muted);margin-bottom:32px;line-height:1.65;max-width:580px}
-.eh-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.search-bar{display:flex;align-items:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;overflow:hidden;flex:1;max-width:400px;min-width:240px;transition:border-color 0.2s}
-.search-bar:focus-within{border-color:var(--accent-border)}
-.search-icon{padding:0 14px;font-size:15px;color:var(--text-dim);flex-shrink:0}
-.search-bar input{flex:1;background:transparent;border:none;outline:none;font-size:14px;color:var(--text);padding:13px 0;font-family:'Inter',sans-serif}
-.search-bar input::placeholder{color:rgba(240,237,232,0.28)}
-.date-select{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:'Inter',sans-serif;outline:none;transition:all 0.18s}
-.date-select:focus{border-color:var(--accent-border);color:var(--text)}
+.events-hero{background:linear-gradient(to bottom,rgba(0,194,209,0.04) 0%,transparent 100%);border-bottom:1px solid rgba(255,255,255,0.04);padding:72px 0 76px}
+.eh-eyebrow{font-size:10px;font-weight:700;letter-spacing:5px;color:var(--accent);margin-bottom:18px;opacity:0.9}
+.eh-title{font-family:'Playfair Display',serif;font-size:clamp(42px,6vw,76px);font-weight:900;color:var(--text);letter-spacing:-2px;margin-bottom:18px;line-height:0.96}
+.eh-sub{font-size:15px;color:rgba(240,237,232,0.68);margin-bottom:34px;line-height:1.8;max-width:640px}
+.eh-controls{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.search-bar{display:flex;align-items:center;background:rgba(255,255,255,0.065);border:1px solid rgba(255,255,255,0.14);border-radius:14px;overflow:hidden;flex:1;max-width:520px;min-width:280px;min-height:52px;box-shadow:0 18px 50px rgba(0,0,0,0.24),inset 0 1px 0 rgba(255,255,255,0.06);backdrop-filter:blur(14px);transition:border-color 0.2s,background 0.2s,box-shadow 0.2s}
+.search-bar:focus-within{border-color:var(--accent-border);background:rgba(255,255,255,0.085);box-shadow:0 20px 60px rgba(0,0,0,0.32),0 0 0 1px var(--accent-muted),inset 0 1px 0 rgba(255,255,255,0.08)}
+.search-icon{padding:0 16px;font-size:15px;color:rgba(240,237,232,0.38);flex-shrink:0}
+.search-bar input{flex:1;background:transparent;border:none;outline:none;font-size:13px;font-weight:500;letter-spacing:0.1px;color:var(--text);padding:15px 16px 15px 0;font-family:'Inter',sans-serif}
+.search-bar input::placeholder{color:rgba(240,237,232,0.38)}
+.date-select{background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.11);border-radius:12px;padding:14px 16px;font-size:11px;font-weight:700;letter-spacing:0.7px;color:rgba(240,237,232,0.62);cursor:pointer;font-family:'Inter',sans-serif;outline:none;transition:all 0.18s;min-height:52px;text-transform:uppercase}
+.date-select:focus{border-color:var(--accent-border);color:var(--text);background:rgba(255,255,255,0.065)}
 
 /* ── FILTER BAR ── */
-.filter-bar{background:rgba(8,11,15,0.98);border-bottom:1px solid var(--border);padding:0;position:sticky;top:92px;z-index:100}
+.filter-bar{background:rgba(8,11,15,0.92);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.07);padding:0;position:sticky;top:92px;z-index:100;backdrop-filter:blur(18px)}
 @media(max-width:768px){.filter-bar{top:72px}}
-.filter-inner{display:flex;gap:6px;padding:14px 48px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.filter-inner{display:flex;gap:8px;padding:16px 48px;overflow-x:auto;scrollbar-width:none;align-items:center}
 @media(max-width:768px){.filter-inner{padding:12px 20px}}
 .filter-inner::-webkit-scrollbar{display:none}
-.filter-tab{padding:8px 18px;border-radius:30px;font-size:10px;font-weight:700;letter-spacing:1.5px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(240,237,232,0.42);white-space:nowrap;transition:all 0.18s;font-family:'Inter',sans-serif;flex-shrink:0}
-.filter-tab:hover{border-color:rgba(255,255,255,0.25);color:rgba(240,237,232,0.72)}
+.filter-tab{padding:9px 17px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1.35px;cursor:pointer;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.018);color:rgba(240,237,232,0.46);white-space:nowrap;transition:all 0.18s;font-family:'Inter',sans-serif;flex-shrink:0;text-transform:uppercase}
+.filter-tab:hover{border-color:rgba(255,255,255,0.18);color:rgba(240,237,232,0.76);background:rgba(255,255,255,0.035)}
 .filter-tab.active{color:#050a0b;border-color:transparent}
 .filter-count{font-size:9px;font-weight:700;margin-left:4px;opacity:0.7}
-.sort-select{margin-left:auto;flex-shrink:0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:'Inter',sans-serif;outline:none}
+.sort-select{margin-left:auto;flex-shrink:0;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.09);border-radius:999px;padding:9px 13px;font-size:10px;font-weight:700;letter-spacing:0.8px;color:rgba(240,237,232,0.5);cursor:pointer;font-family:'Inter',sans-serif;outline:none;text-transform:uppercase}
 
 /* ── MAIN CONTENT ── */
 .events-main{padding:48px 0 80px}
@@ -236,9 +236,9 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 @media(max-width:768px){.header-inner{height:64px}}
 .brand-logo{width:72px;height:72px}
 @media(max-width:768px){.brand-logo{width:48px;height:48px}}
-.events-hero{padding:52px 0 40px}
-.eh-title{font-size:clamp(30px,4vw,52px);line-height:1.06;letter-spacing:-1.5px}
-.eh-sub{font-size:14px;margin-bottom:24px}
+.events-hero{padding:72px 0 76px}
+.eh-title{font-size:clamp(42px,6vw,76px);line-height:0.96;letter-spacing:-2px}
+.eh-sub{font-size:15px;margin-bottom:34px}
 .filter-bar{top:76px}
 @media(max-width:768px){.filter-bar{top:64px}}
 .events-main{padding:48px 0 80px}
@@ -267,7 +267,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 .ec-meta-dot{display:none}
 
 /* mobile filter scroll hint — keep sticky positioning */
-.filter-bar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:48px;background:linear-gradient(to right,transparent,rgba(8,11,15,0.98));pointer-events:none;z-index:1}
+.filter-bar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:48px;background:linear-gradient(to right,transparent,rgba(8,11,15,0.92));pointer-events:none;z-index:1}
 @media(max-width:768px){.filter-inner{-webkit-overflow-scrolling:touch}}
 
 /* city signal panel — hero right column */
@@ -281,16 +281,16 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 
 /* events hero — cinematic background, set dynamically per city via JS */
 .events-hero{position:relative;background-size:cover;background-position:center 25%;background-repeat:no-repeat;background-image:url('https://wheresthewave.lovable.app/assets/hero-nyc-BocCk24q.jpg')}
-.events-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,11,15,0.55) 0%,rgba(8,11,15,0.65) 25%,rgba(8,11,15,0.88) 60%,#080b0f 100%)}
+.events-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,11,15,0.46) 0%,rgba(8,11,15,0.62) 34%,rgba(8,11,15,0.86) 72%,#080b0f 100%)}
 .events-hero .wrap{position:relative;z-index:1}
 
 /* city typography personalities */
-.city-nyc .eh-title{font-size:clamp(42px,6vw,76px);letter-spacing:-3px;line-height:0.93}
-.city-miami .eh-title{font-family:'Inter',sans-serif;font-size:clamp(38px,5.5vw,68px);letter-spacing:-1px;line-height:0.96;font-weight:900}
-.city-la .eh-title{font-size:clamp(36px,5vw,64px);letter-spacing:-2px;line-height:1.0;font-weight:700}
-.city-atl .eh-title{font-family:'Inter',sans-serif;font-size:clamp(40px,5.5vw,70px);letter-spacing:-2px;line-height:0.94;font-weight:900}
-.city-houston .eh-title{font-size:clamp(38px,5vw,66px);letter-spacing:-2px;line-height:0.96;font-style:italic}
-.city-nj .eh-title{font-size:clamp(36px,5vw,62px);letter-spacing:-1.5px;line-height:1.0}
+.city-nyc .eh-title{font-size:clamp(42px,6vw,76px);letter-spacing:-2.5px;line-height:0.96}
+.city-miami .eh-title{font-size:clamp(42px,6vw,76px);letter-spacing:-2px;line-height:0.96;font-weight:900}
+.city-la .eh-title{font-size:clamp(42px,6vw,76px);letter-spacing:-2px;line-height:0.98;font-weight:800}
+.city-atl .eh-title{font-size:clamp(42px,6vw,76px);letter-spacing:-2px;line-height:0.96;font-weight:900}
+.city-houston .eh-title{font-size:clamp(42px,6vw,76px);letter-spacing:-2px;line-height:0.96;font-style:normal}
+.city-nj .eh-title{font-size:clamp(42px,6vw,76px);letter-spacing:-2px;line-height:0.98}
 
 /* mobile featured card image height */
 @media(max-width:768px){.featured-card .fc-image img{min-height:220px}}
@@ -331,7 +331,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 /* section pad  : var(--space-xl) 0  (80px top/bottom)                     */
 /* eyebrow      : 10px/700, letter-spacing 4px, var(--accent)              */
 /* section-title: Playfair Display, clamp(28px,3.5vw,42px), weight 800     */
-.filter-inner{max-width:1280px!important;margin:0 auto!important;padding:0 28px!important}
+.filter-inner{max-width:1280px!important;margin:0 auto!important;padding:14px 28px!important}
 </style>
 </head>
 <body>
@@ -367,7 +367,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
     <div class="eh-controls">
       <div class="search-bar">
         <span class="search-icon">⌕</span>
-        <input type="text" placeholder="Search events, venues, DJs, nights..." id="searchInput" oninput="filterEvents()"/>
+        <input type="text" placeholder="Ask WTW for a room, rooftop, table, or mood..." id="searchInput" oninput="filterEvents()"/>
       </div>
       <select class="date-select" id="dateFilter" onchange="filterEvents()">
         <option value="all">All Dates</option>
@@ -385,17 +385,17 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
     <button class="filter-tab active" data-filter="all" onclick="setFilter(this,'all')">All</button>
     <button class="filter-tab" data-filter="tonight" onclick="setFilter(this,'tonight')">Tonight</button>
     <button class="filter-tab" data-filter="weekend" onclick="setFilter(this,'weekend')">This Weekend</button>
-    <button class="filter-tab" data-filter="mostwanted" onclick="setFilter(this,'mostwanted')">Most Wanted</button>
+    <button class="filter-tab" data-filter="mostwanted" onclick="setFilter(this,'mostwanted')">WTW Picks</button>
     <button class="filter-tab" data-filter="guestlist" onclick="setFilter(this,'guestlist')">Guest List</button>
     <button class="filter-tab" data-filter="rooftop" onclick="setFilter(this,'rooftop')">Rooftops</button>
     <button class="filter-tab" data-filter="lounge" onclick="setFilter(this,'lounge')">Lounges</button>
-    <button class="filter-tab" data-filter="latenight" onclick="setFilter(this,'latenight')">Late Night</button>
+    <button class="filter-tab" data-filter="latenight" onclick="setFilter(this,'latenight')">Late Rooms</button>
     <button class="filter-tab" data-filter="premium" onclick="setFilter(this,'premium')">Premium</button>
     <select class="sort-select" onchange="sortEvents(this.value)">
-      <option value="wave">Sort: Wave Score</option>
-      <option value="price_asc">Price: Low to High</option>
-      <option value="price_desc">Price: High to Low</option>
-      <option value="time">By Time</option>
+      <option value="wave">Signal Priority</option>
+      <option value="price_asc">Access: Entry First</option>
+      <option value="price_desc">Access: VIP First</option>
+      <option value="time">Arrival Time</option>
     </select>
   </div>
 </div>
@@ -481,12 +481,12 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 
 <script>
 const CITIES={
-  nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT',bodyClass:'city-nyc',bgImg:'https://wheresthewave.lovable.app/assets/hero-nyc-BocCk24q.jpg',headline:'New York<br>Events',subcopy:'Premium access to the city\'s most exclusive nights. Every event curated, every venue verified, every entry confirmed before you arrive.'},
-  miami:{name:'Miami',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1600&q=80&auto=format&fit=crop',headline:'Miami<br>Nightlife',subcopy:'South Beach\'s most electric nights, curated and confirmed. From rooftop to after-hours — access the city\'s best without the search.'},
-  la:{name:'Los Angeles',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1600&q=80&auto=format&fit=crop',headline:'Los Angeles<br>Events',subcopy:'West Hollywood\'s most exclusive rooms, without the runaround. Verified access to where the city actually goes.'},
-  atl:{name:'Atlanta',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1600&q=80&auto=format&fit=crop',headline:'Atlanta<br>Nights',subcopy:'Buckhead to Westside — Atlanta\'s premier nightlife, curated and confirmed. Premium access to the city\'s most iconic rooms.'},
-  houston:{name:'Houston',short:'HOUSTON',p:'#C8922A',bg:'#080600',eyebrow:'HOUSTON · TONIGHT',bodyClass:'city-houston',bgImg:'https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=1600&q=80&auto=format&fit=crop',headline:'Houston<br>Events',subcopy:'From Midtown lounges to late-night rooms — premium access to Houston\'s most refined verified evenings.'},
-  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1600&q=80&auto=format&fit=crop',headline:'New Jersey<br>Events',subcopy:'Premium curated nights — from downtown rooftops to dinner lounges. Verified access, confirmed before you arrive.'},
+  nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT',bodyClass:'city-nyc',bgImg:'https://wheresthewave.lovable.app/assets/hero-nyc-BocCk24q.jpg',headline:'New York Events',subcopy:'An editorial view of tonight\'s verified rooms, guest lists, and table access. Curated for the city\'s most selective nights.'},
+  miami:{name:'Miami',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1600&q=80&auto=format&fit=crop',headline:'Miami Events',subcopy:'Celebrity rooms, rooftops, and late-night access curated with concierge-level confidence before you arrive.'},
+  la:{name:'Los Angeles',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1600&q=80&auto=format&fit=crop',headline:'Los Angeles Events',subcopy:'A quiet, verified map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
+  atl:{name:'Atlanta',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1600&q=80&auto=format&fit=crop',headline:'Atlanta Events',subcopy:'Premium room intelligence for Buckhead, Westside, and the city\'s most in-demand nightlife access.'},
+  houston:{name:'Houston',short:'HOUSTON',p:'#C8922A',bg:'#080600',eyebrow:'HOUSTON · TONIGHT',bodyClass:'city-houston',bgImg:'https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=1600&q=80&auto=format&fit=crop',headline:'Houston Events',subcopy:'From Midtown lounges to late-night rooms, WTW surfaces Houston\'s most refined verified evenings.'},
+  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1600&q=80&auto=format&fit=crop',headline:'New Jersey Events',subcopy:'Premium local nightlife, rooftops, and dinner lounges curated with verified access before you arrive.'},
 };
 
 const ALL_EVENTS={
