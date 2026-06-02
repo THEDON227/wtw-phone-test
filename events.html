@@ -10,7 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-body::before{content:'';position:fixed;right:clamp(-140px,-8vw,-40px);bottom:clamp(24px,6vh,96px);width:clamp(340px,42vw,760px);aspect-ratio:1;background:var(--wtw-logo-watermark) center/contain no-repeat;opacity:0.024;filter:blur(0.25px) drop-shadow(0 0 68px var(--logo-glow));mix-blend-mode:screen;pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:-80px;background-image:var(--wtw-logo-watermark);background-size:clamp(132px,13vw,220px);background-position:0 0;background-repeat:repeat;opacity:0.052;filter:blur(0.2px) drop-shadow(0 0 28px var(--logo-glow));mix-blend-mode:screen;pointer-events:none;z-index:0}
 :root{
   --accent:#00C2D1;
   --accent-muted:rgba(0,194,209,0.1);
