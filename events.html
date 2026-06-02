@@ -376,7 +376,6 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
         <option value="week">This Week</option>
       </select>
     </div>
-    <div class="city-signal" id="citySignal"></div>
   </div>
 </div>
 
@@ -548,7 +547,6 @@ function applyCity(k){
       <div class="co-info"><div class="co-name" style="${k2===cur?`color:${v.p}`:''}">${v.name}</div></div>
       ${k2===cur?`<span class="co-check" style="color:${v.p}">✓</span>`:''}
     </div>`).join('');
-  document.getElementById('citySignal').innerHTML=`<div class="cs-eyebrow">WTW ACCESS</div><div class="cs-stats"><div class="cs-stat">Verified venues only</div><div class="cs-stat">Tickets, guest lists &amp; tables</div><div class="cs-stat">Confirmed before you arrive</div></div>`;
   renderFeatured();
   renderGrid();
 }
