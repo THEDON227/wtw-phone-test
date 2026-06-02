@@ -232,8 +232,9 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 /* spacing/typography polish — header, hero, filter rhythm */
 .header-inner{height:76px}
 @media(max-width:768px){.header-inner{height:64px}}
-.brand-logo{width:72px;height:72px}
-@media(max-width:768px){.brand-logo{width:48px;height:48px}}
+.brand-logo{width:82px;height:82px;background:transparent!important;box-shadow:none!important;border:none!important;overflow:visible}
+@media(max-width:768px){.brand-logo{width:56px;height:56px}}
+.brand-logo img{background:transparent!important;object-fit:contain;mix-blend-mode:screen}
 .events-hero{padding:72px 0 76px}
 .eh-title{font-size:clamp(42px,6vw,76px);line-height:0.96;letter-spacing:-2px}
 .eh-sub{font-size:15px;margin-bottom:34px}
@@ -402,14 +403,14 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
     <div class="featured-card" id="featuredCard"></div>
 
     <!-- EVENT GRID -->
-    <div class="section-row" style="margin-top:0">
+    <div class="section-row" id="allEventsSection" style="margin-top:0">
       <div>
         <div class="section-eyebrow" id="gridEyebrow">ALL EVENTS</div>
         <div class="section-title">Events in <span id="gridCity">New York</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <span class="section-sub" id="resultCount">Showing 6 events</span>
-        <button class="see-all">View Calendar →</button>
+        <button class="see-all" onclick="showAllEvents()">See All Events →</button>
       </div>
     </div>
     <div class="events-grid" id="eventsGrid"></div>
@@ -471,10 +472,10 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 const CITIES={
   nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1800&q=80&auto=format&fit=crop',headline:'New Jersey Events',subcopy:'Premium local nightlife, rooftops, and dinner lounges curated with verified access before you arrive.'},
   nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT',bodyClass:'city-nyc',bgImg:'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=1800&q=80&auto=format&fit=crop',headline:'New York Events',subcopy:'An editorial view of tonight\'s verified rooms, guest lists, and table access. Curated for the city\'s most selective nights.'},
-  miami:{name:'Miami',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1800&q=80&auto=format&fit=crop',headline:'Miami Events',subcopy:'Celebrity rooms, rooftops, and late-night access curated with concierge-level confidence before you arrive.'},
-  atl:{name:'Atlanta',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1800&q=80&auto=format&fit=crop',headline:'Atlanta Events',subcopy:'Buckhead tables, Midtown lounges, Afrobeats rooms, and late Southern nightlife curated with WTW signal.'},
-  la:{name:'Los Angeles',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'Los Angeles Events',subcopy:'A quiet, verified map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
-  dallas:{name:'Dallas',short:'DALLAS',p:'#D6A94A',bg:'#090704',eyebrow:'DALLAS · TONIGHT',bodyClass:'city-dallas',bgImg:'https://images.unsplash.com/photo-1545470348-9717d1e4ac85?w=1800&q=80&auto=format&fit=crop',headline:'Dallas Events',subcopy:'Upscale lounges, sports-weekend rooms, and skyline tables curated for Dallas nights with polish.'},
+  miami:{name:'Miami',label:'Florida',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1800&q=80&auto=format&fit=crop',headline:'Miami Events',subcopy:'Celebrity rooms, rooftops, and late-night access curated with concierge-level confidence before you arrive.'},
+  atl:{name:'Atlanta',label:'Georgia',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1800&q=80&auto=format&fit=crop',headline:'Atlanta Events',subcopy:'Buckhead tables, Midtown lounges, Afrobeats rooms, and late Southern nightlife curated with WTW signal.'},
+  la:{name:'Los Angeles',label:'California',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'Los Angeles Events',subcopy:'A quiet, verified map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
+  dallas:{name:'Dallas',label:'Texas',short:'DALLAS',p:'#D6A94A',bg:'#090704',eyebrow:'DALLAS · TONIGHT',bodyClass:'city-dallas',bgImg:'https://images.unsplash.com/photo-1545470348-9717d1e4ac85?w=1800&q=80&auto=format&fit=crop',headline:'Dallas Events',subcopy:'Upscale lounges, sports-weekend rooms, and skyline tables curated for Dallas nights with polish.'},
 };
 
 const ALL_EVENTS={
@@ -572,17 +573,27 @@ function applyCity(k){
   document.getElementById('heroTitle').innerHTML=c.headline;
   document.getElementById('heroSub').textContent=c.subcopy;
   document.getElementById('headerDot').style.background=c.p;
-  document.getElementById('headerCity').textContent=c.name;
+  document.getElementById('headerCity').textContent=c.label||c.name;
   document.getElementById('heroEyebrow').textContent=c.eyebrow;
-  document.getElementById('gridCity').textContent=c.name;
+  document.getElementById('gridCity').textContent=c.label||c.name;
   document.getElementById('cityList').innerHTML=Object.entries(CITIES).map(([k2,v])=>`
     <div class="city-option" onclick="applyCity('${k2}');closeCityModal()">
       <div class="co-dot" style="background:${v.p};box-shadow:0 0 6px ${v.p}88"></div>
-      <div class="co-info"><div class="co-name" style="${k2===cur?`color:${v.p}`:''}">${v.name}</div></div>
+      <div class="co-info"><div class="co-name" style="${k2===cur?`color:${v.p}`:''}">${v.label||v.name}</div></div>
       ${k2===cur?`<span class="co-check" style="color:${v.p}">✓</span>`:''}
     </div>`).join('');
   renderFeatured();
   renderGrid();
+}
+
+function showAllEvents(){
+  activeFilter='all';
+  searchTerm='';
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.toggle('active',t.dataset.filter==='all'));
+  const input=document.getElementById('searchInput');
+  if(input) input.value='';
+  renderGrid();
+  document.getElementById('allEventsSection')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function getEvents(){
