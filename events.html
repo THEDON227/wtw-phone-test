@@ -91,6 +91,27 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 .see-all{font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;white-space:nowrap;transition:opacity 0.15s}
 .see-all:hover{opacity:0.72}
 
+.market-rails{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0 0 46px}
+.market-rail{border:1px solid rgba(255,255,255,0.09);background:linear-gradient(180deg,rgba(7,10,14,0.94),rgba(5,7,10,0.98));border-radius:18px;padding:20px;box-shadow:0 22px 60px rgba(0,0,0,0.2)}
+.rail-kicker{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.rail-title{font-family:'Playfair Display',serif;font-size:27px;line-height:1;color:var(--text);font-weight:800;margin-bottom:8px}
+.rail-note{font-size:12px;line-height:1.6;color:var(--text-muted);margin-bottom:16px}
+.rail-list{display:grid;gap:10px}
+.rail-item{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;padding:9px;border:1px solid rgba(255,255,255,0.065);background:rgba(255,255,255,0.025);border-radius:12px;cursor:pointer;transition:all 0.16s}
+.rail-item:hover{border-color:var(--accent-border);background:var(--accent-muted)}
+.rail-thumb{width:56px;height:54px;object-fit:cover;border-radius:8px}
+.rail-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.25}
+.rail-meta{font-size:10px;line-height:1.5;color:var(--text-dim);margin-top:3px;text-transform:uppercase;letter-spacing:0.8px}
+.night-flow-strip{display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);gap:24px;align-items:center;border:1px solid var(--accent-border);background:linear-gradient(135deg,var(--accent-muted),rgba(255,255,255,0.025));border-radius:20px;padding:24px 26px;margin:-24px 0 38px}
+.nf-label{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.nf-title{font-family:'Playfair Display',serif;font-size:30px;line-height:1;color:var(--text);font-weight:800}
+.nf-copy{font-size:13px;line-height:1.7;color:var(--text-muted);max-width:520px}
+.nf-steps{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.nf-step{border:1px solid rgba(255,255,255,0.1);background:rgba(0,0,0,0.26);border-radius:12px;padding:10px 13px;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text)}
+.nf-arrow{color:var(--accent);font-weight:900}
+@media(max-width:900px){.market-rails,.night-flow-strip{grid-template-columns:1fr}.nf-steps{justify-content:flex-start}}
+@media(max-width:600px){.market-rail{padding:18px}.night-flow-strip{padding:20px;margin:-18px 0 32px}.rail-title{font-size:24px}}
+
 /* ── FEATURED EVENT ── */
 .featured-card{border:1px solid rgba(255,255,255,0.1);border-radius:22px;overflow:hidden;margin-bottom:56px;display:grid;grid-template-columns:1fr 440px;min-height:440px;background:rgba(255,255,255,0.02)}
 @media(max-width:900px){.featured-card{grid-template-columns:1fr}}
@@ -132,8 +153,8 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 .events-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:56px}
 @media(max-width:1024px){.events-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.events-grid{grid-template-columns:1fr}}
-.event-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;cursor:pointer;transition:all 0.22s;display:flex;flex-direction:column}
-.event-card:hover{border-color:var(--accent-border);transform:translateY(-3px);background:rgba(255,255,255,0.05)}
+.event-card{background:rgba(4,6,9,0.92);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;cursor:pointer;transition:all 0.22s;display:flex;flex-direction:column}
+.event-card:hover{border-color:var(--accent-border);transform:translateY(-3px);background:rgba(10,13,18,0.94)}
 .ec-img{position:relative;height:200px;overflow:hidden}
 .ec-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.5s}
 .event-card:hover .ec-img img{transform:scale(1.04)}
@@ -148,7 +169,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 .status-limited{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#ef4444}
 .status-gl{background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);color:#fbbf24}
 .wave-mini{font-size:10px;font-weight:800;color:var(--accent);background:rgba(0,194,209,0.12);border:1px solid rgba(0,194,209,0.25);padding:3px 8px;border-radius:20px}
-.ec-body{padding:18px;flex:1;display:flex;flex-direction:column}
+.ec-body{background:linear-gradient(180deg,rgba(5,7,10,0.98),rgba(3,5,8,0.995));padding:18px;flex:1;display:flex;flex-direction:column}
 .ec-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .ec-cat{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--accent);background:var(--accent-muted);border:1px solid var(--accent-border);padding:3px 8px;border-radius:6px}
 .ec-cat-neutral{font-size:9px;font-weight:600;color:var(--text-dim);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:3px 8px;border-radius:6px}
@@ -402,10 +423,24 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
     </div>
     <div class="featured-card" id="featuredCard"></div>
 
+    <section class="night-flow-strip" aria-label="WTW night flow">
+      <div>
+        <div class="nf-label">Night Flow</div>
+        <div class="nf-title">Dinner to rooftop to event.</div>
+      </div>
+      <div>
+        <p class="nf-copy">WTW previews how the full night moves, connecting Indulge rooms, rooftop energy, and the event that anchors the evening.</p>
+        <div class="nf-steps"><span class="nf-step">Dinner</span><span class="nf-arrow">&rarr;</span><span class="nf-step">Rooftop</span><span class="nf-arrow">&rarr;</span><span class="nf-step">Event</span></div>
+      </div>
+    </section>
+
+    <section class="market-rails" id="marketRails" aria-label="WTW browsing sections"></section>
+
     <!-- EVENT GRID -->
+
     <div class="section-row" id="allEventsSection" style="margin-top:0">
       <div>
-        <div class="section-eyebrow" id="gridEyebrow">ALL EVENTS</div>
+        <div class="section-eyebrow" id="gridEyebrow">WHAT'S HAPPENING</div>
         <div class="section-title">Events in <span id="gridCity">New York</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
@@ -473,9 +508,9 @@ const CITIES={
   nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1800&q=80&auto=format&fit=crop',headline:'New Jersey Events',subcopy:'Premium local nightlife, rooftops, and dinner lounges curated with verified access before you arrive.'},
   nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT',bodyClass:'city-nyc',bgImg:'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=1800&q=80&auto=format&fit=crop',headline:'New York Events',subcopy:'An editorial view of tonight\'s verified rooms, guest lists, and table access. Curated for the city\'s most selective nights.'},
   miami:{name:'Miami',label:'Florida',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1800&q=80&auto=format&fit=crop',headline:'Miami Events',subcopy:'Celebrity rooms, rooftops, and late-night access curated with concierge-level confidence before you arrive.'},
-  atl:{name:'Atlanta',label:'Georgia',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1800&q=80&auto=format&fit=crop',headline:'Atlanta Events',subcopy:'Buckhead tables, Midtown lounges, Afrobeats rooms, and late Southern nightlife curated with WTW signal.'},
-  la:{name:'Los Angeles',label:'California',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'Los Angeles Events',subcopy:'A quiet, verified map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
-  dallas:{name:'Dallas',label:'Texas',short:'DALLAS',p:'#D6A94A',bg:'#090704',eyebrow:'DALLAS · TONIGHT',bodyClass:'city-dallas',bgImg:'https://images.unsplash.com/photo-1545470348-9717d1e4ac85?w=1800&q=80&auto=format&fit=crop',headline:'Dallas Events',subcopy:'Upscale lounges, sports-weekend rooms, and skyline tables curated for Dallas nights with polish.'},
+  atl:{name:'Atlanta',label:'Georgia',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1800&q=80&auto=format&fit=crop',headline:'Georgia Events',subcopy:'Buckhead tables, Midtown lounges, Afrobeats rooms, and late Southern nightlife curated with WTW signal.'},
+  la:{name:'Los Angeles',label:'California',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'California Events',subcopy:'A quiet, verified map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
+  dallas:{name:'Dallas',label:'Texas',short:'DALLAS',p:'#D6A94A',bg:'#090704',eyebrow:'DALLAS · TONIGHT',bodyClass:'city-dallas',bgImg:'https://images.unsplash.com/photo-1545470348-9717d1e4ac85?w=1800&q=80&auto=format&fit=crop',headline:'Texas Events',subcopy:'Upscale lounges, sports-weekend rooms, and skyline tables curated for Dallas nights with polish.'},
 };
 
 const ALL_EVENTS={
@@ -641,6 +676,7 @@ function applyCity(k){
       ${k2===cur?`<span class="co-check" style="color:${v.p}">✓</span>`:''}
     </div>`).join('');
   renderFeatured();
+  renderMarketRails();
   renderGrid();
 }
 
@@ -733,8 +769,30 @@ function renderFeatured(){
     </div>`;
 }
 
+function renderMarketRails(){
+  const mount=document.getElementById('marketRails');
+  if(!mount) return;
+  const c=CITIES[cur];
+  const rails=[
+    {kicker:'Browse Fast',title:'Trending Tonight',note:'High-signal rooms moving now.',cat:'tonight'},
+    {kicker:'Weekend Edit',title:'This Weekend',note:'Curated plans with stronger group energy.',cat:'weekend'},
+    {kicker:'Demand Signal',title:'Most Requested',note:'Events drawing WTW table, list, and ticket interest.',cat:'mostwanted'}
+  ];
+  mount.innerHTML=rails.map(r=>{
+    const picks=filterAndSort(getEvents().filter(e=>e.cats.includes(r.cat))).slice(0,3);
+    const fallback=filterAndSort(getEvents()).slice(0,3);
+    const items=(picks.length?picks:fallback).map(e=>`
+      <div class="rail-item" onclick="openTicketModal(${e.id})">
+        <img class="rail-thumb" src="${e.img}" alt="${e.title}" loading="lazy" onerror="this.style.background='${hexToRgba(c.p,0.1)}'"/>
+        <div><div class="rail-name">${e.title}</div><div class="rail-meta">${e.date} &middot; ${e.venue}</div></div>
+      </div>`).join('');
+    return `<article class="market-rail"><div class="rail-kicker">${r.kicker}</div><h3 class="rail-title">${r.title}</h3><p class="rail-note">${r.note}</p><div class="rail-list">${items}</div></article>`;
+  }).join('');
+}
+
 function renderGrid(){
   const c=CITIES[cur];
+
   const allEvents=filterAndSort(getEvents());
   const events=allEvents.slice(0,9);
   const grid=document.getElementById('eventsGrid');
