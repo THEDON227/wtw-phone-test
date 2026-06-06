@@ -10,7 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-body::before{content:'';position:fixed;inset:-80px;background-image:url('assets/wtw-logo-transparent.png');background-size:clamp(150px,14vw,240px) auto;background-position:0 0;background-repeat:repeat;opacity:0.08;mix-blend-mode:screen;pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:-80px;background-image:url('assets/wtw-logo-transparent.png');background-size:clamp(150px,14vw,240px) auto;background-position:0 0;background-repeat:repeat;opacity:0.04;mix-blend-mode:screen;pointer-events:none;z-index:0}
 :root{
   --accent:#00C2D1;
   --accent-muted:rgba(0,194,209,0.1);
@@ -354,6 +354,24 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 /* eyebrow      : 10px/700, letter-spacing 4px, var(--accent)              */
 /* section-title: Playfair Display, clamp(28px,3.5vw,42px), weight 800     */
 .filter-inner{max-width:1280px!important;margin:0 auto!important;padding:14px 28px!important}
+
+/* Sync Events with the Indulge product atmosphere */
+body{background:radial-gradient(circle at 18% 0,rgba(255,255,255,0.035),transparent 34%),#080b0f}
+.events-main{padding:56px 0 88px}
+.section-row{margin-bottom:26px}
+.section-title{font-size:clamp(24px,2.7vw,34px);line-height:1.08;letter-spacing:0}
+.market-rails{gap:18px;margin:0 0 52px}
+.market-rail{border-color:rgba(255,255,255,0.105);background:linear-gradient(180deg,rgba(6,8,11,0.96),rgba(3,5,8,0.995));box-shadow:0 26px 80px rgba(0,0,0,0.26)}
+.night-flow-strip{margin:-18px 0 44px;padding:28px;border-color:var(--accent-border);background:radial-gradient(circle at 10% 0,var(--accent-muted),transparent 42%),linear-gradient(135deg,rgba(4,6,9,0.96),rgba(3,5,8,0.995))}
+.nf-title{text-transform:none;letter-spacing:0}
+.nf-copy{color:rgba(240,237,232,0.62)}
+.filter-tab{border-radius:10px;background:rgba(5,7,10,0.58);border-color:rgba(255,255,255,0.105)}
+.filter-tab:hover{border-color:var(--accent-border);background:rgba(255,255,255,0.04)}
+.event-card{border-color:rgba(255,255,255,0.105);box-shadow:0 22px 70px rgba(0,0,0,0.16)}
+.ec-cat{border-radius:8px;background:rgba(0,0,0,0.24)}
+.btn-primary,.btn-outline,.ec-cta{border-radius:10px}
+@media(max-width:768px){.events-main{padding:44px 0 72px}.market-rails{gap:14px;margin-bottom:38px}.night-flow-strip{margin:-12px 0 34px;padding:22px}.section-title{font-size:28px}.nf-title{font-size:26px}.nf-steps{gap:8px}.nf-step{padding:9px 11px}.ec-footer{align-items:flex-start;flex-direction:column}.ec-cta{width:100%}}
+
 </style>
 </head>
 <body>
@@ -426,10 +444,10 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
     <section class="night-flow-strip" aria-label="WTW night flow">
       <div>
         <div class="nf-label">Night Flow</div>
-        <div class="nf-title">Dinner to rooftop to event.</div>
+        <div class="nf-title">Dinner &rarr; Rooftop &rarr; Event</div>
       </div>
       <div>
-        <p class="nf-copy">WTW previews how the full night moves, connecting Indulge rooms, rooftop energy, and the event that anchors the evening.</p>
+        <p class="nf-copy">WTW does not only show events. WTW helps shape the night around them.</p>
         <div class="nf-steps"><span class="nf-step">Dinner</span><span class="nf-arrow">&rarr;</span><span class="nf-step">Rooftop</span><span class="nf-arrow">&rarr;</span><span class="nf-step">Event</span></div>
       </div>
     </section>
@@ -441,7 +459,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
     <div class="section-row" id="allEventsSection" style="margin-top:0">
       <div>
         <div class="section-eyebrow" id="gridEyebrow">WHAT'S HAPPENING</div>
-        <div class="section-title">Events in <span id="gridCity">New York</span></div>
+        <div class="section-title">Browse what is moving tonight in <span id="gridCity">New York</span>.</div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <span class="section-sub" id="resultCount">Showing 6 events</span>
