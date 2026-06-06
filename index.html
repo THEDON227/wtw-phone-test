@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Where's The Wave — Buy tickets, join guest lists, and request VIP tables at verified nightlife venues.">
+<meta name="description" content="Where's The Wave — Curated nightlife access, dining starts, rooftops, guest lists, and VIP tables in your city.">
 <meta property="og:title" content="Where's The Wave — Find The Wave Tonight">
-<meta property="og:description" content="Buy tickets, join guest lists, and request VIP tables at verified nightlife venues.">
+<meta property="og:description" content="Curated nightlife access, dining starts, rooftops, guest lists, and VIP tables in your city.">
 <title>Where's The Wave — Find The Wave Tonight</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
@@ -322,7 +322,7 @@ header{
 }
 .btn-ghost:hover{color:var(--text)}
 
-/* TONIGHT'S PICKS CARD */
+/* CURATED TONIGHT CARD */
 .picks-card{
   background:rgba(12,16,20,0.92);
   border:1px solid rgba(255,255,255,0.1);
@@ -661,6 +661,12 @@ footer{
 /* section pad  : var(--space-xl) 0  (80px top/bottom)                     */
 /* eyebrow      : 10px/700, letter-spacing 4px, var(--accent)              */
 /* section-title: Playfair Display, clamp(28px,3.5vw,42px), weight 800     */
+/* WTW launch polish pass */
+section{box-shadow:inset 0 1px 0 rgba(255,255,255,0.025)}
+.event-card,.table-card,.venue-card,.pathway-card,.trust-item,.picks-card{background:linear-gradient(180deg,rgba(6,8,11,0.965),rgba(3,5,8,0.995));border-color:rgba(255,255,255,0.105);box-shadow:0 26px 80px rgba(0,0,0,0.24)}
+.event-card:hover,.table-card:hover,.venue-card:hover,.pathway-card:hover{transform:translateY(-4px);border-color:var(--accent-border);box-shadow:0 34px 90px rgba(0,0,0,0.34),0 0 0 1px var(--accent-muted)}
+.section-title{letter-spacing:0;line-height:1.05}.section-sub,.pathway-desc,.trust-desc,.f-desc{line-height:1.7}.event-body,.table-card,.venue-body,.pathway-card{padding:22px}.event-img,.table-venue-img,.venue-img-wrap{filter:saturate(1.05) contrast(1.04)}
+
 </style>
 </head>
 <body>
@@ -707,7 +713,7 @@ footer{
         </div>
         <div class="hero-h1" id="heroH1">FIND THE<br>WAVE<br>TONIGHT.</div>
         <p class="hero-sub" id="heroSub">
-          Buy tickets, join guest lists, and request VIP tables at verified nightlife venues in New York.
+          Curated events, guest lists, rooftops, and table access selected for how your city moves tonight.
         </p>
         <div class="hero-search">
           <span class="hero-search-icon">⌕</span>
@@ -715,16 +721,16 @@ footer{
           <button class="hero-search-btn">SEARCH</button>
         </div>
         <div class="hero-ctas">
-          <button class="btn-primary" onclick="document.getElementById('events').scrollIntoView({behavior:'smooth'})">See Events</button>
-          <button class="btn-secondary" onclick="document.getElementById('tables').scrollIntoView({behavior:'smooth'})">Reserve Table</button>
-          <button class="btn-ghost" onclick="openRequest()">Join Guest List</button>
+          <button class="btn-primary" onclick="document.getElementById('events').scrollIntoView({behavior:'smooth'})">Browse Tonight</button>
+          <button class="btn-secondary" onclick="document.getElementById('tables').scrollIntoView({behavior:'smooth'})">Request A Table</button>
+          <button class="btn-ghost" onclick="openRequest()">Join A Guest List</button>
         </div>
       </div>
 
-      <!-- RIGHT — TONIGHT'S PICKS -->
+      <!-- RIGHT — CURATED TONIGHT -->
       <div class="picks-card">
         <div class="picks-header">
-          <span class="picks-title">TONIGHT'S PICKS</span>
+          <span class="picks-title">CURATED TONIGHT</span>
           <span class="picks-badge" id="picksBadge">CURATED TONIGHT</span>
         </div>
         <div id="picksList"></div>
@@ -738,8 +744,8 @@ footer{
   <div class="container">
     <div class="section-hdr">
       <div>
-        <div class="section-eyebrow">THIS WEEK</div>
-        <div class="section-title">Events in <span id="eventsCity">New York</span></div>
+        <div class="section-eyebrow">WHAT'S HAPPENING</div>
+        <div class="section-title">What is moving in <span id="eventsCity">New York</span></div>
       </div>
       <button class="see-all" onclick="window.location.href='events.html?city='+cur">See All Events →</button>
     </div>
@@ -754,9 +760,9 @@ footer{
   <div class="container">
     <div class="section-hdr">
       <div>
-        <div class="section-eyebrow">VIP ACCESS</div>
-        <div class="section-title">Reserve a Table</div>
-        <div class="section-sub">Premium table packages at verified venues. Access subject to venue confirmation.</div>
+        <div class="section-eyebrow">TABLE ACCESS</div>
+        <div class="section-title">Private Table Requests</div>
+        <div class="section-sub">Bottle service, private sections, and elevated room access reviewed by venue partners.</div>
       </div>
       <button class="see-all">See All Tables →</button>
     </div>
@@ -771,8 +777,8 @@ footer{
   <div class="container">
     <div class="section-hdr">
       <div>
-        <div class="section-eyebrow">VERIFIED VENUES</div>
-        <div class="section-title">Featured in <span id="venuesCity">New York</span></div>
+        <div class="section-eyebrow">CITY ROOMS</div>
+        <div class="section-title">Rooms worth planning around in <span id="venuesCity">New York</span></div>
       </div>
       <button class="see-all">See All Venues →</button>
     </div>
@@ -786,49 +792,49 @@ footer{
 <section style="background:rgba(8,11,15,0.98)">
   <div class="container">
     <div style="text-align:center;margin-bottom:48px">
-      <div class="section-eyebrow" style="justify-content:center;display:flex">WTW FOR EVERYONE</div>
-      <div class="section-title" style="margin-bottom:0">Built for the whole night.</div>
+      <div class="section-eyebrow" style="justify-content:center;display:flex">WTW ACCESS LAYERS</div>
+      <div class="section-title" style="margin-bottom:0">Curated Access To The City's Best Rooms.</div>
     </div>
     <div class="pathways">
       <div class="pathway-card">
-        <div class="pathway-icon">🎟</div>
+        <div class="pathway-icon">◈</div>
         <div class="pathway-label">FOR GUESTS</div>
-        <div class="pathway-title">Go out smarter.</div>
-        <div class="pathway-desc">Browse verified events, buy tickets, join guest lists, and request VIP tables — all in one place.</div>
+        <div class="pathway-title">Move with better signal.</div>
+        <div class="pathway-desc">Browse curated events, guest lists, rooftops, and tables without chasing scattered plans.</div>
         <div class="pathway-features">
-          <div class="pf"><div class="pf-dot"></div>Buy tickets instantly</div>
-          <div class="pf"><div class="pf-dot"></div>Join digital guest lists</div>
-          <div class="pf"><div class="pf-dot"></div>Request VIP table access</div>
-          <div class="pf"><div class="pf-dot"></div>Save and share venues</div>
-          <div class="pf"><div class="pf-dot"></div>Real-time crowd signals</div>
+          <div class="pf"><div class="pf-dot"></div>Curated ticket access</div>
+          <div class="pf"><div class="pf-dot"></div>Reviewed guest list windows</div>
+          <div class="pf"><div class="pf-dot"></div>VIP table request routing</div>
+          <div class="pf"><div class="pf-dot"></div>Save rooms worth revisiting</div>
+          <div class="pf"><div class="pf-dot"></div>City demand signals</div>
         </div>
         <button class="btn-primary" onclick="openRequest()">Browse Events</button>
       </div>
       <div class="pathway-card">
         <div class="pathway-icon">◎</div>
         <div class="pathway-label">FOR PROMOTERS</div>
-        <div class="pathway-title">Promote smarter. Earn faster.</div>
-        <div class="pathway-desc">Create events, manage your guest list, sell tickets, and get paid faster than any other platform.</div>
+        <div class="pathway-title">Route the right crowd.</div>
+        <div class="pathway-desc">Reach guests already looking for the rooms, lists, and moments that match your night.</div>
         <div class="pathway-features">
-          <div class="pf"><div class="pf-dot"></div>Create & promote events</div>
-          <div class="pf"><div class="pf-dot"></div>Digital guest list management</div>
-          <div class="pf"><div class="pf-dot"></div>Faster payouts</div>
-          <div class="pf"><div class="pf-dot"></div>Audience analytics</div>
-          <div class="pf"><div class="pf-dot"></div>Automated email blasts</div>
+          <div class="pf"><div class="pf-dot"></div>Position nights with context</div>
+          <div class="pf"><div class="pf-dot"></div>Guest list demand capture</div>
+          <div class="pf"><div class="pf-dot"></div>Cleaner demand routing</div>
+          <div class="pf"><div class="pf-dot"></div>Audience signal</div>
+          <div class="pf"><div class="pf-dot"></div>Member-facing city drops</div>
         </div>
         <button class="btn-primary" onclick="openRequest()">Apply as Promoter</button>
       </div>
       <div class="pathway-card">
         <div class="pathway-icon">✦</div>
         <div class="pathway-label">FOR VENUE OWNERS</div>
-        <div class="pathway-title">Your venue. Your data.</div>
-        <div class="pathway-desc">Manage VIP requests, track attendance, control table inventory, and see the insights that drive revenue.</div>
+        <div class="pathway-title">Your room. Better context.</div>
+        <div class="pathway-desc">Review table, guest list, and group intent before the night gets loud.</div>
         <div class="pathway-features">
-          <div class="pf"><div class="pf-dot"></div>Approve VIP access requests</div>
-          <div class="pf"><div class="pf-dot"></div>Table & section management</div>
-          <div class="pf"><div class="pf-dot"></div>Real-time attendance data</div>
-          <div class="pf"><div class="pf-dot"></div>Promoter network tools</div>
-          <div class="pf"><div class="pf-dot"></div>Revenue insights</div>
+          <div class="pf"><div class="pf-dot"></div>Review VIP access requests</div>
+          <div class="pf"><div class="pf-dot"></div>Table and section context</div>
+          <div class="pf"><div class="pf-dot"></div>Arrival and demand context</div>
+          <div class="pf"><div class="pf-dot"></div>Promoter and host alignment</div>
+          <div class="pf"><div class="pf-dot"></div>Revenue signal readiness</div>
         </div>
         <button class="btn-primary" onclick="openRequest()">Claim Your Venue</button>
       </div>
@@ -843,34 +849,34 @@ footer{
   <div class="container">
     <div style="text-align:center;margin-bottom:40px">
       <div class="section-eyebrow" style="display:flex;justify-content:center">WHY WTW</div>
-      <div class="section-title">Built on trust.</div>
+      <div class="section-title">Access With Standards.</div>
     </div>
     <div class="trust-grid">
       <div class="trust-item">
         <div class="trust-icon">✦</div>
-        <div class="trust-title">VERIFIED VENUES</div>
-        <div class="trust-desc">Every venue is curated and verified. No spam, no fakes, no unverified listings.</div>
+        <div class="trust-title">CITY ROOMS</div>
+        <div class="trust-desc">Rooms are selected for fit, atmosphere, and partner confidence before they become part of the WTW experience.</div>
       </div>
       <div class="trust-item">
-        <div class="trust-icon">🔒</div>
-        <div class="trust-title">SECURE CHECKOUT</div>
-        <div class="trust-desc">All transactions secured with Stripe. Apple Pay and card accepted.</div>
+        <div class="trust-icon">◆</div>
+        <div class="trust-title">PRIVATE CHECKOUT</div>
+        <div class="trust-desc">Checkout and request flows are designed for clean, private, high-trust nightlife decisions.</div>
       </div>
       <div class="trust-item">
         <div class="trust-icon">◈</div>
         <div class="trust-title">GUEST LIST CONFIRMED</div>
-        <div class="trust-desc">Digital confirmation sent instantly. QR code check-in at the door.</div>
+        <div class="trust-desc">Guest list and ticket confirmations are designed for fast door decisions and clear arrival context.</div>
       </div>
       <div class="trust-item">
-        <div class="trust-icon">⬡</div>
+        <div class="trust-icon">◇</div>
         <div class="trust-title">PRIVACY FIRST</div>
-        <div class="trust-desc">Your data is private, encrypted, and never sold or shared. Ever.</div>
+        <div class="trust-desc">Guest information is treated like hospitality context, not public directory traffic.</div>
       </div>
     </div>
     <div class="trust-band">
-      <div class="tb-eyebrow">VIP ACCESS IS BY REQUEST</div>
-      <div class="tb-title">Ready to find the wave?</div>
-      <div class="tb-sub">Every VIP and table request is reviewed directly by the venue. Access is subject to venue confirmation — never guaranteed.</div>
+      <div class="tb-eyebrow">TABLE ACCESS IS BY REQUEST</div>
+      <div class="tb-title">Ready for the right room?</div>
+      <div class="tb-sub">WTW routes requests with context. Final access remains subject to venue or partner confirmation.</div>
       <button class="btn-primary" onclick="openRequest()">Request Access</button>
       <div class="tb-legal">Access subject to venue confirmation. WTW does not guarantee entry.<br>Venue approval pending until confirmed by the venue directly.</div>
     </div>
@@ -884,7 +890,7 @@ footer{
       <div class="footer-brand">
         <div class="f-logo">WHERE'S THE WAVE</div>
         <div class="f-sub">NIGHTLIFE INTELLIGENCE</div>
-        <div class="f-desc">Premium nightlife intelligence. Verified venues. Buy tickets, join guest lists, and request VIP tables.</div>
+        <div class="f-desc">Premium nightlife intelligence, curated rooms, guest lists, and table access across launch cities.</div>
       </div>
       <div class="footer-col">
         <h4>PRODUCT</h4>
@@ -892,11 +898,11 @@ footer{
       </div>
       <div class="footer-col">
         <h4>OPERATORS</h4>
-        <a>Venue Portal</a><a>Promoter Portal</a><a>List Your Venue</a><a>Analytics</a>
+        <a>Partner Review</a><a>Host Access</a><a>List Your Room</a><a>Demand Signal</a>
       </div>
       <div class="footer-col">
         <h4>CITIES</h4>
-        <a>New York</a><a>Miami</a><a>Los Angeles</a><a>Atlanta</a><a>More Cities</a>
+        <a>New York</a><a>New Jersey</a><a>Miami</a><a>California</a><a>Texas</a>
       </div>
       <div class="footer-col">
         <h4>COMPANY</h4>
@@ -906,8 +912,8 @@ footer{
     <div class="footer-bottom">
       <div class="footer-legal">© 2026 Where's The Wave. All rights reserved.<br>VIP access subject to venue confirmation. WTW does not guarantee entry.</div>
       <div class="footer-badges">
-        <div class="f-badge">✦ VERIFIED VENUES</div>
-        <div class="f-badge">🔒 SECURE CHECKOUT</div>
+        <div class="f-badge">✦ CITY ROOMS</div>
+        <div class="f-badge">🔒 PRIVATE CHECKOUT</div>
         <div class="f-badge">◈ PRIVACY FIRST</div>
       </div>
     </div>
@@ -957,6 +963,11 @@ footer{
 
 <script>
 /* ── DATA ── */
+const WTW_BACKEND_PLACEHOLDERS={
+  events:[],venues:[],restaurants:[],reservations:[],partnerRequests:[],wavePassMembers:[],
+  schemas:{event:['id','city','title','venue','date','time','ticketOptions','guestList','vipTable'],venue:['id','city','name','type','neighborhood','accessWindows'],restaurant:['id','city','name','category','reservationPolicy'],reservation:['name','contact','city','date','time','partySize','occasion','status'],partnerRequest:['business','city','type','contact','reviewStatus'],wavePassMember:['memberId','city','tier','interests','accessStatus']}
+};
+
 const CITIES = {
   nyc: {
     name:'New York', accent:'#00C2D1', bg:'#060a0c',
@@ -1120,7 +1131,7 @@ function applyCity(k) {
   document.getElementById('heroCityName').textContent = c.name.toUpperCase();
   document.getElementById('heroCityMood').textContent = '· ' + c.mood;
   document.getElementById('heroCityName').style.color = c.accent;
-  document.getElementById('heroSub').textContent = `Buy tickets, join guest lists, and request VIP tables at verified nightlife venues in ${c.name}.`;
+  document.getElementById('heroSub').textContent = `Curated events, guest lists, rooftops, and table access selected for how ${c.name} moves tonight.`;
   document.getElementById('picksBadge').textContent = c.badge;
 
   // Section city names
