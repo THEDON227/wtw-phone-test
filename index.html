@@ -39,6 +39,12 @@ body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:
   --z-base:1;--z-sticky:100;--z-header:200;--z-overlay:300;--z-modal:400;--z-toast:500;
 }
 
+/* WTW dark luxury wallpaper sync */
+body::before{content:'';position:fixed;inset:-80px;background-image:url('assets/wtw-logo-transparent.png');background-size:clamp(150px,14vw,240px) auto;background-position:0 0;background-repeat:repeat;opacity:0.04;mix-blend-mode:screen;pointer-events:none;z-index:0}
+body{background:radial-gradient(circle at 18% 0,rgba(255,255,255,0.035),transparent 34%),#080b0f}
+body>*{position:relative;z-index:1}
+#heroBg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 15% 0,rgba(255,255,255,0.04),transparent 34%);pointer-events:none;z-index:1}
+
 /* ── HERO BG ── */
 #heroBg{
   position:fixed;inset:0;z-index:0;
@@ -1088,14 +1094,16 @@ let cur = 'nyc';
 
 function applyCity(k) {
   const c = CITIES[k];
+  if (!c) return;
   cur = k;
+  try{localStorage.setItem('wtwSelectedCity',k);}catch(e){}
 
   // CSS variables
   document.documentElement.style.setProperty('--accent', c.accent);
   document.documentElement.style.setProperty('--accent-muted', hexToRgba(c.accent, 0.1));
   document.documentElement.style.setProperty('--accent-border', hexToRgba(c.accent, 0.22));
   document.documentElement.style.setProperty('--bg', c.bg);
-  document.body.style.background = c.bg;
+  document.body.style.background = `radial-gradient(circle at 18% 0, rgba(255,255,255,0.035), transparent 34%), ${c.bg}`;
   // Logo glow — city-specific, subtle not neon
   document.documentElement.style.setProperty('--logo-glow', hexToRgba(c.accent, 0.55));
   document.documentElement.style.setProperty('--logo-glow-far', hexToRgba(c.accent, 0.18));
@@ -1255,7 +1263,12 @@ function processLogo() {
 if (document.readyState === 'complete') processLogo();
 else window.addEventListener('load', processLogo);
 
-applyCity('nyc');
+const CITY_ALIASES={florida:'miami',georgia:'atl',california:'la',texas:'dallas','new-jersey':'nj',newjersey:'nj','new-york':'nyc',newyork:'nyc'};
+const _urlCityRaw=new URLSearchParams(window.location.search).get('city');
+let _storedCity='';
+try{_storedCity=localStorage.getItem('wtwSelectedCity')||'';}catch(e){}
+const _cityKey=(_urlCityRaw||_storedCity||'nyc').toLowerCase();
+applyCity(CITIES[_cityKey]?_cityKey:(CITY_ALIASES[_cityKey]||'nyc'));
 </script>
 </body>
 </html>
