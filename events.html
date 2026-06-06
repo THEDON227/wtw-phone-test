@@ -369,6 +369,13 @@ body{background:radial-gradient(circle at 18% 0,rgba(255,255,255,0.035),transpar
 .ec-body{padding:21px}.ec-title{font-size:17px;letter-spacing:0;line-height:1.22}.ec-venue,.ec-meta-item{line-height:1.55}.fc-content{padding:40px}.fc-desc{font-size:14px;color:rgba(240,237,232,0.62)}
 .detail-link{display:none}
 
+/* Events hero cinematic sync */
+.events-hero{min-height:620px;display:flex;align-items:center;padding:112px 0 118px;background-image:linear-gradient(90deg,rgba(5,7,10,0.92) 0%,rgba(5,7,10,0.68) 43%,rgba(5,7,10,0.22) 100%),linear-gradient(180deg,rgba(5,7,10,0.18) 0%,#080b0f 100%),url('https://wheresthewave.lovable.app/assets/hero-nyc-BocCk24q.jpg');background-size:cover;background-position:center;border-bottom:1px solid rgba(255,255,255,0.08);overflow:hidden}
+.events-hero::before{background:linear-gradient(180deg,rgba(5,7,10,0.12) 0%,rgba(5,7,10,0.18) 48%,#080b0f 100%)}
+.events-hero::after{content:'';display:block;position:absolute;inset:auto 0 0;height:180px;background:linear-gradient(180deg,transparent,#080b0f);pointer-events:none}
+.events-hero .wrap{align-items:center}.eh-title{letter-spacing:0;line-height:.94}.eh-sub{font-size:16px;line-height:1.8;color:rgba(240,237,232,0.7)}
+@media(max-width:768px){.events-hero{min-height:560px;padding:86px 0 96px}.eh-title{font-size:52px;line-height:.96}}
+
 </style>
 </head>
 <body>
@@ -675,7 +682,7 @@ function applyCity(k){
   document.documentElement.style.setProperty('--logo-glow-far',hexToRgba(c.p,0.18));
   document.body.style.background=`radial-gradient(circle at 18% 0, rgba(255,255,255,0.035), transparent 34%), ${c.bg}`;
   document.body.className=c.bodyClass;
-  document.querySelector('.events-hero').style.backgroundImage=`url('${c.bgImg}')`;
+  document.querySelector('.events-hero').style.backgroundImage=`linear-gradient(90deg,rgba(5,7,10,0.92) 0%,rgba(5,7,10,0.68) 43%,rgba(5,7,10,0.22) 100%),linear-gradient(180deg,rgba(5,7,10,0.18) 0%,#080b0f 100%),url('${c.bgImg}')`;
   document.getElementById('heroTitle').innerHTML=c.headline;
   document.getElementById('heroSub').textContent=c.subcopy;
   document.getElementById('headerDot').style.background=c.p;
