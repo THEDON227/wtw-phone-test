@@ -10,7 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-body::before{content:'';position:fixed;inset:-80px;background-image:url('assets/wtw-logo-transparent.png');background-size:clamp(150px,14vw,240px) auto;background-position:0 0;background-repeat:repeat;opacity:0.04;mix-blend-mode:screen;pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:-80px;background-image:url('assets/wtw-logo-transparent.png');background-size:clamp(150px,14vw,240px) auto;background-position:0 0;background-repeat:repeat;opacity:0.032;mix-blend-mode:screen;pointer-events:none;z-index:0}
 :root{
   --accent:#00C2D1;
   --accent-muted:rgba(0,194,209,0.1);
@@ -364,17 +364,17 @@ body{background:radial-gradient(circle at 18% 0,rgba(255,255,255,0.035),transpar
 
 /* Events launch card polish */
 .events-hero{box-shadow:inset 0 -1px 0 rgba(255,255,255,0.035)}
-.market-rail,.featured-card,.event-card{border-color:rgba(255,255,255,0.115);background:linear-gradient(180deg,rgba(6,8,11,0.965),rgba(3,5,8,0.995));box-shadow:0 28px 86px rgba(0,0,0,0.28)}
-.market-rail:hover,.event-card:hover{box-shadow:0 34px 96px rgba(0,0,0,0.38),0 0 0 1px var(--accent-muted)}
+.market-rail,.featured-card,.event-card{border-color:rgba(255,255,255,0.1);background:linear-gradient(180deg,rgba(4,6,9,0.985),rgba(2,4,7,0.998));box-shadow:0 30px 92px rgba(0,0,0,0.32)}
+.market-rail:hover,.event-card:hover{box-shadow:0 36px 102px rgba(0,0,0,0.4),0 0 0 1px var(--accent-muted)}
 .ec-body{padding:21px}.ec-title{font-size:17px;letter-spacing:0;line-height:1.22}.ec-venue,.ec-meta-item{line-height:1.55}.fc-content{padding:40px}.fc-desc{font-size:14px;color:rgba(240,237,232,0.62)}
 .detail-link{display:none}
 
 /* Events hero cinematic sync */
-.events-hero{min-height:620px;display:flex;align-items:center;padding:112px 0 118px;background-image:linear-gradient(90deg,rgba(5,7,10,0.92) 0%,rgba(5,7,10,0.68) 43%,rgba(5,7,10,0.22) 100%),linear-gradient(180deg,rgba(5,7,10,0.18) 0%,#080b0f 100%),url('https://wheresthewave.lovable.app/assets/hero-nyc-BocCk24q.jpg');background-size:cover;background-position:center;border-bottom:1px solid rgba(255,255,255,0.08);overflow:hidden}
-.events-hero::before{background:linear-gradient(180deg,rgba(5,7,10,0.12) 0%,rgba(5,7,10,0.18) 48%,#080b0f 100%)}
+.events-hero{min-height:640px;display:flex;align-items:center;padding:118px 0 126px;background-image:linear-gradient(90deg,rgba(5,7,10,0.92) 0%,rgba(5,7,10,0.72) 40%,rgba(5,7,10,0.24) 100%),linear-gradient(180deg,rgba(5,7,10,0.16) 0%,#080b0f 100%),url('https://wheresthewave.lovable.app/assets/hero-nyc-BocCk24q.jpg');background-size:cover;background-position:center 20%;border-bottom:1px solid rgba(255,255,255,0.08);overflow:hidden}
+.events-hero::before{background:linear-gradient(180deg,rgba(5,7,10,0.16) 0%,rgba(5,7,10,0.22) 48%,#080b0f 100%)}
 .events-hero::after{content:'';display:block;position:absolute;inset:auto 0 0;height:180px;background:linear-gradient(180deg,transparent,#080b0f);pointer-events:none}
 .events-hero .wrap{align-items:center}.eh-title{letter-spacing:0;line-height:.94}.eh-sub{font-size:16px;line-height:1.8;color:rgba(240,237,232,0.7)}
-@media(max-width:768px){.events-hero{min-height:560px;padding:86px 0 96px}.eh-title{font-size:52px;line-height:.96}}
+@media(max-width:768px){.events-hero{min-height:580px;padding:92px 0 100px}.eh-title{font-size:52px;line-height:.96}}
 
 
 /* Global header and city modal consistency */
