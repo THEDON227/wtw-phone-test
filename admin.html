@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="WTW internal admin dashboard for events, venues, and request intake.">
+<title>WTW Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  body{margin:0;min-height:100vh;background:#080b0f;color:#F0EDE8;font-family:Inter,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  body::before{content:'';position:fixed;inset:-80px;background-image:url('assets/wtw-logo-transparent.png');background-size:170px auto;background-repeat:repeat;opacity:.03;mix-blend-mode:screen;pointer-events:none;z-index:0}
+  body>*{position:relative;z-index:1}
+  :root{--accent:#00C2D1;--am:rgba(0,194,209,.1);--ab:rgba(0,194,209,.22);--tx:#F0EDE8;--tm:rgba(240,237,232,.6);--bd:rgba(255,255,255,.09)}
+  .wrap{width:min(1280px,calc(100% - 40px));margin:0 auto;padding:32px 0 72px}
+  header{position:sticky;top:0;z-index:20;background:rgba(5,7,10,.82);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .header-inner{width:min(1280px,calc(100% - 40px));height:72px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--tx)}
+  .brand-logo{width:56px;height:38px;display:flex;align-items:center;justify-content:center}
+  .brand-logo img{width:56px;height:auto;display:block;object-fit:contain;filter:drop-shadow(0 0 12px var(--accent))}
+  .brand-name{font-size:12px;font-weight:900;letter-spacing:2.4px;white-space:nowrap}
+  .brand-sub{font-size:7px;font-weight:800;letter-spacing:2.8px;color:var(--accent);margin-top:3px}
+  .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ab);background:rgba(255,255,255,.04);padding:8px 12px;font-size:10px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:var(--tx)}
+  .hero{padding:34px 0 24px}
+  .hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}
+  @media(max-width:960px){.hero-grid{grid-template-columns:1fr}}
+  .panel{border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,rgba(8,10,14,.96),rgba(3,5,8,.995));box-shadow:0 26px 80px rgba(0,0,0,.3);border-radius:20px}
+  .hero-main{padding:28px}
+  .eyebrow{font-size:10px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+  .title{font-family:'Playfair Display',serif;font-size:clamp(42px,6vw,74px);line-height:.92;font-weight:900;color:var(--tx);margin-bottom:12px}
+  .sub{font-size:16px;line-height:1.75;color:var(--tm);max-width:760px}
+  .meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+  .section{margin-top:22px;padding:26px}
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+  .section-title{font-family:'Playfair Display',serif;font-size:32px;line-height:1;color:var(--tx)}
+  .section-sub{font-size:13px;line-height:1.65;color:var(--tm);max-width:760px}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  @media(max-width:780px){.grid{grid-template-columns:1fr}}
+  .card{border:1px solid rgba(255,255,255,.09);background:rgba(0,0,0,.28);border-radius:16px;padding:18px;min-height:160px}
+  .card-top{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-name{font-family:'Playfair Display',serif;font-size:24px;line-height:1.05;font-weight:900}
+  .card-pill{font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);border:1px solid var(--ab);padding:6px 8px;white-space:nowrap}
+  .card-meta{font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--tm);margin-bottom:10px}
+  .card-list{display:grid;gap:8px;margin-top:10px}
+  .card-list div{font-size:12px;line-height:1.5;color:var(--tm)}
+  .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .badge{font-size:9px;font-weight:900;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent);border:1px solid var(--ab);background:var(--am);padding:6px 8px}
+  .table-card{overflow:hidden}
+  .table-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .empty{padding:26px;border:1px dashed rgba(255,255,255,.12);border-radius:16px;color:var(--tm);font-size:13px;line-height:1.65;background:rgba(255,255,255,.02)}
+  footer{padding:36px 0 48px;color:rgba(240,237,232,.34);font-size:11px;border-top:1px solid rgba(255,255,255,.08);margin-top:36px}
+  @media(max-width:768px){.header-inner{height:68px}.brand-logo{width:50px;height:34px}.brand-logo img{width:50px}.title{font-size:44px}.hero-main,.section{padding:20px}.wrap{width:min(100% - 28px,1280px)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-logo"><img src="assets/wtw-logo-transparent.png" alt="WTW"></div>
+      <div>
+        <div class="brand-name">WHERE'S THE WAVE</div>
+        <div class="brand-sub">INTERNAL ADMIN</div>
+      </div>
+    </a>
+    <div class="pill">Supabase Ready · Frontend Only</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero hero-grid">
+    <div class="panel hero-main">
+      <div class="eyebrow">WTW ADMIN DASHBOARD</div>
+      <h1 class="title">Operating System Intake</h1>
+      <p class="sub">Events, venues, reservations, ticket requests, guest lists, partner applications, and Wave Pass interest all route through the same request model. This page is ready for Supabase connection but ships as a safe frontend shell for now.</p>
+      <div class="meta-row">
+        <span class="pill">Events</span>
+        <span class="pill">Venues</span>
+        <span class="pill">Reservations</span>
+        <span class="pill">Partners</span>
+        <span class="pill">Wave Pass</span>
+      </div>
+    </div>
+    <div class="panel hero-main">
+      <div class="eyebrow">Connection Plan</div>
+      <div class="card-list">
+        <div>1. Keep the static frontend live on Vercel.</div>
+        <div>2. Add Supabase anon key only when the environment is ready.</div>
+        <div>3. Use RLS for all public request tables.</div>
+        <div>4. Read request queues into this admin surface later.</div>
+      </div>
+      <div class="badge-row">
+        <span class="badge">No service role key</span>
+        <span class="badge">No payments yet</span>
+        <span class="badge">No AI bots yet</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Collections</div>
+        <div class="section-title">Data surfaces prepared for Supabase</div>
+      </div>
+      <div class="section-sub">Each section below maps to one table in <code>schema.sql</code>.</div>
+    </div>
+    <div class="grid">
+      <article class="card table-card"><div class="card-top"><div class="card-name">Events</div><div class="card-pill">events</div></div><div class="card-meta">Discovery inventory</div><div class="card-list"><div>Title, venue, market, date, times, music, dress code, age, price, guest list, and VIP table flags.</div><div>Status-driven publishing model for launch, draft, and archived states.</div></div></article>
+      <article class="card table-card"><div class="card-top"><div class="card-name">Venues</div><div class="card-pill">venues</div></div><div class="card-meta">Indulge inventory</div><div class="card-list"><div>Dining rooms, rooftops, lounges, and dinner-to-nightlife spots by market.</div><div>Reservation, table, and guest list availability is tracked at the venue layer.</div></div></article>
+      <article class="card table-card"><div class="card-top"><div class="card-name">Reservations</div><div class="card-pill">reservation_requests</div></div><div class="card-meta">Concierge intake</div><div class="card-list"><div>Guest name, contact, market, venue, requested date/time, party size, occasion, and notes.</div><div>Later this can power concierge routing and partner review queues.</div></div></article>
+      <article class="card table-card"><div class="card-top"><div class="card-name">Ticket + Guest List</div><div class="card-pill">ticket_requests</div></div><div class="card-meta">Event conversion</div><div class="card-list"><div>Ticket type, quantity, total amount, plus guest list arrivals and event links.</div><div>Separated tables keep the event flow clean and easy to query.</div></div></article>
+      <article class="card table-card"><div class="card-top"><div class="card-name">Partners</div><div class="card-pill">partner_applications</div></div><div class="card-meta">Supply network</div><div class="card-list"><div>Restaurants, rooftops, lounges, promoters, and hospitality operators apply here.</div><div>Designed to route qualified high-intent guests to the right rooms.</div></div></article>
+      <article class="card table-card"><div class="card-top"><div class="card-name">Wave Pass</div><div class="card-pill">wave_pass_requests</div></div><div class="card-meta">Membership interest</div><div class="card-list"><div>Tracks early interest before login, payments, or digital card issuance exist.</div><div>Leaves room for later tiers, accounts, and QR-ready access.</div></div></article>
+    </div>
+  </section>
+
+  <section class="panel section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Admin Sections</div>
+        <div class="section-title">Internal dashboard layout</div>
+      </div>
+      <div class="section-sub">This is layout-only until Supabase credentials are configured.</div>
+    </div>
+    <div class="grid">
+      <article class="card"><div class="card-top"><div class="card-name">Events</div><div class="card-pill">queue</div></div><div class="empty">Read published events and pending edits. Later: add approve/reject controls and direct sync from the admin queue.</div></article>
+      <article class="card"><div class="card-top"><div class="card-name">Venues</div><div class="card-pill">queue</div></div><div class="empty">Manage Indulge venues, availability flags, and market-specific visibility.</div></article>
+      <article class="card"><div class="card-top"><div class="card-name">Reservations</div><div class="card-pill">queue</div></div><div class="empty">Review reservation requests with market, timing, party size, and notes visible in one place.</div></article>
+      <article class="card"><div class="card-top"><div class="card-name">Ticket Requests</div><div class="card-pill">queue</div></div><div class="empty">Inspect paid-intent fields later when checkout is added. For now it remains request-only.</div></article>
+      <article class="card"><div class="card-top"><div class="card-name">Guest Lists</div><div class="card-pill">queue</div></div><div class="empty">Cleanly separate guest list requests from table and ticket flows.</div></article>
+      <article class="card"><div class="card-top"><div class="card-name">Partner Applications</div><div class="card-pill">queue</div></div><div class="empty">Route partner submissions by market and business type, then track status changes.</div></article>
+      <article class="card"><div class="card-top"><div class="card-name">Wave Pass</div><div class="card-pill">queue</div></div><div class="empty">Store interest and later convert to membership plans, digital card records, and routing rules.</div></article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">WTW backend foundation v1.0 · Supabase-ready schema and request helpers · Frontend-only admin shell.</div>
+</footer>
+
+<script src="supabase-client.js"></script>
+</body>
+</html>
