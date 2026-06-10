@@ -3792,6 +3792,76 @@
         }
       }
     }
+    function summarizeAutomationChannel(channel,result){
+      const payload=result&&result[channel]&&typeof result[channel]==='object'?result[channel]:{};
+      const status=safeText(payload.status).trim().toLowerCase();
+      const reason=safeText(payload.reason).trim();
+      const providerMessageId=safeText(payload.provider_message_id).trim();
+      const normalizedStatus=status==='sent'||status==='delivered'
+        ? 'sent'
+        : status==='skipped'||status==='blocked'||status==='not_configured'
+          ? 'skipped'
+          : status==='failed'
+            ? 'failed'
+            : 'failed';
+      return {
+        status:normalizedStatus,
+        reason,
+        providerMessageId
+      };
+    }
+    function formatAutomationNotice(result){
+      const email=summarizeAutomationChannel('email',result);
+      const sms=summarizeAutomationChannel('sms',result);
+      const parts=[];
+      const emailText=email.status==='sent'
+        ? 'Email sent'
+        : email.status==='skipped'
+          ? `Email skipped${email.reason?` (${email.reason})`:''}`
+          : `Email failed${email.reason?` (${email.reason})`:''}`;
+      const smsText=sms.status==='sent'
+        ? 'SMS sent'
+        : sms.status==='skipped'
+          ? `SMS skipped${sms.reason?` (${sms.reason})`:''}`
+          : `SMS failed${sms.reason?` (${sms.reason})`:''}`;
+      parts.push(emailText);
+      parts.push(smsText);
+      return {
+        message: `${parts.join('. ')}.`,
+        isError: email.status==='failed' || sms.status==='failed'
+      };
+    }
+    async function sendCustomerConfirmationDeliveries(item,confirmationId){
+      const record=drawerConfirmationRecord&&drawerConfirmationKey===getConfirmationKey(item)?drawerConfirmationRecord:null;
+      const cid=safeText(confirmationId||record&&record.id||'').trim();
+      if(!cid){
+        setCustomerDeliveryNotice('Confirmation created. Use the email and SMS buttons below to send delivery.',false);
+        return;
+      }
+      drawerDeliveryBusy=true;
+      setCustomerDeliveryControlsDisabled(true);
+      setCustomerDeliveryNotice('Sending confirmation email/SMS...',false);
+      try{
+        const [emailResult, smsResult] = await Promise.allSettled([
+          WTWBackend.sendConfirmationEmail(cid, false),
+          WTWBackend.sendConfirmationSms(cid, false)
+        ]);
+        drawerDeliveryBusy=false;
+        setCustomerDeliveryControlsDisabled(false);
+        await loadCustomerDelivery(item);
+        const result={
+          email: emailResult.status==='fulfilled' ? emailResult.value : { status:'failed', reason:String((emailResult.reason&&emailResult.reason.message)||emailResult.reason||'') },
+          sms: smsResult.status==='fulfilled' ? smsResult.value : { status:'failed', reason:String((smsResult.reason&&smsResult.reason.message)||smsResult.reason||'') }
+        };
+        const summary=formatAutomationNotice(result);
+        setCustomerDeliveryNotice(summary.message,summary.isError);
+      }catch(err){
+        drawerDeliveryBusy=false;
+        setCustomerDeliveryControlsDisabled(false);
+        console.error('WTW automatic delivery failed:',err);
+        setCustomerDeliveryNotice('Automatic delivery could not run. Manual email and SMS buttons are still available.',true);
+      }
+    }
     async function loadCustomerConfirmation(item){
       const recordType=requestConfirmationType(item);
       const key=getConfirmationKey(item);
@@ -3932,6 +4002,7 @@
         renderDrawer(selectedDrawerItem||item);
         renderDrawerNotice('Confirmation Created.',false);
         setCustomerConfirmationNotice('Confirmation created.',false);
+        void sendCustomerConfirmationDeliveries(item,normalized&&normalized.id);
       }catch(err){
         const msg=String((err&&err.message)||err||'');
         if(/permission|not authorized|forbidden|policy|401|403/i.test(msg)){
