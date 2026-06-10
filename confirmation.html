@@ -120,8 +120,8 @@
       padding:16px;
     }
     .qr-pass-code{
-      width:220px;
-      min-height:220px;
+      width:min(240px,72vw);
+      aspect-ratio:1/1;
       background:#fff;
       padding:12px;
       border:1px solid rgba(255,255,255,.14);
@@ -136,6 +136,14 @@
       display:block !important;
       width:100% !important;
       height:100% !important;
+    }
+    .qr-pass-code table{
+      border-collapse:collapse !important;
+      line-height:0 !important;
+    }
+    .qr-pass-code td{
+      padding:0 !important;
+      margin:0 !important;
     }
     .qr-pass-caption{
       text-align:center;
@@ -269,6 +277,8 @@
       .hero,.content,.footer{padding-left:20px;padding-right:20px}
       .grid{grid-template-columns:1fr}
       .title{font-size:44px}
+      .qr-pass-code{width:min(220px,70vw)}
+      .status-title{font-size:26px}
     }
   </style>
 </head>
