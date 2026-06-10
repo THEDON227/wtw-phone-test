@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Request Received - Where's The Wave</title>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(0,194,209,.12), transparent 28%),
+        #080b0f;
+      color:#F0EDE8;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    body:before{
+      content:"";
+      position:fixed;
+      inset:-80px;
+      pointer-events:none;
+      background-image:url('assets/wtw-logo-transparent.png');
+      background-repeat:repeat;
+      background-size:180px auto;
+      opacity:.035;
+      mix-blend-mode:screen;
+      z-index:0;
+    }
+    .page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+    .wrap{width:min(1120px,calc(100% - 40px));margin:0 auto}
+    header{position:sticky;top:0;z-index:10;background:rgba(5,7,10,.82);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)}
+    .header-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#F0EDE8}
+    .brand-logo{width:58px;height:40px;display:flex;align-items:center;justify-content:center}
+    .brand-logo img{display:block;width:58px;height:auto;filter:drop-shadow(0 0 12px rgba(0,194,209,.55))}
+    .brand-name{font-size:12px;font-weight:900;letter-spacing:2.8px;line-height:1;white-space:nowrap}
+    .brand-sub{font-size:8px;font-weight:800;letter-spacing:2.2px;color:#00C2D1;margin-top:2px;text-transform:uppercase;white-space:nowrap}
+    main{flex:1;display:flex;align-items:center;padding:34px 0 54px}
+    .panel{
+      width:min(720px,100%);
+      margin:0 auto;
+      border:1px solid rgba(0,194,209,.22);
+      background:linear-gradient(180deg,rgba(10,12,16,.96),rgba(4,6,9,.98));
+      box-shadow:0 40px 140px rgba(0,0,0,.55);
+      border-radius:24px;
+      overflow:hidden;
+    }
+    .hero{
+      padding:36px 28px 22px;
+      text-align:center;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .eyebrow{
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:4px;
+      color:#00C2D1;
+      text-transform:uppercase;
+      margin-bottom:16px;
+    }
+    h1{
+      margin:0;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:clamp(40px,7vw,68px);
+      line-height:.95;
+      font-weight:900;
+      color:#F0EDE8;
+    }
+    .sub{
+      margin:16px auto 0;
+      max-width:560px;
+      font-size:15px;
+      line-height:1.75;
+      color:rgba(240,237,232,.68);
+    }
+    .card{
+      margin:24px 24px 0;
+      border:1px solid rgba(0,194,209,.22);
+      border-radius:18px;
+      background:rgba(255,255,255,.025);
+      padding:22px;
+    }
+    .ref-label{
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:rgba(240,237,232,.42);
+      margin-bottom:10px;
+    }
+    .ref{
+      font-size:clamp(22px,4vw,30px);
+      font-weight:900;
+      letter-spacing:1px;
+      color:#F0EDE8;
+      word-break:break-word;
+    }
+    .meta{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+    .item{
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top:14px;
+      min-width:0;
+    }
+    .item span{
+      display:block;
+      font-size:8px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:rgba(240,237,232,.35);
+      margin-bottom:6px;
+    }
+    .item strong{
+      display:block;
+      font-size:15px;
+      line-height:1.6;
+      font-weight:600;
+      color:#F0EDE8;
+      word-break:break-word;
+    }
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:22px;
+    }
+    .btn-primary,.btn-outline{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:12px;
+      text-decoration:none;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      flex:1 1 220px;
+    }
+    .btn-primary{
+      background:#00C2D1;
+      color:#020607;
+      box-shadow:0 14px 40px rgba(0,194,209,.18);
+    }
+    .btn-outline{
+      border:1px solid rgba(255,255,255,.14);
+      color:#F0EDE8;
+      background:rgba(255,255,255,.02);
+    }
+    .footer{
+      padding:22px 24px 28px;
+      text-align:center;
+      color:rgba(240,237,232,.62);
+      font-size:13px;
+      line-height:1.7;
+    }
+    .footer strong{
+      display:block;
+      margin-top:8px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:#00C2D1;
+    }
+    @media (max-width: 640px){
+      .wrap{width:calc(100% - 24px)}
+      .hero{padding:30px 18px 20px}
+      .card{margin:18px 16px 0;padding:18px}
+      .meta{grid-template-columns:1fr}
+      .actions{flex-direction:column}
+      .btn-primary,.btn-outline{width:100%;flex-basis:auto}
+      .footer{padding:18px 18px 24px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="wrap">
+        <div class="header-inner">
+          <a class="brand" href="index.html">
+            <div class="brand-logo"><img src="assets/wtw-logo-transparent.png" alt="WTW"></div>
+            <div>
+              <div class="brand-name">WHERE'S THE WAVE</div>
+              <div class="brand-sub">PRIVATE NIGHTLIFE ACCESS</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="wrap">
+        <section class="panel" aria-labelledby="pageTitle">
+          <div class="hero">
+            <div class="eyebrow">Request Received</div>
+            <h1 id="pageTitle">Request Received</h1>
+            <p class="sub">WTW concierge will review availability and route your reservation request to the venue. Your night is not yet confirmed until the partner approves it.</p>
+          </div>
+          <div class="card">
+            <div class="ref-label">Request Reference</div>
+            <div class="ref" id="requestRef">WTW-R-XXXXXX</div>
+            <div class="meta">
+              <div class="item">
+                <span>Status</span>
+                <strong>Under WTW Review</strong>
+              </div>
+              <div class="item">
+                <span>What Happens Next</span>
+                <strong>WTW concierge reviews the request and confirms availability with the venue.</strong>
+              </div>
+            </div>
+            <div class="actions">
+              <a class="btn-primary" href="indulge.html">Back to Indulge</a>
+              <a class="btn-outline" href="index.html">Back to Home</a>
+            </div>
+          </div>
+          <div class="footer">
+            Keep this reference handy for follow-up.
+            <strong>Where's The Wave</strong>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>
+    (function(){
+      var params=new URLSearchParams(window.location.search);
+      var ref=params.get('ref')||'WTW-R-XXXXXX';
+      var el=document.getElementById('requestRef');
+      if(el) el.textContent=ref;
+    })();
+  </script>
+</body>
+</html>
