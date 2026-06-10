@@ -919,6 +919,23 @@
     .delivery-actions-row .drawer-action{
       min-width:160px;
     }
+    .qr-shell{
+      display:grid;
+      gap:10px;
+    }
+    .qr-link-block{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.18);
+      padding:10px 12px;
+      font-size:12px;
+      line-height:1.55;
+      color:var(--tx);
+      word-break:break-all;
+      overflow-wrap:anywhere;
+    }
+    .qr-link-block.muted{
+      color:var(--tm);
+    }
     @media(max-width:720px){
       .delivery-grid{grid-template-columns:1fr}
     }
@@ -1495,6 +1512,7 @@
       <section class="detail-section hidden" id="partnerRoutingPanel"></section>
       <section class="detail-section hidden" id="customerConfirmationPanel"></section>
       <section class="detail-section hidden" id="customerDeliveryPanel"></section>
+      <section class="detail-section hidden" id="customerQrPanel"></section>
       <section class="detail-section hidden" id="partnerAccessPanel"></section>
       <div class="drawer-notice hidden" id="drawerNotice"></div>
       <section class="detail-section hidden" id="internalNotesPanel">
@@ -1564,6 +1582,13 @@
     let drawerDeliveryRows=[];
     let drawerDeliveryKey='';
     let drawerDeliveryBusy=false;
+    let drawerQrCredential=null;
+    let drawerQrCredentialKey='';
+    let drawerQrCredentialLoading=false;
+    let drawerQrCredentialLoadingToken=0;
+    let drawerQrBusy=false;
+    let drawerQrPassToken='';
+    let drawerQrPassLink='';
     let drawerConfirmationDrafts=Object.create(null);
     let adminClient=null;
     let adminReady=false;
@@ -3290,6 +3315,310 @@
       }
       setCustomerDeliveryNotice('',false);
     }
+    function buildQrCheckinLink(token){
+      const safeToken=safeText(token).trim();
+      if(!safeToken)return'';
+      try{
+        return new URL(`qr-checkin.html?token=${encodeURIComponent(safeToken)}`, window.location.href).toString();
+      }catch(err){
+        const base=location.href.split('?')[0].replace(/[^/]*$/, '');
+        return `${base}qr-checkin.html?token=${encodeURIComponent(safeToken)}`;
+      }
+    }
+    function buildCustomerQrLink(accessToken,qrToken){
+      const safeAccessToken=safeText(accessToken).trim();
+      const safeQrToken=safeText(qrToken).trim();
+      if(!safeAccessToken||!safeQrToken)return'';
+      try{
+        return new URL(`confirmation.html?token=${encodeURIComponent(safeAccessToken)}&qr=${encodeURIComponent(safeQrToken)}`, window.location.href).toString();
+      }catch(err){
+        const base=location.href.split('?')[0].replace(/[^/]*$/, '');
+        return `${base}confirmation.html?token=${encodeURIComponent(safeAccessToken)}&qr=${encodeURIComponent(safeQrToken)}`;
+      }
+    }
+    function normalizeQrStatus(value){
+      const s=safeText(value).trim().toLowerCase();
+      if(!s)return'';
+      return s.replace(/[_\s]+/g,'-');
+    }
+    function qrStatusLabel(value){
+      const s=normalizeQrStatus(value);
+      if(!s)return'Not Created';
+      if(s==='checked-in')return'Checked In';
+      if(s==='not-configured')return'Not Configured';
+      return s.replace(/[-_]+/g,' ').replace(/\b\w/g,function(ch){return ch.toUpperCase();});
+    }
+    function setCustomerQrNotice(message,isError){
+      const el=document.getElementById('customerQrNotice');
+      if(!el)return;
+      if(!message){
+        el.textContent='';
+        el.classList.add('hidden');
+        el.classList.remove('is-error');
+        return;
+      }
+      el.textContent=message;
+      el.classList.remove('hidden');
+      el.classList.toggle('is-error',!!isError);
+    }
+    function setCustomerQrControlsDisabled(disabled){
+      const ids=['qrGenerateButton','qrOpenButton','qrCopyButton','qrCustomerOpenButton','qrCustomerCopyButton'];
+      ids.forEach(function(id){
+        const el=document.getElementById(id);
+        if(el)el.disabled=disabled;
+      });
+    }
+    function renderCustomerQrPanel(item,loading){
+      const panel=document.getElementById('customerQrPanel');
+      if(!panel)return;
+      const record=drawerConfirmationRecord&&drawerConfirmationKey===getConfirmationKey(item)?drawerConfirmationRecord:null;
+      const credential=drawerQrCredential&&drawerQrCredentialKey===getConfirmationKey(item)?drawerQrCredential:null;
+      if(!record){
+        panel.classList.add('hidden');
+        panel.innerHTML='';
+        setCustomerQrNotice('',false);
+        return;
+      }
+      const qrStatus=normalizeQrStatus((credential&&credential.qr_status)||'');
+      const issuedAt=safeText(credential&&credential.issued_at).trim();
+      const firstScannedAt=safeText(credential&&credential.first_scanned_at).trim();
+      const lastScannedAt=safeText(credential&&credential.last_scanned_at).trim();
+      const checkedInAt=safeText(credential&&credential.checked_in_at).trim();
+      const revokedAt=safeText(credential&&credential.revoked_at).trim();
+      const expiresAt=safeText(credential&&credential.expires_at).trim();
+      const scanCount=Number(credential&&credential.scan_count||0);
+      const hasToken=!!drawerQrPassToken;
+      const qrLink=drawerQrPassLink||'';
+      const customerQrLink=buildCustomerQrLink(record&&record.access_token,drawerQrPassToken);
+      const qrExpired=qrStatus==='active'&&!!expiresAt&&new Date(expiresAt).getTime()<=Date.now();
+      const effectiveQrStatus=qrExpired?'expired':qrStatus;
+      const qrStatusText=qrStatusLabel(effectiveQrStatus||'');
+      const qrStatusTone=effectiveQrStatus==='active'||effectiveQrStatus==='checked-in'?'good':'warn';
+      const generateLabel=credential&&effectiveQrStatus==='active' ? 'Regenerate QR Pass' : (credential?'Refresh QR Pass':'Generate QR Pass');
+      const noteText=loading
+        ? 'Loading QR credential...'
+        : credential&&effectiveQrStatus==='active'
+          ? 'Share the generated check-in link with the guest or door staff.'
+          : credential&&effectiveQrStatus==='checked-in'
+            ? 'This credential has already been used at the door.'
+            : credential&&effectiveQrStatus==='revoked'
+              ? 'This credential has been revoked.'
+              : credential&&effectiveQrStatus==='expired'
+                ? 'This credential has expired.'
+                : credential&&effectiveQrStatus==='cancelled'
+                  ? 'This credential was cancelled.'
+                  : 'Generate a secure QR pass for this confirmation.';
+      panel.classList.remove('hidden');
+      panel.innerHTML=
+        `<div class="detail-section-title">QR Credential</div>
+         <div class="detail-section-copy">Admin-generated secure check-in credential. The raw token is never stored in the database.</div>
+         <div class="qr-shell">
+           <div class="delivery-card">
+             <div class="delivery-grid">
+               <div class="delivery-field">
+                 <div class="delivery-label">Confirmation Reference</div>
+                 <div class="delivery-value">${escapeHtml(record.confirmation_reference||'—')}</div>
+               </div>
+               <div class="delivery-field">
+                 <div class="delivery-label">Status</div>
+                 <div class="delivery-value ${qrStatusTone==='good'?'':'muted'}">${escapeHtml(qrStatusText)}</div>
+               </div>
+               <div class="delivery-field">
+                 <div class="delivery-label">Issued</div>
+                 <div class="delivery-value">${escapeHtml(issuedAt?fmtTime(issuedAt):'—')}</div>
+               </div>
+               <div class="delivery-field">
+                 <div class="delivery-label">Scan Count</div>
+                 <div class="delivery-value">${escapeHtml(String(scanCount))}</div>
+               </div>
+               <div class="delivery-field">
+                 <div class="delivery-label">First Scanned</div>
+                 <div class="delivery-value">${escapeHtml(firstScannedAt?fmtTime(firstScannedAt):'—')}</div>
+               </div>
+               <div class="delivery-field">
+                 <div class="delivery-label">Last Scanned</div>
+                 <div class="delivery-value">${escapeHtml(lastScannedAt?fmtTime(lastScannedAt):'—')}</div>
+               </div>
+               <div class="delivery-field">
+                 <div class="delivery-label">Checked In</div>
+                 <div class="delivery-value">${escapeHtml(checkedInAt?fmtTime(checkedInAt):'—')}</div>
+               </div>
+               <div class="delivery-field">
+                 <div class="delivery-label">Expires</div>
+                 <div class="delivery-value">${escapeHtml(expiresAt?fmtTime(expiresAt):'—')}</div>
+               </div>
+               <div class="delivery-field" style="grid-column:1/-1">
+                 <div class="delivery-label">QR Check-in Link</div>
+                 <div class="qr-link-block ${qrLink?'':'muted'}">${escapeHtml(qrLink||'Generate a QR pass to create a check-in link.')}</div>
+               </div>
+               <div class="delivery-field" style="grid-column:1/-1">
+                 <div class="delivery-label">Customer QR Link</div>
+                 <div class="qr-link-block ${customerQrLink?'':'muted'}">${escapeHtml(customerQrLink||'Generate a QR pass to build a customer link.')}</div>
+               </div>
+               ${revokedAt?`<div class="delivery-field" style="grid-column:1/-1">
+                 <div class="delivery-label">Revoked</div>
+                 <div class="delivery-value">${escapeHtml(fmtTime(revokedAt))}</div>
+               </div>`:''}
+             </div>
+             <div class="detail-section-copy">${escapeHtml(noteText)}</div>
+             <div class="delivery-actions-row">
+               <button class="drawer-action primary" id="qrGenerateButton" type="button" ${loading||drawerQrBusy||drawerConfirmationBusy||!record?'disabled':''}>${escapeHtml(generateLabel)}</button>
+               <button class="drawer-action neutral" id="qrCopyButton" type="button" ${hasToken?'':'disabled'}>Copy Link</button>
+               <button class="drawer-action neutral" id="qrOpenButton" type="button" ${qrLink?'':'disabled'}>Open QR Check-in Link</button>
+               <button class="drawer-action neutral" id="qrCustomerCopyButton" type="button" ${customerQrLink?'':'disabled'}>Copy Customer QR Link</button>
+               <button class="drawer-action neutral" id="qrCustomerOpenButton" type="button" ${customerQrLink?'':'disabled'}>Open Customer Page</button>
+             </div>
+           </div>
+         </div>
+         <div class="drawer-notice hidden" id="customerQrNotice"></div>`;
+      const generateBtn=document.getElementById('qrGenerateButton');
+      if(generateBtn){
+        generateBtn.addEventListener('click',async function(){
+          if(!drawerConfirmationRecord||drawerQrBusy)return;
+          await sendCustomerQrGeneration(item);
+        });
+      }
+      const copyBtn=document.getElementById('qrCopyButton');
+      if(copyBtn){
+        copyBtn.addEventListener('click',async function(){
+          if(!drawerQrPassLink)return;
+          try{
+            await navigator.clipboard.writeText(drawerQrPassLink);
+            setCustomerQrNotice('QR check-in link copied.',false);
+          }catch(err){
+            setCustomerQrNotice('Could not copy the QR link right now.',true);
+          }
+        });
+      }
+      const openBtn=document.getElementById('qrOpenButton');
+      if(openBtn){
+        openBtn.addEventListener('click',function(){
+          if(drawerQrPassLink)window.open(drawerQrPassLink,'_blank','noopener,noreferrer');
+        });
+      }
+      const customerCopyBtn=document.getElementById('qrCustomerCopyButton');
+      if(customerCopyBtn){
+        customerCopyBtn.addEventListener('click',async function(){
+          const customerLink=buildCustomerQrLink(record&&record.access_token,drawerQrPassToken);
+          if(!customerLink)return;
+          try{
+            await navigator.clipboard.writeText(customerLink);
+            setCustomerQrNotice('Customer QR link copied.',false);
+          }catch(err){
+            setCustomerQrNotice('Could not copy the customer QR link right now.',true);
+          }
+        });
+      }
+      const customerOpenBtn=document.getElementById('qrCustomerOpenButton');
+      if(customerOpenBtn){
+        customerOpenBtn.addEventListener('click',function(){
+          const customerLink=buildCustomerQrLink(record&&record.access_token,drawerQrPassToken);
+          if(customerLink)window.open(customerLink,'_blank','noopener,noreferrer');
+        });
+      }
+      setCustomerQrNotice('',false);
+    }
+    async function loadCustomerQrCredential(item){
+      const key=getConfirmationKey(item);
+      const record=drawerConfirmationRecord&&drawerConfirmationKey===key?drawerConfirmationRecord:null;
+      const token=++drawerQrCredentialLoadingToken;
+      drawerQrCredentialLoading=true;
+      drawerQrCredentialKey=key;
+      drawerQrPassToken='';
+      drawerQrPassLink='';
+      if(!record){
+        drawerQrCredential=null;
+        drawerQrCredentialLoading=false;
+        renderCustomerQrPanel(item,false);
+        return;
+      }
+      renderCustomerQrPanel(item,true);
+      try{
+        const credential=await WTWBackend.fetchConfirmationQrCredential(record.id);
+        if(token!==drawerQrCredentialLoadingToken||!selectedDrawerItem||getConfirmationKey(selectedDrawerItem)!==key)return;
+        drawerQrCredential=credential;
+        drawerQrCredentialLoading=false;
+        renderCustomerQrPanel(item,false);
+      }catch(err){
+        if(token!==drawerQrCredentialLoadingToken||!selectedDrawerItem||getConfirmationKey(selectedDrawerItem)!==key)return;
+        drawerQrCredential=null;
+        drawerQrCredentialLoading=false;
+        renderCustomerQrPanel(item,false);
+        setCustomerQrNotice('QR credential could not be loaded right now.',true);
+      }
+    }
+    async function sendCustomerQrGeneration(item){
+      if(!drawerConfirmationRecord||drawerQrBusy)return;
+      const key=getConfirmationKey(item);
+      const record=drawerConfirmationRecord&&drawerConfirmationKey===key?drawerConfirmationRecord:null;
+      if(!record)return;
+      drawerQrBusy=true;
+      setCustomerQrControlsDisabled(true);
+      setCustomerQrNotice('Creating QR credential...',false);
+      try{
+        const currentQrStatus=normalizeQrStatus(drawerQrCredential&&drawerQrCredential.qr_status);
+        const currentExpiresAt=safeText(drawerQrCredential&&drawerQrCredential.expires_at).trim();
+        const currentQrExpired=currentQrStatus==='active'&&!!currentExpiresAt&&new Date(currentExpiresAt).getTime()<=Date.now();
+        const rotate=!!(drawerQrCredential&&currentQrStatus==='active'&&!currentQrExpired);
+        const result=await WTWBackend.generateConfirmationQrCredential(record.id,record.confirmation_reference,rotate);
+        if(!result){
+          throw new Error('WTW did not return a QR credential result.');
+        }
+        const token=safeText(result.raw_token).trim();
+        const resultState=normalizeQrStatus(result.result);
+        drawerQrPassToken=token;
+        drawerQrPassLink=token?buildQrCheckinLink(token):'';
+        if(token){
+          drawerQrCredential={
+            id:drawerQrCredential&&drawerQrCredential.id?drawerQrCredential.id:'',
+            confirmation_id:record.id,
+            qr_status:safeText(result.qr_status||'active').trim(),
+            issued_at:new Date().toISOString(),
+            first_scanned_at:'',
+            last_scanned_at:'',
+            scan_count:0,
+            checked_in_at:'',
+            revoked_at:'',
+            expires_at:'',
+            created_at:new Date().toISOString(),
+            updated_at:new Date().toISOString()
+          };
+        }else if(resultState!=='already-active'){
+          drawerQrCredential={
+            id:drawerQrCredential&&drawerQrCredential.id?drawerQrCredential.id:'',
+            confirmation_id:record.id,
+            qr_status:safeText(result.qr_status||'active').trim(),
+            issued_at:drawerQrCredential&&drawerQrCredential.issued_at?drawerQrCredential.issued_at:new Date().toISOString(),
+            first_scanned_at:drawerQrCredential&&drawerQrCredential.first_scanned_at?drawerQrCredential.first_scanned_at:'',
+            last_scanned_at:drawerQrCredential&&drawerQrCredential.last_scanned_at?drawerQrCredential.last_scanned_at:'',
+            scan_count:drawerQrCredential&&drawerQrCredential.scan_count!==undefined?drawerQrCredential.scan_count:0,
+            checked_in_at:drawerQrCredential&&drawerQrCredential.checked_in_at?drawerQrCredential.checked_in_at:'',
+            revoked_at:drawerQrCredential&&drawerQrCredential.revoked_at?drawerQrCredential.revoked_at:'',
+            expires_at:drawerQrCredential&&drawerQrCredential.expires_at?drawerQrCredential.expires_at:'',
+            created_at:drawerQrCredential&&drawerQrCredential.created_at?drawerQrCredential.created_at:new Date().toISOString(),
+            updated_at:new Date().toISOString()
+          };
+        }
+        drawerQrBusy=false;
+        setCustomerQrControlsDisabled(false);
+        renderCustomerQrPanel(item,false);
+        if(token){
+          setCustomerQrNotice('QR credential created. Copy or open the link below.',false);
+        }else{
+          setCustomerQrNotice('QR credential already exists. Regenerate only if you need a fresh link.',false);
+        }
+      }catch(err){
+        drawerQrBusy=false;
+        setCustomerQrControlsDisabled(false);
+        const msg=String((err&&err.message)||err||'');
+        console.error('WTW QR generation failed:',err);
+        if(/permission|not authorized|forbidden|policy|401|403/i.test(msg)){
+          setCustomerQrNotice('You do not have permission to generate QR credentials.',true);
+        }else{
+          setCustomerQrNotice(msg||'Could not generate the QR credential right now.',true);
+        }
+      }
+    }
     async function loadCustomerDelivery(item){
       const key=getConfirmationKey(item);
       const record=drawerConfirmationRecord&&drawerConfirmationKey===key?drawerConfirmationRecord:null;
@@ -3410,12 +3739,18 @@
         drawerConfirmationRecord=null;
         drawerConfirmationLoading=false;
         renderCustomerConfirmationPanel(item,false);
+        drawerQrCredential=null;
+        drawerQrCredentialKey='';
+        drawerQrPassToken='';
+        drawerQrPassLink='';
+        renderCustomerQrPanel(item,false);
         return;
       }
       if(drawerConfirmationRecord&&drawerConfirmationKey===key){
         drawerConfirmationLoading=false;
         renderCustomerConfirmationPanel(item,false);
         loadCustomerDelivery(item);
+        loadCustomerQrCredential(item);
         return;
       }
       renderCustomerConfirmationPanel(item,true);
@@ -3426,6 +3761,7 @@
         drawerConfirmationLoading=false;
         renderCustomerConfirmationPanel(item,false);
         loadCustomerDelivery(item);
+        loadCustomerQrCredential(item);
       }catch(err){
         if(token!==drawerConfirmationToken||!selectedDrawerItem||getConfirmationKey(selectedDrawerItem)!==key)return;
         drawerConfirmationRecord=null;
@@ -3433,6 +3769,11 @@
         renderCustomerConfirmationPanel(item,false);
         drawerDeliveryRows=[];
         renderCustomerDeliveryPanel(item,false);
+        drawerQrCredential=null;
+        drawerQrCredentialKey='';
+        drawerQrPassToken='';
+        drawerQrPassLink='';
+        renderCustomerQrPanel(item,false);
         if(isConfirmationEligible(item)){
           setCustomerConfirmationNotice('Customer confirmation could not be loaded right now.',true);
         }

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WTW QR verification and door check-in.">
+  <title>WTW QR Verification</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#00C2D1;
+      --am:rgba(0,194,209,.1);
+      --ab:rgba(0,194,209,.24);
+      --tx:#F0EDE8;
+      --tm:rgba(240,237,232,.64);
+      --muted:#96a0a8;
+      --good:#46d39a;
+      --warn:#f7b84d;
+      --bad:#ef6b6b;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#07090d;color:var(--tx);font-family:'DM Sans',system-ui,sans-serif}
+    body{
+      background:
+        radial-gradient(circle at 50% -10%, rgba(0,194,209,.15), transparent 32%),
+        linear-gradient(180deg, #05070a 0%, #090c11 58%, #05070a 100%);
+    }
+    body::before{
+      content:'';
+      position:fixed;
+      inset:-40px;
+      background-image:url('assets/wtw-logo-transparent.png');
+      background-repeat:repeat;
+      background-size:140px auto;
+      opacity:.04;
+      pointer-events:none;
+    }
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    .page{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+    .shell{
+      width:min(620px,100%);
+      display:grid;
+      gap:14px;
+    }
+    .brand{
+      display:grid;
+      justify-items:center;
+      gap:10px;
+      padding:12px 0 4px;
+    }
+    .brand img{
+      width:min(240px,70vw);
+      height:auto;
+      display:block;
+      object-fit:contain;
+      filter:drop-shadow(0 0 16px rgba(0,194,209,.22));
+    }
+    .eyebrow{
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:4px;
+      text-transform:uppercase;
+      color:var(--accent);
+      text-align:center;
+    }
+    .card{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      backdrop-filter:blur(18px);
+      box-shadow:0 28px 84px rgba(0,0,0,.38);
+      padding:18px;
+      display:grid;
+      gap:14px;
+    }
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 10px;
+      border:1px solid var(--ab);
+      background:var(--am);
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:2.5px;
+      text-transform:uppercase;
+      color:var(--accent);
+      width:max-content;
+    }
+    .title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(34px,7vw,58px);
+      line-height:.95;
+      letter-spacing:-.35px;
+      text-align:center;
+      margin:0;
+    }
+    .copy{
+      margin:0;
+      text-align:center;
+      color:var(--tm);
+      line-height:1.6;
+      font-size:14px;
+    }
+    .grid{
+      display:grid;
+      gap:10px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.2);
+      padding:14px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns:minmax(110px,160px) minmax(0,1fr);
+      gap:12px;
+      align-items:flex-start;
+      padding-bottom:10px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .row:last-child{padding-bottom:0;border-bottom:none}
+    .label{
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:rgba(240,237,232,.42);
+    }
+    .value{
+      font-size:14px;
+      line-height:1.5;
+      word-break:break-word;
+      color:var(--tx);
+      text-align:right;
+    }
+    .value.muted{color:var(--tm)}
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .btn{
+      appearance:none;
+      border:1px solid var(--ab);
+      background:linear-gradient(135deg,var(--accent),rgba(255,255,255,.86));
+      color:#05070a;
+      min-height:44px;
+      padding:0 14px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:1.6px;
+      text-transform:uppercase;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex:1 1 200px;
+    }
+    .btn.secondary{
+      background:rgba(255,255,255,.04);
+      color:var(--tx);
+    }
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+    .notice{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      padding:12px 14px;
+      color:var(--tm);
+      line-height:1.6;
+      font-size:13px;
+    }
+    .notice.error{
+      color:#ffd4d4;
+      border-color:rgba(239,107,107,.32);
+      background:rgba(239,107,107,.12);
+    }
+    .state-good{color:var(--good)}
+    .state-warn{color:var(--warn)}
+    .state-bad{color:var(--bad)}
+    .footer{
+      text-align:center;
+      color:rgba(240,237,232,.42);
+      font-size:11px;
+      line-height:1.5;
+      padding:2px 0 8px;
+    }
+    .hidden{display:none !important}
+    @media (max-width: 540px){
+      .page{padding:12px}
+      .card{padding:14px}
+      .row{grid-template-columns:1fr;gap:4px}
+      .value{text-align:left}
+      .btn{flex-basis:100%}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <div class="brand">
+        <img src="assets/wtw-logo-transparent.png" alt="Where's The Wave">
+        <div class="eyebrow">WTW QR VERIFICATION</div>
+      </div>
+
+      <section class="card" id="appCard">
+        <div class="status-pill" id="statusPill">Loading</div>
+        <h1 class="title" id="title">Verifying credential</h1>
+        <p class="copy" id="subtitle">Please wait while WTW verifies this QR credential.</p>
+
+        <div class="grid" id="detailsGrid">
+          <div class="row"><div class="label">Reference</div><div class="value muted">—</div></div>
+          <div class="row"><div class="label">Customer</div><div class="value muted">—</div></div>
+          <div class="row"><div class="label">Venue / Event</div><div class="value muted">—</div></div>
+          <div class="row"><div class="label">Date</div><div class="value muted">—</div></div>
+          <div class="row"><div class="label">Time</div><div class="value muted">—</div></div>
+          <div class="row"><div class="label">Party Size</div><div class="value muted">—</div></div>
+        </div>
+
+        <div class="actions hidden" id="actions">
+          <button class="btn" id="checkInBtn" type="button">Check In Guest</button>
+          <a class="btn secondary" href="index.html">Back to WTW</a>
+        </div>
+
+        <div class="notice hidden" id="notice"></div>
+      </section>
+
+      <div class="footer">WTW door verification. Keep this page available for arrival processing only.</div>
+    </div>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script>
+    function safeText(v){return v===undefined||v===null?'':String(v);}
+    function getToken(){
+      const params=new URLSearchParams(window.location.search);
+      return safeText(params.get('token')).trim();
+    }
+    function fmtDate(v){
+      if(!v)return'';
+      try{
+        return new Date(v).toLocaleDateString([], {weekday:'long', month:'long', day:'numeric', year:'numeric'});
+      }catch(err){
+        return safeText(v);
+      }
+    }
+    function fmtTime(v){
+      const raw=safeText(v).trim();
+      if(!raw)return'';
+      const parts=raw.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+      if(!parts)return raw;
+      let hour=Number(parts[1]);
+      const minute=parts[2];
+      const period=hour>=12?'PM':'AM';
+      hour=hour%12;
+      if(hour===0)hour=12;
+      return `${hour}:${minute} ${period}`;
+    }
+    function setNotice(message,isError){
+      const el=document.getElementById('notice');
+      if(!el)return;
+      if(!message){
+        el.textContent='';
+        el.classList.add('hidden');
+        el.classList.remove('error');
+        return;
+      }
+      el.textContent=message;
+      el.classList.remove('hidden');
+      el.classList.toggle('error',!!isError);
+    }
+    function statusTone(status){
+      const s=safeText(status).trim().toLowerCase();
+      if(s==='active')return'good';
+      if(s==='checked_in')return'good';
+      if(s==='expired')return'warn';
+      if(s==='revoked'||s==='cancelled')return'bad';
+      return'warn';
+    }
+    function renderDetails(record,showCheckInAction){
+      const pill=document.getElementById('statusPill');
+      const title=document.getElementById('title');
+      const subtitle=document.getElementById('subtitle');
+      const grid=document.getElementById('detailsGrid');
+      const actions=document.getElementById('actions');
+      const checkInBtn=document.getElementById('checkInBtn');
+      const status=safeText(record&&record.display_status).trim()||'INVALID';
+      const qrStatus=safeText(record&&record.qr_status).trim().toLowerCase();
+      const tone=statusTone(qrStatus||status);
+      if(pill){
+        pill.textContent=status;
+        pill.className=`status-pill state-${tone}`;
+      }
+      const titleMap={
+        active:'Valid Credential',
+        checked_in:'Already Checked In',
+        revoked:'Credential Revoked',
+        cancelled:'Credential Cancelled',
+        expired:'Credential Expired',
+        invalid:'Invalid Credential'
+      };
+      const subtitleMap={
+        active:'This QR credential is valid for door verification.',
+        checked_in:'This guest has already been checked in.',
+        revoked:'This credential has been revoked and cannot be used.',
+        cancelled:'This credential was cancelled.',
+        expired:'This credential has expired.',
+        invalid:'The provided QR token could not be verified.'
+      };
+      if(title)title.textContent=titleMap[qrStatus]||titleMap.invalid;
+      if(subtitle)subtitle.textContent=subtitleMap[qrStatus]||subtitleMap.invalid;
+      if(grid){
+        const fields=[
+          ['Reference',record&&record.confirmation_reference],
+          ['Customer',record&&record.customer_name],
+          ['Venue / Event',record&&record.venue_name],
+          ['Date',fmtDate(record&&record.confirmed_date)],
+          ['Time',fmtTime(record&&record.confirmed_time)],
+          ['Party Size',record&&record.party_size!==undefined&&record&&record.party_size!==null?record.party_size:record&&record.quantity]
+        ];
+        grid.innerHTML=fields.map(function(pair){
+          return `<div class="row"><div class="label">${safeText(pair[0])}</div><div class="value ${pair[1]===undefined||pair[1]===null||pair[1]===''?'muted':''}">${safeText(pair[1]===undefined||pair[1]===null||pair[1]===''?'—':pair[1])}</div></div>`;
+        }).join('');
+      }
+      const allowCheckIn=!!showCheckInAction && qrStatus==='active' && !!record && !!record.confirmation_reference;
+      if(actions){
+        actions.classList.toggle('hidden',!allowCheckIn && !(qrStatus==='checked_in'||qrStatus==='revoked'||qrStatus==='cancelled'||qrStatus==='expired'));
+      }
+      if(checkInBtn){
+        checkInBtn.classList.toggle('hidden',!allowCheckIn);
+        checkInBtn.disabled=!allowCheckIn;
+      }
+    }
+    async function loadVerification(){
+      const token=getToken();
+      if(!token){
+        renderDetails({qr_status:'invalid',display_status:'INVALID'});
+        setNotice('No QR token was provided.',true);
+        return;
+      }
+      if(!window.WTWBackend||typeof WTWBackend.verifyConfirmationQr!=='function'){
+        renderDetails({qr_status:'invalid',display_status:'INVALID'},false);
+        setNotice('WTW QR verification is not configured yet.',true);
+        return;
+      }
+      try{
+        const record=await WTWBackend.verifyConfirmationQr(token);
+        renderDetails(record||{qr_status:'invalid',display_status:'INVALID'},false);
+        const canCheckIn=record&&safeText(record.qr_status).trim().toLowerCase()==='active';
+        if(canCheckIn){
+          try{
+            const adminOk=await WTWBackend.isWtwAdmin();
+            const partnerOk=!adminOk ? await WTWBackend.isWtwPartnerUser() : false;
+            if(adminOk || partnerOk){
+              renderDetails(record,true);
+              setNotice('Authorized operator session detected. You may check this guest in.',false);
+            }else{
+              setNotice('Verification only. Authorized operator login required to check in.',false);
+            }
+          }catch(err){
+            setNotice('Verification only. Authorized operator login required to check in.',false);
+          }
+        }else{
+          setNotice('',false);
+        }
+      }catch(err){
+        console.error('WTW QR verification failed:',err);
+        renderDetails({qr_status:'invalid',display_status:'INVALID'},false);
+        setNotice('The provided QR token could not be verified.',true);
+      }
+    }
+    async function checkInGuest(){
+      const token=getToken();
+      const btn=document.getElementById('checkInBtn');
+      if(!token||!btn||btn.disabled)return;
+      btn.disabled=true;
+      btn.textContent='Checking In...';
+      setNotice('Processing check-in...',false);
+      try{
+        const updated=await WTWBackend.checkInConfirmationQr(token);
+        renderDetails(updated||{qr_status:'invalid',display_status:'INVALID'},false);
+        setNotice('Guest checked in successfully.',false);
+      }catch(err){
+        console.error('WTW QR check-in failed:',err);
+        setNotice(String((err&&err.message)||err||'Could not check in this guest right now.'),true);
+      }finally{
+        btn.disabled=false;
+        btn.textContent='Check In Guest';
+      }
+    }
+    document.addEventListener('DOMContentLoaded',function(){
+      const btn=document.getElementById('checkInBtn');
+      if(btn)btn.addEventListener('click',checkInGuest);
+      loadVerification();
+    });
+  </script>
+</body>
+</html>

@@ -19,7 +19,8 @@
     partnerUsers: 'partner_users',
     requestAssignments: 'request_assignments',
     customerConfirmations: 'customer_confirmations',
-    confirmationDeliveries: 'confirmation_deliveries'
+    confirmationDeliveries: 'confirmation_deliveries',
+    confirmationQrCredentials: 'confirmation_qr_credentials'
   });
   const RECORD_TYPES = Object.freeze({
     reservation: 'reservation',
@@ -660,6 +661,59 @@
     return data || [];
   }
 
+  async function fetchConfirmationQrCredential(confirmationId) {
+    const cid = String(confirmationId || '').trim();
+    if (!isUuidLike(cid)) return null;
+    const { client } = await getAuthenticatedClientOrThrow();
+    const { data, error } = await client
+      .from(TABLES.confirmationQrCredentials)
+      .select('id,confirmation_id,qr_status,issued_at,first_scanned_at,last_scanned_at,scan_count,checked_in_at,revoked_at,expires_at,created_at,updated_at')
+      .eq('confirmation_id', cid)
+      .maybeSingle();
+    if (error) throw error;
+    return data || null;
+  }
+
+  async function generateConfirmationQrCredential(confirmationId, confirmationReference, rotate) {
+    const cid = String(confirmationId || '').trim();
+    const ref = String(confirmationReference || '').trim();
+    if (!isUuidLike(cid) && !ref) {
+      throw new Error('WTW QR generation requires a confirmation id or reference.');
+    }
+    const { client } = await getAuthenticatedClientOrThrow();
+    const { data, error } = await client.rpc('generate_confirmation_qr_credential', {
+      p_confirmation_id: isUuidLike(cid) ? cid : null,
+      p_confirmation_reference: ref || null,
+      p_rotate: !!rotate
+    });
+    if (error) throw error;
+    return Array.isArray(data) ? (data[0] || null) : (data || null);
+  }
+
+  async function verifyConfirmationQr(qrToken) {
+    const token = String(qrToken || '').trim();
+    if (!token) return null;
+    const client = getClientOrThrow();
+    const { data, error } = await client.rpc('verify_confirmation_qr', {
+      p_qr_token: token
+    });
+    if (error) throw error;
+    return Array.isArray(data) ? (data[0] || null) : (data || null);
+  }
+
+  async function checkInConfirmationQr(qrToken) {
+    const token = String(qrToken || '').trim();
+    if (!token) {
+      throw new Error('WTW QR token is required.');
+    }
+    const { client } = await getAuthenticatedClientOrThrow();
+    const { data, error } = await client.rpc('check_in_confirmation_qr', {
+      p_qr_token: token
+    });
+    if (error) throw error;
+    return Array.isArray(data) ? (data[0] || null) : (data || null);
+  }
+
   async function sendConfirmationEmail(confirmationId, resend) {
     const cid = String(confirmationId || '').trim();
     if (!isUuidLike(cid)) {
@@ -770,6 +824,10 @@
     confirmCustomerRequest,
     fetchCustomerConfirmationForRequest,
     fetchConfirmationDeliveries,
+    fetchConfirmationQrCredential,
+    generateConfirmationQrCredential,
+    verifyConfirmationQr,
+    checkInConfirmationQr,
     sendConfirmationEmail,
     sendConfirmationSms,
     getCustomerConfirmation,

@@ -280,6 +280,10 @@
       const params=new URLSearchParams(window.location.search);
       return params.get('token')||'';
     }
+    function getQrToken(){
+      const params=new URLSearchParams(window.location.search);
+      return params.get('qr')||'';
+    }
     function safeText(value){
       return String(value===undefined||value===null?'':value);
     }
@@ -377,6 +381,8 @@
         : status==='completed'
           ? 'If this confirmation has already been used, no further action is needed.'
           : 'Show this page at arrival if requested by WTW or the venue.';
+      const qrToken=getQrToken().trim();
+      const qrLink=qrToken?new URL(`qr-checkin.html?token=${encodeURIComponent(qrToken)}`, window.location.href).toString():'';
       const fields=[
         ['Reference',record.confirmation_reference],
         ['Status',statusLabel(status)],
@@ -398,6 +404,13 @@
         </div>
         ${record.access_instructions?`<div class="status-card"><div class="status-kicker">Access Instructions</div><div class="status-copy">${escapeHtml(record.access_instructions)}</div></div>`:''}
         ${record.customer_message?`<div class="status-card"><div class="status-kicker">Customer Message</div><div class="status-copy">${escapeHtml(record.customer_message)}</div></div>`:''}
+        ${qrLink?`<div class="status-card">
+          <div class="status-kicker">QR Pass</div>
+          <div class="status-copy">Your secure QR pass is ready. Keep it available at arrival.</div>
+          <div class="actions">
+            <a class="btn" href="${escapeHtml(qrLink)}">Open QR Check-in</a>
+          </div>
+        </div>`:''}
         <div class="status-card">
           <div class="status-kicker">WTW Guidance</div>
           <div class="status-copy">${escapeHtml(supportMessage)}</div>
