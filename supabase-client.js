@@ -216,15 +216,14 @@
         apikey: cfg.anonKey,
         Authorization: `Bearer ${cfg.anonKey}`,
         'Content-Type': 'application/json',
-        Prefer: 'return=representation'
+        Prefer: 'return=minimal'
       },
       body: JSON.stringify(payload)
     });
     if (!response.ok) {
       throw new Error(await response.text());
     }
-    const data = await response.json();
-    return Array.isArray(data) ? data[0] : data;
+    return { success: true };
   }
 
   async function createTicketRequest(payload) {
