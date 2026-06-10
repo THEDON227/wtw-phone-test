@@ -111,6 +111,39 @@
       display:grid;
       gap:10px;
     }
+    .qr-pass-stage{
+      display:grid;
+      justify-items:center;
+      gap:12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      padding:16px;
+    }
+    .qr-pass-code{
+      width:220px;
+      min-height:220px;
+      background:#fff;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      margin:0 auto;
+    }
+    .qr-pass-code canvas,
+    .qr-pass-code img,
+    .qr-pass-code table{
+      display:block !important;
+      width:100% !important;
+      height:100% !important;
+    }
+    .qr-pass-caption{
+      text-align:center;
+      font-size:12px;
+      line-height:1.6;
+      color:var(--tm);
+      max-width:28ch;
+    }
     .status-kicker{
       font-size:9px;
       font-weight:900;
@@ -274,6 +307,7 @@
 
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="supabase-client.js"></script>
   <script>
     function getToken(){
@@ -331,6 +365,28 @@
     }
     function getClient(){
       return window.WTWBackend&&WTWBackend.createClient?WTWBackend.createClient():null;
+    }
+    function renderQrCode(containerId,text){
+      const el=document.getElementById(containerId);
+      if(!el)return;
+      el.innerHTML='';
+      const value=safeText(text).trim();
+      if(!value){
+        el.innerHTML='<div class="qr-pass-caption">QR pass unavailable.</div>';
+        return;
+      }
+      if(window.QRCode){
+        new QRCode(el,{
+          text:value,
+          width:196,
+          height:196,
+          colorDark:'#05070a',
+          colorLight:'#ffffff',
+          correctLevel:QRCode.CorrectLevel.M
+        });
+      }else{
+        el.textContent=value;
+      }
     }
     function setPageState(record){
       const title=document.getElementById('pageTitle');
@@ -406,7 +462,12 @@
         ${record.customer_message?`<div class="status-card"><div class="status-kicker">Customer Message</div><div class="status-copy">${escapeHtml(record.customer_message)}</div></div>`:''}
         ${qrLink?`<div class="status-card">
           <div class="status-kicker">QR Pass</div>
+          <div class="status-title">Present this code at arrival</div>
           <div class="status-copy">Your secure QR pass is ready. Keep it available at arrival.</div>
+          <div class="qr-pass-stage">
+            <div class="qr-pass-code" id="customerQrCode"></div>
+            <div class="qr-pass-caption">Scan to open the secure WTW door check-in link.</div>
+          </div>
           <div class="actions">
             <a class="btn" href="${escapeHtml(qrLink)}">Open QR Check-in</a>
           </div>
@@ -420,6 +481,7 @@
             <a class="btn-outline" href="index.html">Back to WTW</a>
           </div>
         </div>`;
+      renderQrCode('customerQrCode',qrLink);
       document.body.classList.remove('loading');
     }
     async function loadConfirmation(){
