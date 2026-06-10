@@ -1,0 +1,30 @@
+From 5f68277a845df64f9817b8768a9c54c97a59accc Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 1 Jun 2026 00:23:09 +0000
+Subject: [PATCH] fix(events): align filter-inner to wrap grid via calc padding
+
+Replace max-width+margin:auto approach (unreliable on overflow:auto
+scroll containers) with calc-based padding that exactly replicates
+the wrap content offset: max(48px, (100vw - 1280px)/2 + 48px).
+---
+ events.html | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/events.html b/events.html
+index 60639f2..03481a2 100644
+--- a/events.html
++++ b/events.html
+@@ -266,8 +266,8 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
+ .ec-meta-item{font-size:11px;font-weight:600;letter-spacing:0.6px;color:var(--text-muted);text-transform:uppercase}
+ .ec-meta-dot{display:none}
+ 
+-/* filter-inner: constrain to same grid as .wrap and .header-inner */
+-.filter-inner{max-width:1280px;margin:0 auto}
++/* filter-inner: match .wrap left/right offset exactly via calc padding */
++.filter-inner{padding-left:max(48px,calc((100vw - 1280px) / 2 + 48px));padding-right:max(48px,calc((100vw - 1280px) / 2 + 48px))}
+ .filter-bar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:48px;background:linear-gradient(to right,transparent,rgba(8,11,15,0.98));pointer-events:none;z-index:1}
+ @media(max-width:768px){.filter-inner{-webkit-overflow-scrolling:touch}}
+ 
+-- 
+2.43.0
+

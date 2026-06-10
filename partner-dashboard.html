@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WTW Partner Portal dashboard.">
+  <title>WTW Partner Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#00C2D1;
+      --am:rgba(0,194,209,.1);
+      --ab:rgba(0,194,209,.22);
+      --tx:#F0EDE8;
+      --tm:rgba(240,237,232,.62);
+      --bg:#070a0e;
+      --panel:#0b1016;
+      --panel2:#091015;
+      --line:rgba(255,255,255,.08);
+      --good:#6de0a2;
+      --warn:#ffb45c;
+      --bad:#ef6b6b;
+      --shadow:0 28px 84px rgba(0,0,0,.36);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%;overflow-x:hidden}
+    body{
+      background:var(--bg);
+      color:var(--tx);
+      font-family:'DM Sans',system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    body::before{
+      content:'';
+      position:fixed;
+      inset:-80px;
+      background-image:url('assets/wtw-logo-transparent.png');
+      background-size:170px auto;
+      background-repeat:repeat;
+      opacity:.025;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:0;
+    }
+    body::after{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle at 18% 0,rgba(255,255,255,.04),transparent 34%),linear-gradient(180deg,rgba(5,7,10,.1),rgba(5,7,10,.94));
+      pointer-events:none;
+      z-index:0;
+    }
+    body>*{position:relative;z-index:1}
+    body.loading .app-shell{opacity:0;pointer-events:none}
+    a{color:inherit;text-decoration:none}
+    button,input,select,textarea{font:inherit}
+    .app-shell{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:280px minmax(0,1fr);
+    }
+    .sidebar{
+      position:sticky;
+      top:0;
+      height:100vh;
+      border-right:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(9,12,17,.98),rgba(5,7,10,.99));
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      z-index:4;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .brand-logo{width:56px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .brand-logo img{width:56px;height:auto;display:block;object-fit:contain;filter:drop-shadow(0 0 12px var(--accent))}
+    .brand-copy{min-width:0}
+    .brand-name{font-size:12px;font-weight:900;letter-spacing:2.4px;line-height:1}
+    .brand-sub{margin-top:3px;font-size:7px;font-weight:800;letter-spacing:2.6px;color:var(--accent);white-space:nowrap}
+    .partner-identity{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      padding:14px;
+      display:grid;
+      gap:7px;
+    }
+    .partner-identity-eyebrow{
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .partner-identity-name{
+      font-family:'Cormorant Garamond',serif;
+      font-size:31px;
+      line-height:1;
+      font-weight:700;
+      letter-spacing:0;
+      text-transform:none;
+      word-break:break-word;
+    }
+    .partner-identity-meta{
+      display:grid;
+      gap:4px;
+      font-size:11px;
+      line-height:1.55;
+      color:var(--tm);
+    }
+    .partner-identity-meta strong{color:var(--tx);font-weight:800}
+    .sidebar-nav{display:grid;gap:14px;overflow:auto;padding-right:4px}
+    .nav-group{display:grid;gap:8px}
+    .nav-label{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(240,237,232,.34)}
+    .nav-list{display:grid;gap:6px}
+    .nav-item{
+      width:100%;
+      border:1px solid transparent;
+      background:rgba(255,255,255,.02);
+      color:var(--tx);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      text-align:left;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .nav-item:hover,.nav-item.active{border-color:var(--ab);background:rgba(255,255,255,.05)}
+    .nav-item-main{min-width:0;display:grid;gap:3px}
+    .nav-item-title{font-size:13px;font-weight:700}
+    .nav-item-sub{font-size:10px;line-height:1.4;color:var(--tm)}
+    .nav-pill{
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      color:var(--accent);
+      flex-shrink:0;
+    }
+    .sidebar-footer{
+      margin-top:auto;
+      display:grid;
+      gap:12px;
+      border-top:1px solid var(--line);
+      padding-top:16px;
+    }
+    .connection{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+      padding:12px;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+    }
+    .conn-dot{
+      width:10px;height:10px;border-radius:999px;
+      background:rgba(255,255,255,.22);
+      box-shadow:0 0 0 4px rgba(255,255,255,.03);
+      margin-top:4px;
+    }
+    .conn-dot.live{background:var(--good);box-shadow:0 0 0 4px rgba(109,224,162,.08)}
+    .conn-copy{min-width:0}
+    .conn-title{font-size:11px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;line-height:1.4}
+    .conn-sub{margin-top:4px;font-size:11px;line-height:1.5;color:var(--tm)}
+    .signout,.small-btn,.btn-primary,.btn-ghost,.chip{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--tx);
+      cursor:pointer;
+    }
+    .signout,.small-btn,.btn-primary,.btn-ghost{
+      padding:11px 14px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+      transition:.18s ease;
+    }
+    .btn-primary{background:linear-gradient(135deg,var(--accent),rgba(255,255,255,.88));color:#020406;border-color:transparent}
+    .btn-ghost:hover,.small-btn:hover,.signout:hover,.chip:hover{border-color:var(--ab);background:rgba(255,255,255,.05)}
+    .sidebar-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.5);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease;
+      z-index:3;
+    }
+    .sidebar-backdrop.open{opacity:1;pointer-events:auto}
+    .main-shell{min-width:0;display:grid;grid-template-rows:auto minmax(0,1fr)}
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px 22px;
+      border-bottom:1px solid var(--line);
+      background:rgba(7,10,14,.96);
+      backdrop-filter:blur(18px);
+    }
+    .topbar-left{display:flex;align-items:center;gap:14px;min-width:0}
+    .menu-btn{
+      display:none;
+      width:42px;height:42px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--tx);
+      font-size:18px;
+      cursor:pointer;
+    }
+    .section-copy{min-width:0;display:grid;gap:4px}
+    .section-title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:32px;
+      line-height:1;
+      font-weight:700;
+    }
+    .section-subtitle{font-size:13px;line-height:1.6;color:var(--tm)}
+    .topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .select,.input{
+      height:42px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--tx);
+      padding:0 12px;
+      min-width:0;
+      outline:none;
+    }
+    .select:focus,.input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 1px rgba(0,194,209,.18) inset}
+    .workspace{
+      min-width:0;
+      padding:22px;
+      display:grid;
+      gap:16px;
+    }
+    .workspace-panel{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(10,14,19,.96),rgba(6,8,12,.99));
+      box-shadow:var(--shadow);
+      padding:18px;
+      display:grid;
+      gap:16px;
+    }
+    .panel-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .panel-title{font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
+    .panel-subtitle{margin-top:4px;font-size:12px;line-height:1.65;color:var(--tm)}
+    .meta-chip{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      padding:8px 10px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      color:var(--tx);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:999px;
+      background:var(--accent);
+      box-shadow:0 0 0 3px rgba(0,194,209,.08);
+      flex-shrink:0;
+    }
+    .summary-grid{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:12px;
+    }
+    .summary-card,.profile-card,.request-card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+    .summary-card{
+      padding:14px;
+      display:grid;
+      gap:8px;
+    }
+    .summary-label{
+      font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(240,237,232,.4)
+    }
+    .summary-value{
+      font-family:'Cormorant Garamond',serif;
+      font-size:34px;
+      line-height:1;
+      font-weight:700;
+    }
+    .summary-note{font-size:11px;line-height:1.6;color:var(--tm)}
+    .toolbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .chip-row{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{
+      padding:10px 12px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      transition:.18s ease;
+    }
+    .chip.active,.chip:hover{border-color:var(--ab);background:rgba(255,255,255,.06)}
+    .request-list{display:grid;gap:10px}
+    .request-card{
+      padding:14px;
+      display:grid;
+      gap:12px;
+      cursor:pointer;
+    }
+    .request-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .request-type{
+      font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--accent)
+    }
+    .request-title{
+      margin-top:4px;
+      font-size:18px;
+      font-weight:700;
+      line-height:1.35;
+    }
+    .request-sub{
+      margin-top:6px;
+      font-size:12px;
+      line-height:1.6;
+      color:var(--tm);
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px 12px;
+    }
+    .request-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    .request-fields{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+    .request-field{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.025);
+      padding:10px;
+    }
+    .request-field-label{
+      font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(240,237,232,.4);margin-bottom:6px
+    }
+    .request-field-value{font-size:12px;line-height:1.6;color:var(--tx);word-break:break-word}
+    .empty-state,.timeline-empty{
+      border:1px dashed rgba(255,255,255,.12);
+      background:rgba(255,255,255,.02);
+      padding:18px;
+      font-size:12px;
+      line-height:1.7;
+      color:var(--tm);
+    }
+    .profile-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+    .profile-card{
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+    .profile-title{
+      font-size:18px;
+      font-weight:700;
+      line-height:1.35;
+    }
+    .profile-sub{font-size:12px;line-height:1.6;color:var(--tm)}
+    .detail-row{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      padding:12px;
+    }
+    .detail-label{
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:rgba(240,237,232,.42);
+      margin-bottom:6px;
+    }
+    .detail-value{font-size:13px;line-height:1.7;color:var(--tx);word-break:break-word}
+    .detail-section-title{
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+    .detail-section-copy{
+      font-size:12px;
+      line-height:1.7;
+      color:var(--tm);
+    }
+    .drawer-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.52);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease;
+      z-index:8;
+    }
+    .drawer-backdrop.open{opacity:1;pointer-events:auto}
+    .drawer{
+      position:fixed;
+      top:0;
+      right:0;
+      width:min(520px,100%);
+      height:100vh;
+      border-left:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(10,14,19,.99),rgba(6,8,12,.995));
+      transform:translateX(102%);
+      transition:transform .22s ease;
+      z-index:9;
+      display:grid;
+      grid-template-rows:auto minmax(0,1fr) auto;
+    }
+    .drawer.open{transform:translateX(0)}
+    .drawer-head,.drawer-footer{padding:18px;border-bottom:1px solid var(--line)}
+    .drawer-footer{border-bottom:0;border-top:1px solid var(--line)}
+    .drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .toolbar-title{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+    .drawer-title{margin-top:5px;font-size:26px;font-family:'Cormorant Garamond',serif;line-height:1.05;font-weight:700}
+    .drawer-close{
+      width:40px;height:40px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--tx);
+      cursor:pointer;
+      font-size:24px;
+      line-height:1;
+    }
+    .drawer-body{
+      min-height:0;
+      overflow:auto;
+      padding:18px;
+      display:grid;
+      gap:14px;
+    }
+    .drawer-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .drawer-details{display:grid;gap:10px}
+    .response-panel{
+      border:1px solid var(--ab);
+      background:rgba(255,255,255,.035);
+      padding:14px;
+      display:grid;
+      gap:12px;
+    }
+    .response-panel-title{font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+    .response-panel-copy{font-size:12px;line-height:1.65;color:var(--tm)}
+    .response-notice{
+      border:1px solid var(--ab);
+      background:rgba(255,255,255,.035);
+      padding:12px 14px;
+      font-size:12px;
+      line-height:1.7;
+      color:var(--tx);
+    }
+    .response-notice.is-error{border-color:rgba(239,107,107,.45);background:rgba(239,107,107,.08)}
+    .response-textarea{
+      width:100%;
+      min-height:92px;
+      resize:vertical;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--tx);
+      padding:12px;
+      outline:none;
+    }
+    .response-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 1px rgba(0,194,209,.18) inset}
+    .response-hint{font-size:11px;line-height:1.6;color:var(--tm)}
+    .drawer-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .drawer-action{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--tx);
+      padding:10px 12px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+    .drawer-action.primary{
+      background:linear-gradient(135deg,var(--accent),rgba(255,255,255,.9));
+      color:#020406;
+      border-color:transparent;
+    }
+    .drawer-action.neutral{border-color:var(--ab)}
+    .drawer-action.warn{border-color:rgba(255,180,92,.32);background:rgba(255,180,92,.08)}
+    .drawer-action:disabled{opacity:.6;cursor:not-allowed}
+    .drawer-readonly{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+      padding:12px 14px;
+      font-size:11px;
+      line-height:1.6;
+      color:var(--tm);
+    }
+    .settings-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+    .settings-card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      padding:14px;
+      display:grid;
+      gap:8px;
+    }
+    .settings-label{
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:rgba(240,237,232,.4);
+    }
+    .settings-value{
+      font-size:14px;
+      line-height:1.6;
+      color:var(--tx);
+      word-break:break-word;
+    }
+    .loading-state{
+      padding:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      color:var(--tm);
+      font-size:12px;
+      line-height:1.7;
+    }
+    @media (max-width:1180px){
+      .app-shell{grid-template-columns:1fr}
+      .sidebar{
+        position:fixed;
+        left:0;
+        top:0;
+        width:280px;
+        transform:translateX(-102%);
+        transition:transform .22s ease;
+        box-shadow:var(--shadow);
+      }
+      .sidebar.open{transform:translateX(0)}
+      .menu-btn{display:inline-flex;align-items:center;justify-content:center}
+    }
+    @media (max-width:980px){
+      .summary-grid,.profile-grid,.request-fields,.settings-grid{grid-template-columns:1fr 1fr}
+      .topbar{padding:16px}
+      .workspace{padding:16px}
+    }
+    @media (max-width:720px){
+      .summary-grid,.profile-grid,.request-fields,.settings-grid{grid-template-columns:1fr}
+      .section-title{font-size:28px}
+      .drawer{width:100%}
+      .topbar-right{justify-content:flex-start}
+    }
+  </style>
+</head>
+<body class="loading">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Partner navigation">
+      <a class="brand" href="index.html" aria-label="WTW home">
+        <div class="brand-logo"><img src="assets/wtw-logo-transparent.png" alt="WTW"></div>
+        <div class="brand-copy">
+          <div class="brand-name">WHERE'S THE WAVE</div>
+          <div class="brand-sub">PARTNER PORTAL</div>
+        </div>
+      </a>
+      <section class="partner-identity" id="partnerIdentity">
+        <div class="partner-identity-eyebrow">WTW Partner Portal</div>
+        <div class="partner-identity-name" id="partnerIdentityName">Partner</div>
+        <div class="partner-identity-meta" id="partnerIdentityMeta">
+          <span>Loading partner profile...</span>
+        </div>
+      </section>
+      <nav class="sidebar-nav">
+        <div class="nav-group">
+          <div class="nav-label">Overview</div>
+          <div class="nav-list">
+            <button class="nav-item active" data-tab="overview" type="button"><span class="nav-item-main"><span class="nav-item-title">Overview</span><span class="nav-item-sub">Live attention and queue summary</span></span><span class="nav-pill">Portal</span></button>
+            <button class="nav-item" data-tab="incoming" type="button"><span class="nav-item-main"><span class="nav-item-title">Incoming Requests</span><span class="nav-item-sub">Assigned routed requests</span></span><span class="nav-pill">Portal</span></button>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-label">Business</div>
+          <div class="nav-list">
+            <button class="nav-item" data-tab="profile" type="button"><span class="nav-item-main"><span class="nav-item-title">Business Profile</span><span class="nav-item-sub">Read-only partner details</span></span><span class="nav-pill">Portal</span></button>
+            <button class="nav-item" data-tab="settings" type="button"><span class="nav-item-main"><span class="nav-item-title">Settings</span><span class="nav-item-sub">Session and support</span></span><span class="nav-pill">Portal</span></button>
+          </div>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="connection">
+          <span class="conn-dot" id="connDot"></span>
+          <div class="conn-copy">
+            <div class="conn-title" id="connTitle">Partner portal loading</div>
+            <div class="conn-sub" id="connSub">Partner access.</div>
+          </div>
+        </div>
+        <button class="signout" id="signOutBtn" type="button">Sign Out</button>
+      </div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+    <div class="main-shell">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation">☰</button>
+          <div class="section-copy">
+            <div class="section-title" id="sectionTitle">Overview</div>
+            <div class="section-subtitle" id="sectionSubtitle">Requests routed to your partner.</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <span class="meta-chip"><span class="dot"></span><span id="refreshStamp">Not refreshed yet</span></span>
+          <button class="btn-ghost" id="refreshBtn" type="button">Refresh</button>
+        </div>
+      </header>
+      <main class="workspace">
+        <section id="workspaceRoot"></section>
+      </main>
+    </div>
+  </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <div class="toolbar-title" id="drawerType">Request</div>
+        <div class="drawer-title" id="drawerTitle">Details</div>
+      </div>
+      <button class="drawer-close" id="drawerClose" type="button" aria-label="Close request details">&times;</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-meta" id="drawerMeta"></div>
+      <div class="drawer-details" id="drawerDetails"></div>
+      <section class="response-panel" id="responsePanel"></section>
+    </div>
+    <div class="drawer-footer">
+      <div class="drawer-meta" id="drawerFooterStatus"></div>
+    </div>
+  </aside>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script>
+    const state={tab:'overview',filter:'all'};
+    let partnerSession=null;
+    let partnerMemberships=[];
+    let partnerProfiles=[];
+    let partnerRequests=[];
+    let selectedRequest=null;
+    let drawerToken=0;
+    let drawerResponseMode='default';
+    let drawerResponseBusy=false;
+    let portalReady=false;
+
+    function safeText(v){return v===undefined||v===null||v===''?'':String(v);}
+    function escapeHtml(v){return safeText(v).replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+    function fmtTime(v){
+      if(!v)return'';
+      try{return new Date(v).toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});}catch(e){return String(v);}
+    }
+    function fmtDate(v){
+      if(!v)return'';
+      try{return new Date(v).toLocaleDateString([], {month:'short', day:'numeric', year:'numeric'});}catch(e){return String(v);}
+    }
+    function fmtMoney(v){
+      if(v===undefined||v===null||v==='')return'';
+      const n=Number(v);
+      if(Number.isNaN(n))return String(v);
+      return new Intl.NumberFormat([], {style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);
+    }
+    function titleCase(v){
+      return safeText(v).trim().replace(/\s+/g,' ').split(' ').filter(Boolean).map(function(part){
+        return part.charAt(0).toUpperCase()+part.slice(1).toLowerCase();
+      }).join(' ');
+    }
+    function formatReference(id){
+      const raw=safeText(id).replace(/-/g,'').toUpperCase();
+      return raw?'WTW-R-'+raw.slice(0,8):'—';
+    }
+    function primaryPartnerProfile(){
+      return (partnerProfiles&&partnerProfiles[0])||null;
+    }
+    function displayPartnerName(){
+      const row=primaryPartnerProfile();
+      return row?titleCase(row.business_name):'Partner';
+    }
+    function partnerLevelLabel(v){
+      const s=safeText(v).trim().toLowerCase();
+      if(!s)return'—';
+      if(s==='basic')return'Basic Partner';
+      if(s==='preferred')return'Preferred Partner';
+      if(s==='signature')return'Signature Partner';
+      return titleCase(v);
+    }
+    function statusLabel(v){
+      const s=safeText(v).trim().toLowerCase();
+      if(!s)return'—';
+      const map={
+        pending_response:'Pending Response',
+        sent_to_partner:'Sent to Partner',
+        alternative_suggested:'Alternative Suggested',
+        pending_setup:'Pending Setup',
+        guest_list:'Guest List',
+        vip_table:'VIP Table',
+        checkout_pending:'Checkout Pending',
+        accepted:'Accepted',
+        declined:'Declined',
+        completed:'Completed',
+        active:'Active',
+        inactive:'Inactive',
+        archived:'Archived',
+        confirmed:'Confirmed',
+        reviewing:'Reviewing',
+        rerouted:'Rerouted',
+        new:'New'
+      };
+      if(map[s])return map[s];
+      return titleCase(s.replace(/[_-]/g,' '));
+    }
+    function requestTypeLabel(type){
+      const value=safeText(type).trim().toLowerCase();
+      if(value==='reservation')return'Reservation';
+      if(value==='guest_list')return'Guest List';
+      if(value==='vip_table')return'VIP Table';
+      if(value==='ticket')return'Ticket';
+      return'Request';
+    }
+    function requestSummaryText(row){
+      const type=safeText(row.request_type).trim().toLowerCase();
+      if(type==='reservation')return [row.venue_name,titleCase(row.market)].filter(Boolean).join(' · ');
+      if(type==='guest_list')return [row.event_title,titleCase(row.market)].filter(Boolean).join(' · ');
+      if(type==='vip_table')return [row.event_title,'VIP Table'].filter(Boolean).join(' · ');
+      return [row.event_title,row.ticket_type].filter(Boolean).join(' · ');
+    }
+    function requestPrimaryName(row){
+      return safeText(row.customer_name||'Guest');
+    }
+    function requestSubtitle(row){
+      const type=safeText(row.request_type).trim().toLowerCase();
+      if(type==='reservation')return [row.requested_date?fmtDate(row.requested_date):'',row.requested_time||''].filter(Boolean).join(' · ');
+      if(type==='guest_list')return [row.arrival_time||'',row.party_size?row.party_size+' guests':''].filter(Boolean).join(' · ');
+      if(type==='vip_table')return [row.quantity?row.quantity+' qty':'',row.total_amount?fmtMoney(row.total_amount):''].filter(Boolean).join(' · ');
+      return [row.quantity?row.quantity+' tickets':'',row.total_amount?fmtMoney(row.total_amount):''].filter(Boolean).join(' · ');
+    }
+    function currentPartnerSummary(){
+      const row=primaryPartnerProfile();
+      if(!row)return 'No partner profile loaded';
+      return [partnerLevelLabel(row.partner_level), titleCase(row.market), statusLabel(row.status)].filter(Boolean).join(' · ');
+    }
+    function currentPartnerName(){
+      return displayPartnerName();
+    }
+    function normalizeFilter(filter){return String(filter||'all').trim().toLowerCase();}
+    function filterRequests(items){
+      const filter=normalizeFilter(state.filter);
+      return (items||[]).filter(function(row){
+        const type=safeText(row.request_type).trim().toLowerCase();
+        if(filter==='pending_response')return safeText(row.partner_status).trim().toLowerCase()==='pending_response';
+        if(filter==='reservations')return type==='reservation';
+        if(filter==='guest lists' || filter==='guest_lists')return type==='guest_list';
+        if(filter==='vip tables' || filter==='vip_tables')return type==='vip_table';
+        if(filter==='tickets')return type==='ticket';
+        return true;
+      });
+    }
+    function sortRequests(items){
+      return (items||[]).slice().sort(function(a,b){
+        return new Date(b.routed_at||0).getTime()-new Date(a.routed_at||0).getTime();
+      });
+    }
+    function summaryCounts(items){
+      const rows=items||[];
+      return {
+        pending: rows.filter(function(r){return safeText(r.partner_status).trim().toLowerCase()==='pending_response';}).length,
+        accepted: rows.filter(function(r){return safeText(r.partner_status).trim().toLowerCase()==='accepted';}).length,
+        declined: rows.filter(function(r){return safeText(r.partner_status).trim().toLowerCase()==='declined';}).length,
+        alternativeSuggested: rows.filter(function(r){return safeText(r.partner_status).trim().toLowerCase()==='alternative_suggested';}).length,
+        completed: rows.filter(function(r){return safeText(r.partner_status).trim().toLowerCase()==='completed';}).length,
+        total: rows.length
+      };
+    }
+    function normalizePartnerRequest(updated,fallback){
+      if(!updated)return fallback||null;
+      const base=fallback&&typeof fallback==='object'?Object.assign({},fallback):{};
+      const assignmentId=safeText(updated.assignment_id||updated.id||base.assignment_id).trim();
+      if(assignmentId)base.assignment_id=assignmentId;
+      if(updated.request_type!==undefined)base.request_type=updated.request_type;
+      if(updated.request_id!==undefined)base.request_id=updated.request_id;
+      if(updated.partner_id!==undefined)base.partner_id=updated.partner_id;
+      if(updated.assigned_venue_id!==undefined)base.assigned_venue_id=updated.assigned_venue_id;
+      if(updated.routed_at!==undefined)base.routed_at=updated.routed_at;
+      if(updated.routed_by!==undefined)base.routed_by=updated.routed_by;
+      if(updated.internal_status!==undefined)base.internal_status=updated.internal_status;
+      if(updated.partner_status!==undefined)base.partner_status=updated.partner_status;
+      if(updated.partner_response_at!==undefined)base.partner_response_at=updated.partner_response_at;
+      if(updated.partner_response_by!==undefined)base.partner_response_by=updated.partner_response_by;
+      if(updated.metadata!==undefined)base.metadata=updated.metadata;
+      if(updated.updated_at!==undefined)base.updated_at=updated.updated_at;
+      return base;
+    }
+    function upsertPartnerRequest(updated){
+      const normalized=normalizePartnerRequest(updated);
+      if(!normalized||!normalized.assignment_id)return;
+      const id=String(normalized.assignment_id);
+      const index=partnerRequests.findIndex(function(row){return String(row.assignment_id)===id;});
+      if(index>=0){
+        partnerRequests=partnerRequests.slice();
+        partnerRequests[index]=Object.assign({},partnerRequests[index],normalized);
+      }else{
+        partnerRequests=[normalized].concat(partnerRequests||[]);
+      }
+    }
+    function setConnectionStatus(text,isLive){
+      const title=document.getElementById('connTitle');
+      const sub=document.getElementById('connSub');
+      const dot=document.getElementById('connDot');
+      if(title)title.textContent=text;
+      if(sub)sub.textContent=portalReady?'Partner portal connected.':'Preparing partner portal.';
+      if(dot){
+        if(isLive)dot.classList.add('live');
+        else dot.classList.remove('live');
+      }
+    }
+    function renderPartnerIdentity(){
+      const row=primaryPartnerProfile();
+      const name=document.getElementById('partnerIdentityName');
+      const meta=document.getElementById('partnerIdentityMeta');
+      if(name)name.textContent=displayPartnerName();
+      if(meta){
+        if(!row){
+          meta.innerHTML='<span>No partner profile loaded.</span>';
+        }else{
+          meta.innerHTML=[
+            `<strong>${escapeHtml(partnerLevelLabel(row.partner_level))}</strong>`,
+            `<span>${escapeHtml(titleCase(row.market)||'—')}</span>`,
+            `<span>${escapeHtml(statusLabel(row.status))}</span>`
+          ].join('');
+        }
+      }
+    }
+    function setSection(tab){
+      state.tab=tab;
+      document.querySelectorAll('.nav-item').forEach(function(btn){btn.classList.toggle('active',btn.dataset.tab===tab);});
+      const map={
+        overview:[`${displayPartnerName()} Overview`,`Assigned requests routed to ${displayPartnerName()}.`],
+        incoming:['Incoming Requests','Requests routed to your partner.'],
+        profile:['Business Profile','Read-only partner business details.'],
+        settings:['Settings','Session and support.']
+      };
+      const meta=map[tab]||map.overview;
+      document.getElementById('sectionTitle').textContent=meta[0];
+      document.getElementById('sectionSubtitle').textContent=meta[1];
+      renderWorkspace();
+    }
+    function getFilteredRequests(){
+      return sortRequests(filterRequests(partnerRequests));
+    }
+    function buildIncomingFilterChips(){
+      const rows=partnerRequests||[];
+      const counts={
+        all:rows.length,
+        reservations:rows.filter(function(r){return safeText(r.request_type).trim().toLowerCase()==='reservation';}).length,
+        guest_lists:rows.filter(function(r){return safeText(r.request_type).trim().toLowerCase()==='guest_list';}).length,
+        vip_tables:rows.filter(function(r){return safeText(r.request_type).trim().toLowerCase()==='vip_table';}).length,
+        tickets:rows.filter(function(r){return safeText(r.request_type).trim().toLowerCase()==='ticket';}).length,
+        pending_response:rows.filter(function(r){return safeText(r.partner_status).trim().toLowerCase()==='pending_response';}).length
+      };
+      return [
+        ['all','All',counts.all],
+        ['reservations','Reservations',counts.reservations],
+        ['guest_lists','Guest Lists',counts.guest_lists],
+        ['vip_tables','VIP Tables',counts.vip_tables],
+        ['tickets','Tickets',counts.tickets],
+        ['pending_response','Pending Response',counts.pending_response]
+      ].map(function(item){
+        return `<button class="chip ${state.filter===item[0]?'active':''}" data-filter="${item[0]}" type="button">${escapeHtml(item[1])} · ${item[2]}</button>`;
+      }).join('');
+    }
+    function renderSummary(){
+      const counts=summaryCounts(partnerRequests);
+      return `<section class="workspace-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Welcome, ${escapeHtml(displayPartnerName())}</div>
+            <div class="panel-subtitle">${escapeHtml(currentPartnerSummary())}</div>
+          </div>
+          <div class="meta-chip"><span class="dot"></span>${escapeHtml(fmtTime(new Date().toISOString()))}</div>
+        </div>
+        <div class="summary-grid">
+          <article class="summary-card"><div class="summary-label">Pending Responses</div><div class="summary-value">${counts.pending}</div><div class="summary-note">Requests waiting on partner response</div></article>
+          <article class="summary-card"><div class="summary-label">Accepted</div><div class="summary-value">${counts.accepted}</div><div class="summary-note">Accepted responses on file</div></article>
+          <article class="summary-card"><div class="summary-label">Declined</div><div class="summary-value">${counts.declined}</div><div class="summary-note">Declined responses on file</div></article>
+          <article class="summary-card"><div class="summary-label">Alternative Suggested</div><div class="summary-value">${counts.alternativeSuggested}</div><div class="summary-note">Responses with alternative proposals</div></article>
+          <article class="summary-card"><div class="summary-label">Completed</div><div class="summary-value">${counts.completed}</div><div class="summary-note">Accepted requests marked complete</div></article>
+          <article class="summary-card"><div class="summary-label">Total Assigned</div><div class="summary-value">${counts.total}</div><div class="summary-note">All routed requests visible to this partner</div></article>
+        </div>
+      </section>`;
+    }
+    function renderRequestCard(row){
+      return `<article class="request-card" data-assignment="${escapeHtml(row.assignment_id)}">
+        <div class="request-top">
+          <div>
+            <div class="request-type">${escapeHtml(requestTypeLabel(row.request_type))}</div>
+            <div class="request-title">${escapeHtml(requestPrimaryName(row))}</div>
+            <div class="request-sub">
+              <span>${escapeHtml(requestSummaryText(row))}</span>
+              ${row.partner_status?`<span>Partner Status: ${escapeHtml(statusLabel(row.partner_status))}</span>`:''}
+              ${row.internal_status?`<span>Routing: ${escapeHtml(statusLabel(row.internal_status))}</span>`:''}
+            </div>
+          </div>
+          <div class="request-meta">
+            <span class="meta-chip"><span class="dot"></span>${escapeHtml(fmtTime(row.routed_at))}</span>
+            <span class="meta-chip"><span class="dot"></span>${escapeHtml(formatReference(row.assignment_id))}</span>
+          </div>
+        </div>
+        <div class="request-fields">
+          <div class="request-field"><div class="request-field-label">Venue / Event</div><div class="request-field-value">${escapeHtml(row.venue_name||row.event_title||'—')}</div></div>
+          <div class="request-field"><div class="request-field-label">Date / Time</div><div class="request-field-value">${escapeHtml(requestSubtitle(row)||'—')}</div></div>
+          <div class="request-field"><div class="request-field-label">Quantity / Party</div><div class="request-field-value">${escapeHtml(row.party_size||row.quantity||'—')}</div></div>
+          <div class="request-field"><div class="request-field-label">Operational</div><div class="request-field-value">${escapeHtml(statusLabel(row.internal_status))}</div></div>
+        </div>
+        <div class="drawer-actions">
+          <span class="meta-chip"><span class="dot"></span>View Details</span>
+        </div>
+      </article>`;
+    }
+    function renderIncoming(){
+      const items=getFilteredRequests();
+      const chips=buildIncomingFilterChips();
+      const list=items.length?items.map(renderRequestCard).join(''):'<div class="empty-state">No routed requests are visible right now.</div>';
+      const root=document.getElementById('workspaceRoot');
+      root.innerHTML=
+        `<section class="workspace-panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Incoming Requests</div>
+              <div class="panel-subtitle">Routed requests assigned to your partner.</div>
+            </div>
+            <div class="toolbar"><div class="chip-row">${chips}</div></div>
+          </div>
+          <div class="request-list">${list}</div>
+        </section>`;
+      root.querySelectorAll('.chip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          state.filter=btn.dataset.filter;
+          renderWorkspace();
+        });
+      });
+      root.querySelectorAll('.request-card').forEach(function(card){
+        card.addEventListener('click',function(){
+          const item=items.find(function(row){return String(row.assignment_id)===String(card.dataset.assignment);});
+          if(item)openDrawer(item);
+        });
+      });
+    }
+    function renderBusinessProfile(){
+      const profiles=partnerProfiles||[];
+      const memberships=partnerMemberships||[];
+      const cards=profiles.length?profiles.map(function(row){
+        return `<article class="profile-card">
+          <div class="profile-title">${escapeHtml(titleCase(row.business_name))}</div>
+          <div class="profile-sub">${escapeHtml([titleCase(row.business_type),titleCase(row.market)].filter(Boolean).join(' · '))}</div>
+          <div class="profile-sub">${escapeHtml([row.website,row.instagram].filter(Boolean).join(' · ')||'No public links on file')}</div>
+          <div class="request-meta">
+            <span class="meta-chip"><span class="dot"></span>${escapeHtml(partnerLevelLabel(row.partner_level))}</span>
+            <span class="meta-chip"><span class="dot"></span>${escapeHtml(statusLabel(row.status))}</span>
+          </div>
+          <div class="detail-row"><div class="detail-label">Created</div><div class="detail-value">${escapeHtml(fmtTime(row.created_at)||'—')}</div></div>
+        </article>`;
+      }).join(''):'<div class="empty-state">No partner profile loaded.</div>';
+      const roles=memberships.length?memberships.map(function(row){
+        return `<span class="meta-chip"><span class="dot"></span>${escapeHtml(titleCase(row.role))}</span>`;
+      }).join(''):'<div class="empty-state">No active partner memberships.</div>';
+      document.getElementById('workspaceRoot').innerHTML=
+        `<section class="workspace-panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Business Profile</div>
+              <div class="panel-subtitle">Read-only permanent partner records and membership roles.</div>
+            </div>
+          </div>
+          <div class="profile-grid">${cards}</div>
+          <div style="display:grid;gap:12px">
+            <div class="panel-head"><div><div class="panel-title">Active Roles</div><div class="panel-subtitle">Current partner memberships for the signed-in account.</div></div></div>
+            <div class="request-meta">${roles}</div>
+          </div>
+        </section>`;
+    }
+    function renderSettings(){
+      const email=safeText(partnerSession&&partnerSession.user&&partnerSession.user.email)||'—';
+      const memberships=partnerMemberships||[];
+      const roleText=memberships.length?memberships.map(function(row){return titleCase(row.role);}).join(' · '):'—';
+      document.getElementById('workspaceRoot').innerHTML=
+        `<section class="workspace-panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Settings</div>
+              <div class="panel-subtitle">Session details and support placeholder.</div>
+            </div>
+          </div>
+          <div class="settings-grid">
+            <div class="settings-card"><div class="settings-label">Signed-in Email</div><div class="settings-value">${escapeHtml(email)}</div></div>
+            <div class="settings-card"><div class="settings-label">Partner Role</div><div class="settings-value">${escapeHtml(roleText)}</div></div>
+          </div>
+          <div class="settings-card">
+            <div class="settings-label">Support</div>
+            <div class="settings-value">Partner support placeholder. Contact your WTW operator for access changes.</div>
+            <button class="btn-ghost" id="settingsSignOut" type="button" style="justify-self:start">Sign Out</button>
+          </div>
+        </section>`;
+      const btn=document.getElementById('settingsSignOut');
+      if(btn)btn.addEventListener('click',signOutAndExit);
+    }
+    function renderOverview(){
+      const counts=summaryCounts(partnerRequests);
+      const recent=sortRequests(partnerRequests).slice(0,4);
+      const recentHtml=recent.length?recent.map(renderRequestCard).join(''):'<div class="empty-state">No routed requests assigned yet.</div>';
+      document.getElementById('workspaceRoot').innerHTML=
+        `${renderSummary()}
+        <section class="workspace-panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Priority Queue</div>
+              <div class="panel-subtitle">Newest routed requests assigned to this partner.</div>
+            </div>
+          </div>
+          <div class="request-list">${recentHtml}</div>
+        </section>`;
+      document.getElementById('workspaceRoot').querySelectorAll('.request-card').forEach(function(card){
+        card.addEventListener('click',function(){
+          const item=partnerRequests.find(function(row){return String(row.assignment_id)===String(card.dataset.assignment);});
+          if(item)openDrawer(item);
+        });
+      });
+    }
+    function renderWorkspace(){
+      renderPartnerIdentity();
+      if(state.tab==='overview')renderOverview();
+      else if(state.tab==='incoming')renderIncoming();
+      else if(state.tab==='profile')renderBusinessProfile();
+      else if(state.tab==='settings')renderSettings();
+    }
+    function setResponseNotice(message,isError){
+      const el=document.getElementById('responseNotice');
+      if(!el)return;
+      if(!message){
+        el.textContent='';
+        el.classList.add('hidden');
+        el.classList.remove('is-error');
+        return;
+      }
+      el.textContent=message;
+      el.classList.remove('hidden');
+      el.classList.toggle('is-error',!!isError);
+    }
+    function setResponseBusy(isBusy){
+      drawerResponseBusy=!!isBusy;
+      const panel=document.getElementById('responsePanel');
+      if(!panel)return;
+      panel.querySelectorAll('button,textarea').forEach(function(el){
+        if(el.id==='responseModeToggle'&&drawerResponseBusy)return;
+        el.disabled=drawerResponseBusy;
+      });
+      const saveBtn=panel.querySelector('[data-response-save]');
+      if(saveBtn)saveBtn.textContent=drawerResponseBusy?'Saving response...':saveBtn.dataset.defaultLabel||saveBtn.textContent;
+    }
+    function activeResponseAction(row){
+      const status=safeText(row.partner_status).trim().toLowerCase();
+      if(status==='pending_response')return'pending';
+      if(status==='alternative_suggested')return'alternative';
+      if(status==='accepted')return'accepted';
+      return'locked';
+    }
+    function responsePanelHtml(row){
+      const status=safeText(row.partner_status).trim().toLowerCase();
+      const metadata=(row&&row.metadata&&typeof row.metadata==='object'&&!Array.isArray(row.metadata))?row.metadata:{};
+      const alternativeNote=safeText(metadata.partner_alternative_note||'').trim();
+      const mode=drawerResponseMode;
+      const isAlternativeVisible=mode==='alternative' || status==='alternative_suggested';
+      const buttons=[];
+      if(status==='pending_response'){
+        buttons.push(`<button class="drawer-action primary" type="button" data-response-action="accept">Accept Request</button>`);
+        buttons.push(`<button class="drawer-action warn" type="button" data-response-action="decline">Decline Request</button>`);
+        if(mode==='alternative'){
+          buttons.push(`<button class="drawer-action neutral" type="button" data-response-save="suggest_alternative" data-default-label="Save Alternative">Save Alternative</button>`);
+        }else{
+          buttons.push(`<button class="drawer-action neutral" type="button" data-response-action="suggest_alternative">Suggest Alternative</button>`);
+        }
+      }else if(status==='alternative_suggested'){
+        buttons.push(`<button class="drawer-action primary" type="button" data-response-action="accept">Accept Request</button>`);
+        buttons.push(`<button class="drawer-action warn" type="button" data-response-action="decline">Decline Request</button>`);
+        buttons.push(`<button class="drawer-action neutral" type="button" data-response-save="update_alternative" data-default-label="Update Alternative">Update Alternative</button>`);
+      }else if(status==='accepted'){
+        buttons.push(`<button class="drawer-action primary" type="button" data-response-action="mark_completed">Mark Completed</button>`);
+      }
+      const hasActions=buttons.length>0;
+      const textareaValue=escapeHtml(alternativeNote);
+      const hint=isAlternativeVisible
+        ? 'Keep it concise and useful. Mention time, party size, or minimum if you are proposing an alternative.'
+        : 'Use the action buttons below to respond to this routed request.';
+      return `
+        <div class="response-panel-title">Partner Response</div>
+        <div class="response-panel-copy">${hasActions?'Respond to this routed request directly from the partner portal.':'No further action is available in this phase.'}</div>
+        <div class="response-notice hidden" id="responseNotice"></div>
+        ${isAlternativeVisible ? `
+          <div>
+            <textarea class="response-textarea" id="responseAltNote" placeholder="Add a useful alternative note...">${textareaValue}</textarea>
+            <div class="response-hint">${escapeHtml(hint)}</div>
+          </div>
+        ` : ''}
+        ${hasActions ? `<div class="drawer-actions" id="responseActions">${buttons.join('')}</div>` : `<div class="response-hint">${escapeHtml(hint)}</div>`}
+      `;
+    }
+    function bindResponseControls(item){
+      const panel=document.getElementById('responsePanel');
+      if(!panel)return;
+      panel.querySelectorAll('[data-response-action]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          if(drawerResponseBusy)return;
+          const action=btn.dataset.responseAction;
+          if(action==='suggest_alternative' || action==='update_alternative'){
+            drawerResponseMode='alternative';
+            renderDrawer(selectedRequest||item);
+            const textarea=document.getElementById('responseAltNote');
+            if(textarea)textarea.focus();
+            return;
+          }
+          respondToAssignment(action);
+        });
+      });
+      const saveBtn=panel.querySelector('[data-response-save]');
+      if(saveBtn){
+        saveBtn.addEventListener('click',function(){
+          if(drawerResponseBusy)return;
+          const currentStatus=safeText((selectedRequest||item)&& (selectedRequest||item).partner_status).trim().toLowerCase();
+          const action=currentStatus==='alternative_suggested'?'update_alternative':'suggest_alternative';
+          respondToAssignment(action);
+        });
+      }
+    }
+    async function respondToAssignment(actionOverride){
+      const row=selectedRequest;
+      if(!row)return;
+      const status=safeText(row.partner_status).trim().toLowerCase();
+      let action=String(actionOverride||'').trim().toLowerCase();
+      let note='';
+      const textarea=document.getElementById('responseAltNote');
+      const alternativeAliases=new Set(['alternative','save_alternative','savealternative','suggestalternative','suggest_alternative','save_alternative_note']);
+      if(alternativeAliases.has(action)){
+        action=status==='alternative_suggested'?'update_alternative':'suggest_alternative';
+      }
+      if(action==='suggest_alternative' || action==='update_alternative'){
+        note=safeText(textarea&&textarea.value).trim();
+        if(!note){
+          setResponseNotice('Enter an alternative note before saving.',true);
+          return;
+        }
+      }
+      if(action==='') {
+        if(status==='alternative_suggested'){
+          action='update_alternative';
+          note=safeText(textarea&&textarea.value).trim();
+        }else{
+          setResponseNotice('This request cannot be updated right now.',true);
+          return;
+        }
+      }
+      setResponseNotice('',false);
+      setResponseBusy(true);
+      try{
+        const updated=await WTWBackend.respondToPartnerAssignment(row.assignment_id,action,note);
+        const normalized=normalizePartnerRequest(updated,row);
+        upsertPartnerRequest(normalized);
+        selectedRequest=normalized;
+        drawerResponseMode=safeText(normalized.partner_status).trim().toLowerCase()==='alternative_suggested'?'alternative':'default';
+        setResponseBusy(false);
+        renderWorkspace();
+        renderDrawer(normalized);
+        setResponseNotice(action==='mark_completed'?'Request marked completed.':'Response saved.',false);
+      }catch(err){
+        setResponseBusy(false);
+        const msg=String((err&&err.message)||err||'');
+        if(/permission|not authorized|forbidden|policy|401|403/i.test(msg)){
+          setResponseNotice('You do not have permission to respond to this request.',true);
+        }else{
+          setResponseNotice(msg || 'Could not save your response right now.',true);
+        }
+      }
+    }
+    function renderDrawer(item){
+      const drawer=document.getElementById('drawer');
+      const backdrop=document.getElementById('drawerBackdrop');
+      if(!drawer||!backdrop||!item)return;
+      drawerToken++;
+      const sameItem=selectedRequest&&String(selectedRequest.assignment_id)===String(item.assignment_id);
+      selectedRequest=item;
+      const currentResponseMode=drawerResponseMode;
+      drawerResponseMode=sameItem
+        ? (safeText(item.partner_status).trim().toLowerCase()==='alternative_suggested' || currentResponseMode==='alternative' ? 'alternative' : 'default')
+        : (safeText(item.partner_status).trim().toLowerCase()==='alternative_suggested' ? 'alternative' : 'default');
+      const row=item||{};
+      document.getElementById('drawerType').textContent=requestTypeLabel(row.request_type);
+      document.getElementById('drawerTitle').textContent=requestPrimaryName(row);
+      document.getElementById('drawerMeta').innerHTML=[
+        row.partner_name?`<span class="meta-chip"><span class="dot"></span>${escapeHtml(titleCase(row.partner_name))}</span>`:'',
+        row.partner_status?`<span class="meta-chip"><span class="dot"></span>${escapeHtml(statusLabel(row.partner_status))}</span>`:'',
+        row.internal_status?`<span class="meta-chip"><span class="dot"></span>${escapeHtml(statusLabel(row.internal_status))}</span>`:'',
+        row.routed_at?`<span class="meta-chip"><span class="dot"></span>${escapeHtml(fmtTime(row.routed_at))}</span>`:''
+      ].filter(Boolean).join('');
+      const detailPairs=[];
+      detailPairs.push(['Request Reference',formatReference(row.assignment_id)]);
+      detailPairs.push(['Request Type',requestTypeLabel(row.request_type)]);
+      detailPairs.push(['Customer',requestPrimaryName(row)]);
+      if(row.customer_email||row.customer_phone)detailPairs.push(['Contact',[row.customer_email,row.customer_phone].filter(Boolean).join(' · ')]);
+      detailPairs.push(['Venue / Event',row.venue_name||row.event_title||'—']);
+      detailPairs.push(['Partner Status',statusLabel(row.partner_status)]);
+      detailPairs.push(['Routing Status',statusLabel(row.internal_status)]);
+      detailPairs.push(['Routed At',fmtTime(row.routed_at)||'—']);
+      if(row.request_type==='reservation'){
+        detailPairs.push(['Requested Date',fmtDate(row.requested_date)||'—']);
+        detailPairs.push(['Requested Time',safeText(row.requested_time)||'—']);
+        detailPairs.push(['Party Size',safeText(row.party_size)||'—']);
+        detailPairs.push(['Occasion',safeText(row.occasion)||'—']);
+        detailPairs.push(['Market',titleCase(row.market)||'—']);
+        detailPairs.push(['Notes',safeText(row.notes)||'—']);
+      }else if(row.request_type==='guest_list'){
+        detailPairs.push(['Party Size',safeText(row.party_size)||'—']);
+        detailPairs.push(['Arrival Time',safeText(row.arrival_time)||'—']);
+        detailPairs.push(['Market',titleCase(row.market)||'—']);
+        detailPairs.push(['Notes',safeText(row.notes)||'—']);
+      }else if(row.request_type==='vip_table'){
+        detailPairs.push(['Quantity',safeText(row.quantity)||'—']);
+        detailPairs.push(['Estimated Amount',row.total_amount?fmtMoney(row.total_amount):'—']);
+        detailPairs.push(['Notes',safeText(row.notes)||'—']);
+      }else if(row.request_type==='ticket'){
+        detailPairs.push(['Ticket Type',safeText(row.ticket_type)||'—']);
+        detailPairs.push(['Quantity',safeText(row.quantity)||'—']);
+        detailPairs.push(['Total Amount',row.total_amount?fmtMoney(row.total_amount):'—']);
+        detailPairs.push(['Operational Status',statusLabel(row.request_status)]);
+      }
+      const metadata=(row&&row.metadata&&typeof row.metadata==='object'&&!Array.isArray(row.metadata))?row.metadata:{};
+      if(metadata.partner_alternative_note){
+        detailPairs.push(['Alternative Note',safeText(metadata.partner_alternative_note)]);
+      }
+      document.getElementById('drawerDetails').innerHTML=detailPairs.map(function(pair){
+        return `<div class="detail-row"><div class="detail-label">${escapeHtml(pair[0])}</div><div class="detail-value">${escapeHtml(pair[1]||'—')}</div></div>`;
+      }).join('');
+      const responsePanel=document.getElementById('responsePanel');
+      if(responsePanel)responsePanel.innerHTML=responsePanelHtml(row);
+      bindResponseControls(row);
+      document.getElementById('drawerFooterStatus').innerHTML=[
+        `<span class="meta-chip"><span class="dot"></span>${escapeHtml(formatReference(row.request_id))}</span>`,
+        `<span class="meta-chip"><span class="dot"></span>Partner owned view</span>`
+      ].join('');
+      drawer.classList.add('open');
+      backdrop.classList.add('open');
+      drawer.setAttribute('aria-hidden','false');
+      backdrop.setAttribute('aria-hidden','false');
+    }
+    function openDrawer(item){
+      renderDrawer(item);
+    }
+    function closeDrawer(){
+      const drawer=document.getElementById('drawer');
+      const backdrop=document.getElementById('drawerBackdrop');
+      selectedRequest=null;
+      drawerToken++;
+      drawerResponseMode='default';
+      drawerResponseBusy=false;
+      setResponseNotice('',false);
+      if(drawer)drawer.classList.remove('open');
+      if(backdrop)backdrop.classList.remove('open');
+      if(drawer)drawer.setAttribute('aria-hidden','true');
+      if(backdrop)backdrop.setAttribute('aria-hidden','true');
+    }
+    function signOutAndExit(){
+      if(window.WTWBackend&&WTWBackend.signOutPartner){
+        WTWBackend.signOutPartner().finally(function(){
+          window.location.replace('partner-login.html');
+        });
+      }else{
+        window.location.replace('partner-login.html');
+      }
+    }
+    async function ensurePartnerAccess(){
+      const client=window.WTWBackend&&WTWBackend.createClient?WTWBackend.createClient():null;
+      if(!client){
+        setConnectionStatus('Supabase auth unavailable',false);
+        document.body.classList.remove('loading');
+        document.getElementById('workspaceRoot').innerHTML='<div class="loading-state">Supabase Auth is not configured yet.</div>';
+        return false;
+      }
+      const sessionResult=await WTWBackend.getPartnerSession();
+      const session=sessionResult&&sessionResult.data&&sessionResult.data.session;
+      if(!session){
+        window.location.replace('partner-login.html');
+        return false;
+      }
+      const allowed=await WTWBackend.isWtwPartnerUser().catch(function(){return false;});
+      if(!allowed){
+        await WTWBackend.signOutPartner().catch(function(){});
+        window.location.replace('partner-login.html?denied=1');
+        return false;
+      }
+      partnerSession=session;
+      return true;
+    }
+    async function loadData(){
+      try{
+        const [memberships,profiles,requests]=await Promise.all([
+          WTWBackend.fetchCurrentPartnerMemberships(),
+          WTWBackend.fetchCurrentPartnerProfiles(),
+          WTWBackend.fetchPartnerRoutedRequests()
+        ]);
+        partnerMemberships=memberships||[];
+        partnerProfiles=profiles||[];
+        partnerRequests=requests||[];
+        if(!partnerProfiles.length){
+          await WTWBackend.signOutPartner().catch(function(){});
+          window.location.replace('partner-login.html?denied=1');
+          return false;
+        }
+        return true;
+      }catch(err){
+        const root=document.getElementById('workspaceRoot');
+        if(root){
+          root.innerHTML='<div class="loading-state">Unable to load partner data right now. Please refresh or contact WTW support.</div>';
+        }
+        document.body.classList.remove('loading');
+        return false;
+      }
+    }
+    function rerender(){
+      renderWorkspace();
+      const stamp=document.getElementById('refreshStamp');
+      if(stamp)stamp.textContent='Updated '+fmtTime(new Date().toISOString());
+      document.body.classList.remove('loading');
+      portalReady=true;
+      setConnectionStatus(displayPartnerName()+' portal ready',true);
+    }
+    async function refreshPortal(){
+      if(!await ensurePartnerAccess())return;
+      const ok=await loadData();
+      if(!ok)return;
+      rerender();
+    }
+    document.addEventListener('DOMContentLoaded',async function(){
+      const menuBtn=document.getElementById('menuBtn');
+      const sidebar=document.getElementById('sidebar');
+      const sidebarBackdrop=document.getElementById('sidebarBackdrop');
+      const refreshBtn=document.getElementById('refreshBtn');
+      const signOutBtn=document.getElementById('signOutBtn');
+      const drawerClose=document.getElementById('drawerClose');
+      const drawerBackdrop=document.getElementById('drawerBackdrop');
+      setConnectionStatus('Partner portal loading',false);
+      if(menuBtn)menuBtn.addEventListener('click',function(){sidebar.classList.add('open');sidebarBackdrop.classList.add('open');});
+      if(sidebarBackdrop)sidebarBackdrop.addEventListener('click',function(){sidebar.classList.remove('open');sidebarBackdrop.classList.remove('open');});
+      if(drawerClose)drawerClose.addEventListener('click',closeDrawer);
+      if(drawerBackdrop)drawerBackdrop.addEventListener('click',closeDrawer);
+      if(signOutBtn)signOutBtn.addEventListener('click',signOutAndExit);
+      if(refreshBtn)refreshBtn.addEventListener('click',refreshPortal);
+      document.querySelectorAll('.nav-item').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          setSection(btn.dataset.tab);
+          if(window.innerWidth<=1180){
+            sidebar.classList.remove('open');
+            sidebarBackdrop.classList.remove('open');
+          }
+        });
+      });
+      if(!await ensurePartnerAccess())return;
+      const ok=await loadData().catch(function(){return false;});
+      if(!ok)return;
+      rerender();
+      document.body.classList.remove('loading');
+    });
+  </script>
+</body>
+</html>

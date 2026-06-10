@@ -1,0 +1,33 @@
+From 046cebde29880a423f522eb72cea9e8ce6f534c1 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 31 May 2026 22:46:51 +0000
+Subject: [PATCH] =?UTF-8?q?fix(events):=20escape=20apostrophe=20in=20proce?=
+ =?UTF-8?q?edCheckout=20alert=20=E2=80=94=20was=20crashing=20all=20JS?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+alert('You're on...') contained a bare ASCII apostrophe inside a single-quoted
+string, causing a SyntaxError that prevented renderFeatured/renderGrid from
+ever executing. Escaped to You\'re. Pre-existing bug, now surfaced because
+Phase 2 changes depend on the render functions running.
+---
+ events.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/events.html b/events.html
+index 9d460a2..0a80d67 100644
+--- a/events.html
++++ b/events.html
+@@ -746,7 +746,7 @@ function updateOrderSummary(){
+ 
+ function proceedCheckout(){
+   const type=selectedTicketType;
+-  if(type==='gl') { alert('You're on the guest list. Confirmation sent to your phone. Access subject to venue confirmation at the door.'); closeTicketModal(); return; }
++  if(type==='gl') { alert('You\'re on the guest list. Confirmation sent to your phone. Access subject to venue confirmation at the door.'); closeTicketModal(); return; }
+   if(type==='vip') { alert('VIP Table Request submitted. A WTW host will follow up within 24 hours. Access subject to venue confirmation.'); closeTicketModal(); return; }
+   alert('Redirecting to secure checkout. Stripe + Apple Pay available at checkout.');
+   closeTicketModal();
+-- 
+2.43.0
+

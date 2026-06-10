@@ -1,0 +1,46 @@
+From ff64c1e45206bf20011f50f048f334e0d3ea2d64 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 31 May 2026 23:36:39 +0000
+Subject: [PATCH] fix(events): restore sticky filter-bar and hero/main spacing
+
+Remove erroneous .filter-bar{position:relative} that was overriding
+position:sticky, causing filter bar to lose sticky behavior and break
+page rhythm. Restore events-hero padding (52px 0 40px) and events-main
+padding-top (48px) to original values. Header height reduction (76px)
+and title scale changes retained.
+---
+ events.html | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/events.html b/events.html
+index 8e81aef..d410dcb 100644
+--- a/events.html
++++ b/events.html
+@@ -236,12 +236,12 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
+ @media(max-width:768px){.header-inner{height:64px}}
+ .brand-logo{width:72px;height:72px}
+ @media(max-width:768px){.brand-logo{width:48px;height:48px}}
+-.events-hero{padding:40px 0 32px}
++.events-hero{padding:52px 0 40px}
+ .eh-title{font-size:clamp(30px,4vw,52px);line-height:1.06;letter-spacing:-1.5px}
+ .eh-sub{font-size:14px;margin-bottom:24px}
+ .filter-bar{top:76px}
+ @media(max-width:768px){.filter-bar{top:64px}}
+-.events-main{padding:36px 0 80px}
++.events-main{padding:48px 0 80px}
+ 
+ /* featured card skeleton base */
+ .fc-image{background:rgba(255,255,255,0.03)}
+@@ -266,8 +266,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
+ .ec-meta-item{font-size:11px;font-weight:600;letter-spacing:0.6px;color:var(--text-muted);text-transform:uppercase}
+ .ec-meta-dot{display:none}
+ 
+-/* mobile filter scroll hint */
+-.filter-bar{position:relative}
++/* mobile filter scroll hint — position:sticky already a containing block, no position:relative needed */
+ .filter-bar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:48px;background:linear-gradient(to right,transparent,rgba(8,11,15,0.98));pointer-events:none;z-index:1}
+ @media(max-width:768px){.filter-inner{-webkit-overflow-scrolling:touch}}
+ 
+-- 
+2.43.0
+

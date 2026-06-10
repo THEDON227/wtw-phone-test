@@ -1,0 +1,30 @@
+From 3d1f7561dbf6180e30f3565b1bb3bd26f90e6705 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 1 Jun 2026 00:31:01 +0000
+Subject: [PATCH] =?UTF-8?q?fix(events):=20filter-inner=20alignment=20?=
+ =?UTF-8?q?=E2=80=94=20max-width=201280px,=20margin=20auto,=20padding=200?=
+ =?UTF-8?q?=2028px?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ events.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/events.html b/events.html
+index 03481a2..fa755f8 100644
+--- a/events.html
++++ b/events.html
+@@ -267,7 +267,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
+ .ec-meta-dot{display:none}
+ 
+ /* filter-inner: match .wrap left/right offset exactly via calc padding */
+-.filter-inner{padding-left:max(48px,calc((100vw - 1280px) / 2 + 48px));padding-right:max(48px,calc((100vw - 1280px) / 2 + 48px))}
++.filter-inner{max-width:1280px;margin:0 auto;padding:0 28px}
+ .filter-bar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:48px;background:linear-gradient(to right,transparent,rgba(8,11,15,0.98));pointer-events:none;z-index:1}
+ @media(max-width:768px){.filter-inner{-webkit-overflow-scrolling:touch}}
+ 
+-- 
+2.43.0
+

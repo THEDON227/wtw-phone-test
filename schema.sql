@@ -117,6 +117,7 @@ create table if not exists public.partner_applications (
   email text,
   phone text,
   wave_member_offer text,
+  partner_level text,
   notes text,
   status text default 'new',
   created_at timestamptz not null default now()
@@ -141,4 +142,3 @@ create index if not exists idx_ticket_requests_event on public.ticket_requests (
 create index if not exists idx_guest_list_requests_event on public.guest_list_requests (event_id, created_at desc);
 create index if not exists idx_partner_applications_market on public.partner_applications (market, created_at desc);
 create index if not exists idx_wave_pass_requests_market on public.wave_pass_requests (market, created_at desc);
-

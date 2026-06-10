@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WTW customer confirmation.">
+  <title>WTW Confirmation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#00C2D1;
+      --am:rgba(0,194,209,.1);
+      --ab:rgba(0,194,209,.22);
+      --tx:#F0EDE8;
+      --tm:rgba(240,237,232,.64);
+      --bg:#070a0e;
+      --line:rgba(255,255,255,.08);
+      --shadow:0 28px 84px rgba(0,0,0,.36);
+      --good:#6de0a2;
+      --warn:#ffb45c;
+      --bad:#ef6b6b;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%;overflow-x:hidden}
+    body{
+      background:var(--bg);
+      color:var(--tx);
+      font-family:'DM Sans',system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    body::before{
+      content:'';
+      position:fixed;
+      inset:-80px;
+      background-image:url('assets/wtw-logo-transparent.png');
+      background-size:170px auto;
+      background-repeat:repeat;
+      opacity:.025;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:0;
+    }
+    body::after{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle at 18% 0,rgba(255,255,255,.04),transparent 34%),linear-gradient(180deg,rgba(5,7,10,.12),rgba(5,7,10,.96));
+      pointer-events:none;
+      z-index:0;
+    }
+    body>*{position:relative;z-index:1}
+    a{color:inherit;text-decoration:none}
+    .shell{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+    .card{
+      width:min(760px,100%);
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(9,12,17,.98),rgba(5,7,10,.995));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .hero{
+      padding:28px 28px 0;
+      display:grid;
+      gap:18px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .brand-logo{width:56px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .brand-logo img{width:56px;height:auto;display:block;object-fit:contain;filter:drop-shadow(0 0 12px var(--accent))}
+    .brand-copy{min-width:0}
+    .brand-name{font-size:12px;font-weight:900;letter-spacing:2.4px;line-height:1}
+    .brand-sub{margin-top:3px;font-size:7px;font-weight:800;letter-spacing:2.6px;color:var(--accent);white-space:nowrap}
+    .eyebrow{
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(42px,7vw,74px);
+      line-height:.92;
+      font-weight:700;
+      letter-spacing:0;
+    }
+    .subtitle{
+      font-size:14px;
+      line-height:1.75;
+      color:var(--tm);
+      max-width:58ch;
+    }
+    .content{
+      padding:24px 28px 28px;
+      display:grid;
+      gap:18px;
+    }
+    .status-card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      padding:18px;
+      display:grid;
+      gap:10px;
+    }
+    .status-kicker{
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:2.2px;
+      text-transform:uppercase;
+      color:rgba(240,237,232,.42);
+    }
+    .status-title{
+      font-family:'Cormorant Garamond',serif;
+      font-size:30px;
+      line-height:1;
+      font-weight:700;
+    }
+    .status-copy{
+      font-size:14px;
+      line-height:1.75;
+      color:var(--tm);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+    .row{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      padding:14px;
+      display:grid;
+      gap:5px;
+      min-width:0;
+    }
+    .row span{
+      font-size:8px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:rgba(240,237,232,.34);
+    }
+    .row strong{
+      font-size:14px;
+      line-height:1.4;
+      word-break:break-word;
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:4px;
+    }
+    .btn,.btn-outline,.btn-muted{
+      min-height:42px;
+      padding:11px 14px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+      border-radius:0;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--tx);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      cursor:pointer;
+    }
+    .btn{
+      background:linear-gradient(135deg,var(--accent),rgba(255,255,255,.88));
+      color:#020406;
+      border-color:transparent;
+    }
+    .btn-outline:hover,.btn-muted:hover{border-color:var(--ab);background:rgba(255,255,255,.05)}
+    .btn:disabled,.btn-outline:disabled,.btn-muted:disabled{opacity:.58;cursor:not-allowed}
+    .muted-note{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      padding:14px 16px;
+      font-size:13px;
+      line-height:1.7;
+      color:var(--tm);
+    }
+    .notice{
+      display:none;
+      border:1px solid var(--ab);
+      background:var(--am);
+      padding:12px 14px;
+      font-size:13px;
+      line-height:1.7;
+      color:var(--tx);
+    }
+    .notice.show{display:block}
+    .notice.error{border-color:rgba(239,107,107,.45);background:rgba(239,107,107,.08)}
+    .footer{
+      padding:0 28px 28px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      color:var(--tm);
+      font-size:11px;
+    }
+    .footer a{color:var(--accent)}
+    .pill-row{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      padding:7px 10px;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+    .loading{
+      display:grid;
+      gap:12px;
+      padding:14px 0 6px;
+      color:var(--tm);
+      font-size:14px;
+    }
+    @media(max-width:720px){
+      .card{width:100%}
+      .hero,.content,.footer{padding-left:20px;padding-right:20px}
+      .grid{grid-template-columns:1fr}
+      .title{font-size:44px}
+    }
+  </style>
+</head>
+<body class="loading">
+  <main class="shell">
+    <section class="card" aria-live="polite">
+      <div class="hero">
+        <a class="brand" href="index.html" aria-label="WTW home">
+          <div class="brand-logo"><img src="assets/wtw-logo-transparent.png" alt="WTW"></div>
+          <div class="brand-copy">
+            <div class="brand-name">WHERE'S THE WAVE</div>
+            <div class="brand-sub">CONFIRMATION</div>
+          </div>
+        </a>
+        <div>
+          <div class="eyebrow">WTW Access Confirmation</div>
+          <h1 class="title" id="pageTitle">Loading your confirmation</h1>
+          <p class="subtitle" id="pageSubtitle">We are verifying your secure confirmation link.</p>
+        </div>
+      </div>
+      <div class="content" id="contentRoot">
+        <div class="loading" id="loadingState">
+          <div class="status-card">
+            <div class="status-kicker">Secure credential</div>
+            <div class="status-title">Checking confirmation</div>
+            <div class="status-copy">WTW is verifying your access token and loading your confirmation record.</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>WTW customer confirmation</span>
+        <a href="index.html">Back to WTW</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script>
+    function getToken(){
+      const params=new URLSearchParams(window.location.search);
+      return params.get('token')||'';
+    }
+    function safeText(value){
+      return String(value===undefined||value===null?'':value);
+    }
+    function escapeHtml(value){
+      return safeText(value).replace(/[&<>"']/g,function(ch){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+      });
+    }
+    function fmtDate(value){
+      if(!value)return'—';
+      const d=new Date(value);
+      if(isNaN(d))return safeText(value);
+      return new Intl.DateTimeFormat([], {weekday:'long', month:'long', day:'numeric', year:'numeric'}).format(d);
+    }
+    function fmtTime(value){
+      return safeText(value).trim()||'—';
+    }
+    function fmtAmount(value){
+      if(value===undefined||value===null||value==='')return'—';
+      const num=Number(value);
+      if(Number.isNaN(num))return safeText(value);
+      return new Intl.NumberFormat([], {style:'currency', currency:'USD', maximumFractionDigits:2}).format(num);
+    }
+    function titleCase(value){
+      return safeText(value).replace(/[_-]+/g,' ').trim().split(/\s+/).filter(Boolean).map(function(part){
+        return part.charAt(0).toUpperCase()+part.slice(1);
+      }).join(' ');
+    }
+    function statusLabel(value){
+      const s=safeText(value).trim().toLowerCase();
+      if(!s)return'Unknown';
+      if(s==='confirmed')return'Confirmed';
+      if(s==='updated')return'Updated';
+      if(s==='cancelled')return'Cancelled';
+      if(s==='completed')return'Completed';
+      return titleCase(s);
+    }
+    function requestLabel(value){
+      const s=safeText(value).trim().toLowerCase();
+      if(s==='reservation')return'WTW Confirmation';
+      if(s==='guest_list')return'Access Confirmation';
+      if(s==='vip_table')return'WTW Access Confirmation';
+      if(s==='ticket')return'WTW Ticket Confirmation';
+      return'WTW Confirmation';
+    }
+    function getClient(){
+      return window.WTWBackend&&WTWBackend.createClient?WTWBackend.createClient():null;
+    }
+    function setPageState(record){
+      const title=document.getElementById('pageTitle');
+      const subtitle=document.getElementById('pageSubtitle');
+      const root=document.getElementById('contentRoot');
+      if(!record){
+        title.textContent='We could not verify this WTW confirmation.';
+        subtitle.textContent='The link may be invalid, expired, or no longer active. Please contact WTW for help.';
+        root.innerHTML=
+          `<div class="status-card">
+            <div class="status-kicker">Verification failed</div>
+            <div class="status-title">Invalid or expired confirmation</div>
+            <div class="status-copy">We could not verify this WTW confirmation. Please contact WTW for support and request a fresh confirmation link.</div>
+            <div class="actions">
+              <a class="btn" href="mailto:partners@wheresthewave.com?subject=WTW%20Confirmation%20Support">Contact WTW</a>
+              <a class="btn-outline" href="index.html">Back to WTW</a>
+            </div>
+          </div>
+          <div class="notice show error">No confirmation details are displayed for invalid or expired links.</div>`;
+        document.body.classList.remove('loading');
+        return;
+      }
+      const status=safeText(record.confirmation_status).trim().toLowerCase();
+      const isTicket=safeText(record.request_type).trim().toLowerCase()==='ticket';
+      const heading=status==='cancelled'
+        ? 'This confirmation has been cancelled.'
+        : status==='completed'
+          ? 'This confirmation is complete.'
+          : status==='updated'
+            ? 'Your confirmation has been updated.'
+            : isTicket
+              ? 'WTW Ticket Confirmation'
+              : 'Your Night Is Confirmed';
+      const subtitleText=status==='cancelled'
+        ? 'This access confirmation is no longer active. Please contact WTW for the latest status.'
+        : status==='completed'
+          ? 'This confirmation has been used or completed. Keep this page for your records.'
+          : isTicket
+            ? 'WTW has verified your ticket confirmation details. Payment status is not shown here.'
+            : 'Hold onto this confirmation for the night. WTW has verified your access details.';
+      title.textContent=heading;
+      subtitle.textContent=subtitleText;
+      const partyLabel=isTicket?'Quantity':'Party Size';
+      const amountLabel=isTicket?'Order Value':'';
+      const amountValue=isTicket?fmtAmount(record.total_amount):'';
+      const supportMessage=status==='cancelled'
+        ? 'If you need the latest status, contact WTW support before arrival.'
+        : status==='completed'
+          ? 'If this confirmation has already been used, no further action is needed.'
+          : 'Show this page at arrival if requested by WTW or the venue.';
+      const fields=[
+        ['Reference',record.confirmation_reference],
+        ['Status',statusLabel(status)],
+        ['Customer',record.customer_name||'Guest'],
+        ['Venue / Event',record.venue_name||record.event_title||'—'],
+        ['Date',fmtDate(record.confirmed_date)],
+        ['Time',fmtTime(record.confirmed_time)],
+        [partyLabel,record.party_size!==undefined&&record.party_size!==null?record.party_size:record.quantity],
+        [amountLabel,amountValue]
+      ].filter(function(pair){return pair[0]&&pair[1]!==''&&pair[1]!==null&&pair[1]!==undefined;});
+      root.innerHTML=
+        `<div class="status-card">
+          <div class="status-kicker">${escapeHtml(requestLabel(record.request_type))}</div>
+          <div class="status-title">${escapeHtml(heading)}</div>
+          <div class="status-copy">${escapeHtml(subtitleText)}</div>
+        </div>
+        <div class="grid">
+          ${fields.map(function(pair){return `<div class="row"><span>${escapeHtml(pair[0])}</span><strong>${escapeHtml(pair[1])}</strong></div>`;}).join('')}
+        </div>
+        ${record.access_instructions?`<div class="status-card"><div class="status-kicker">Access Instructions</div><div class="status-copy">${escapeHtml(record.access_instructions)}</div></div>`:''}
+        ${record.customer_message?`<div class="status-card"><div class="status-kicker">Customer Message</div><div class="status-copy">${escapeHtml(record.customer_message)}</div></div>`:''}
+        <div class="status-card">
+          <div class="status-kicker">WTW Guidance</div>
+          <div class="status-copy">${escapeHtml(supportMessage)}</div>
+          <div class="pill-row"><span class="pill">Wallet Pass Coming Soon</span></div>
+          <div class="actions">
+            <a class="btn" href="mailto:partners@wheresthewave.com?subject=WTW%20Confirmation%20Support">Contact WTW</a>
+            <a class="btn-outline" href="index.html">Back to WTW</a>
+          </div>
+        </div>`;
+      document.body.classList.remove('loading');
+    }
+    async function loadConfirmation(){
+      const token=getToken().trim();
+      const client=getClient();
+      if(!client||!window.WTWBackend||typeof WTWBackend.getCustomerConfirmation!=='function'){
+        setPageState(null);
+        return;
+      }
+      if(!token){
+        setPageState(null);
+        return;
+      }
+      try{
+        const record=await WTWBackend.getCustomerConfirmation(token);
+        if(!record){
+          setPageState(null);
+          return;
+        }
+        setPageState(record);
+      }catch(err){
+        setPageState(null);
+      }
+    }
+    document.addEventListener('DOMContentLoaded',loadConfirmation);
+  </script>
+</body>
+</html>

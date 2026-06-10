@@ -1,0 +1,43 @@
+From deb43699a8beb34b1edb4a3ad0bd006beebc5ca9 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 31 May 2026 23:00:31 +0000
+Subject: [PATCH] polish(events): tighten header/hero/filter spacing for
+ premium rhythm
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Reduce header height 92→76px, logo 88→72px, hero title scale and
+line-height, hero padding, sub-text size, events-main top padding.
+Update sticky filter-bar top offset to match new header height.
+CSS-only overrides, no layout or JS changes.
+---
+ events.html | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/events.html b/events.html
+index 0a80d67..8e81aef 100644
+--- a/events.html
++++ b/events.html
+@@ -231,6 +231,18 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
+ 
+ /* ── PHASE 2 ADDITIONS ── */
+ 
++/* spacing/typography polish — header, hero, filter rhythm */
++.header-inner{height:76px}
++@media(max-width:768px){.header-inner{height:64px}}
++.brand-logo{width:72px;height:72px}
++@media(max-width:768px){.brand-logo{width:48px;height:48px}}
++.events-hero{padding:40px 0 32px}
++.eh-title{font-size:clamp(30px,4vw,52px);line-height:1.06;letter-spacing:-1.5px}
++.eh-sub{font-size:14px;margin-bottom:24px}
++.filter-bar{top:76px}
++@media(max-width:768px){.filter-bar{top:64px}}
++.events-main{padding:36px 0 80px}
++
+ /* featured card skeleton base */
+ .fc-image{background:rgba(255,255,255,0.03)}
+ 
+-- 
+2.43.0
+
