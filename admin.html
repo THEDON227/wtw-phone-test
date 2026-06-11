@@ -3799,11 +3799,17 @@
       const providerMessageId=safeText(payload.provider_message_id).trim();
       const normalizedStatus=status==='sent'||status==='delivered'
         ? 'sent'
-        : status==='skipped'||status==='blocked'||status==='not_configured'
+        : status==='skipped'||status==='blocked'
           ? 'skipped'
-          : status==='failed'
-            ? 'failed'
-            : 'failed';
+          : status==='not_configured'
+            ? 'not_configured'
+            : status==='processing'||status==='sending'
+              ? 'sending'
+              : status==='pending'
+                ? 'pending'
+                : status==='failed'
+                  ? 'failed'
+                  : 'failed';
       return {
         status:normalizedStatus,
         reason,
@@ -3813,21 +3819,26 @@
     function formatAutomationNotice(result){
       const email=summarizeAutomationChannel('email',result);
       const sms=summarizeAutomationChannel('sms',result);
+      const describe=function(entry,label){
+        if(entry.status==='sent')return `${label} sent`;
+        if(entry.status==='skipped')return `${label} skipped${entry.reason?` (${entry.reason})`:''}`;
+        if(entry.status==='failed')return `${label} failed${entry.reason?` (${entry.reason})`:''}`;
+        if(entry.status==='sending')return `${label} sending`;
+        if(entry.status==='pending')return `${label} pending`;
+        if(entry.status==='not_configured')return `${label} not configured`;
+        return `${label} ${entry.status}`;
+      };
+      const emailText=describe(email,'Email');
+      const smsText=describe(sms,'SMS');
       const parts=[];
-      const emailText=email.status==='sent'
-        ? 'Email sent'
-        : email.status==='skipped'
-          ? `Email skipped${email.reason?` (${email.reason})`:''}`
-          : `Email failed${email.reason?` (${email.reason})`:''}`;
-      const smsText=sms.status==='sent'
-        ? 'SMS sent'
-        : sms.status==='skipped'
-          ? `SMS skipped${sms.reason?` (${sms.reason})`:''}`
-          : `SMS failed${sms.reason?` (${sms.reason})`:''}`;
-      parts.push(emailText);
-      parts.push(smsText);
+      if(email.status==='sent'&&sms.status==='sent'){
+        parts.push('Email and SMS sent');
+      }else{
+        parts.push(emailText);
+        parts.push(smsText);
+      }
       return {
-        message: `${parts.join('. ')}.`,
+        message:`${parts.join('. ')}.`,
         isError: email.status==='failed' || sms.status==='failed'
       };
     }
