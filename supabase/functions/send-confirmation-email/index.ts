@@ -55,8 +55,8 @@ function formatTime12(value: unknown) {
   return `${hour}:${minute} ${period}`;
 }
 function buildConfirmationUrl(baseUrl: string, token: string) {
-  const base = new URL(baseUrl);
-  return new URL(`/confirmation.html?token=${encodeURIComponent(token)}`, base).toString();
+  const base = new URL(baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`);
+  return new URL(`confirmation.html?token=${encodeURIComponent(token)}`, base).toString();
 }
 
 function safeBaseUrl() {
