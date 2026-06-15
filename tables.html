@@ -207,7 +207,7 @@ function rt(){
   let html="";
   v.forEach(function(x){
     html+='<div class="tc" onclick="openTM('+x.id+')">'
-    +'<div class="tcimg"><img src="'+x.img+'" loading="lazy" onerror="this.style.background=''+h2r(c.p,0.1)+''"/><div class="tcov"></div>'
+    +'<div class="tcimg"><img src="'+x.img+'" loading="lazy" onerror="this.style.background=\''+h2r(c.p,0.1)+'\'"/><div class="tcov"></div>'
     +'<div class="tcbdg">'+(x.ver?'<span class="badge bv">&#10022; VERIFIED</span>':"")+'</div></div>'
     +'<div class="tcb"><div class="tcvn">'+x.venue+'</div><div class="tctype">'+x.type+' &middot; '+x.loc+'</div>'
     +'<div class="tcdetails">'
