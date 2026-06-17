@@ -141,7 +141,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--bd);margin-top:80px}
 <img src="assets/img/venue-marquee.jpg" loading="lazy"/>
 <div class="evimgov"></div>
 <div class="evbdg">
-<span class="badge bv">&#10022; VERIFIED PROMOTER</span>
+<span class="badge bv">&#10022; WTW CURATED PROMOTER</span>
 <span class="badge" style="background:rgba(0,0,0,0.6);color:rgba(240,237,232,0.7);border:1px solid rgba(255,255,255,0.12)">21+</span>
 <span class="badge" style="border:1px solid var(--ab);color:var(--accent);background:var(--am)">HIGH ENERGY</span>
 </div>
@@ -219,7 +219,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--bd);margin-top:80px}
 <div>
 <div style="font-size:16px;font-weight:700;color:var(--tx);margin-bottom:4px">Marquee NYC</div>
 <div style="font-size:12px;color:var(--td);margin-bottom:8px">Chelsea, Manhattan</div>
-<span class="badge bv" style="font-size:8px">&#10022; VERIFIED VENUE</span>
+<span class="badge bv" style="font-size:8px">&#10022; WTW CURATED VENUE</span>
 </div>
 </div>
 <p style="font-size:13px;color:var(--tm);line-height:1.65;margin-bottom:16px">The gold standard of NYC nightlife. World-class DJs, immersive production every Friday.</p>
@@ -235,7 +235,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--bd);margin-top:80px}
 <div class="rgrid" id="relGrid"></div>
 </div>
 </div>
-<footer><div class="w"><div class="fi2"><div class="fl">&#169; 2026 Where's The Wave. All rights reserved.<br>Access subject to venue confirmation. WTW does not guarantee entry.</div><div class="fbg"><div class="fb">&#10022; VERIFIED VENUES</div><div class="fb">&#128274; SECURE CHECKOUT</div></div></div></div></footer>
+<footer><div class="w"><div class="fi2"><div class="fl">&#169; 2026 Where's The Wave. All rights reserved.<br>Access remains subject to venue confirmation.</div><div class="fbg"><div class="fb">&#10022; CURATED VENUES</div><div class="fb">&#128274; SECURE CHECKOUT</div></div></div></div></footer>
 <div class="mb" id="cityModal" onclick="if(event.target===this)closeCM()"><div class="ms"><div class="mh"></div><div class="mt2">SELECT YOUR CITY</div><div id="cityList"></div></div></div>
 <script>
 const C={nyc:{name:"New York",short:"NEW YORK",p:"#00C2D1",bg:"#080b0f",mood:"Private Access. Manhattan Momentum."},miami:{name:"Miami",short:"MIAMI",p:"#E91E8C",bg:"#06000e",mood:"Celebrity Heat. After-Hours."},la:{name:"Los Angeles",short:"LOS ANGELES",p:"#8B6FE8",bg:"#06050f",mood:"Dinner Clubs. Rooftop Movement."},atl:{name:"Atlanta",short:"ATLANTA",p:"#E84545",bg:"#0a0000",mood:"Section Culture. ATL Momentum."},houston:{name:"Houston",short:"HOUSTON",p:"#C8922A",bg:"#080600",mood:"Space City After Dark."},nj:{name:"New Jersey",short:"NEW JERSEY",p:"#0EA5E9",bg:"#00050f",mood:"Skyline Rooftops."}};
@@ -272,8 +272,8 @@ function updateOS(){
   el.innerHTML=html;
 }
 function checkout(){
-  if(selType==="gl"){alert("You are on the guest list. Confirmation sent to your phone. Access subject to venue confirmation.");return;}
-  if(selType==="vip"){alert("VIP Table Request submitted. Our host team will follow up within 24 hours. Access subject to venue confirmation.");return;}
+  if(selType==="gl"){alert("You are on the guest list request. Confirmation sent to your phone. Access remains subject to venue confirmation.");return;}
+  if(selType==="vip"){alert("VIP Table Request submitted. Our host team will follow up within 24 hours. Access remains subject to venue confirmation.");return;}
   alert("Redirecting to secure checkout. Stripe and Apple Pay available at checkout.");
 }
 var RELATED=[

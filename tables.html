@@ -102,9 +102,9 @@ footer{padding:40px 0 32px;border-top:1px solid var(--bd);margin-top:80px}
 <div class="w" style="padding-top:52px">
 <div class="ey" id="tEy">NEW YORK - VIP TABLES</div>
 <h1 class="st">Reserve a Table</h1>
-<p style="font-size:14px;color:var(--tm);line-height:1.65;max-width:560px;margin-bottom:32px">Premium table packages at verified venues. Every reservation is subject to venue confirmation. Minimum spends apply.</p>
+<p style="font-size:14px;color:var(--tm);line-height:1.65;max-width:560px;margin-bottom:32px">Premium table packages at curated venues. Every reservation is subject to venue confirmation. Typical spend varies by venue, date, party size, and final partner confirmation.</p>
 <div class="trust-strip" id="trustStrip">
-  <div class="ts-item"><span class="ts-icon">&#10022;</span>Verified venues only</div>
+  <div class="ts-item"><span class="ts-icon">&#10022;</span>Curated venues only</div>
   <div class="ts-item"><span class="ts-icon">&#128274;</span>Secure deposit via Stripe</div>
   <div class="ts-item"><span class="ts-icon">&#9672;</span>Access subject to venue confirmation</div>
   <div class="ts-item"><span class="ts-icon">&#9711;</span>Concierge follow-up within 24hrs</div>
@@ -131,7 +131,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--bd);margin-top:80px}
 <div style="flex-shrink:0"><button class="bp" onclick="openTM(null)">Contact Concierge</button></div>
 </div>
 </div>
-<footer><div class="w"><div class="fi2"><div class="fl">&#169; 2026 Where's The Wave. All rights reserved.<br>Access subject to venue confirmation. WTW does not guarantee entry.</div><div class="fbg"><div class="fb">&#10022; VERIFIED VENUES</div><div class="fb">&#128274; SECURE CHECKOUT</div><div class="fb">&#9672; PRIVACY FIRST</div></div></div></div></footer>
+<footer><div class="w"><div class="fi2"><div class="fl">&#169; 2026 Where's The Wave. All rights reserved.<br>Access remains subject to venue confirmation.</div><div class="fbg"><div class="fb">&#10022; CURATED VENUES</div><div class="fb">&#128274; SECURE CHECKOUT</div><div class="fb">&#9672; PRIVACY FIRST</div></div></div></div></footer>
 <div class="mb" id="cityModal" onclick="if(event.target===this)closeCM()"><div class="ms"><div class="mh"></div><div class="mt2">SELECT YOUR CITY</div><div id="cityList"></div></div></div>
 <div class="ob" id="tableModal" onclick="if(event.target===this)closeTM()">
 <div class="obx">
@@ -155,7 +155,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--bd);margin-top:80px}
 <input class="inp" placeholder="Preferred date and time" type="text"/>
 <textarea class="inp" placeholder="Special requests (birthday setup, preferred section, etc.)" rows="3" style="resize:none"></textarea>
 <button class="bp" style="width:100%;padding:15px;font-size:12px" onclick="submitTM()">SUBMIT TABLE REQUEST</button>
-<div style="font-size:10px;color:var(--td);text-align:center;line-height:1.6">Minimum spend applies. Access subject to venue confirmation.<br>Venue Confirmation Pending. WTW does not guarantee entry.</div>
+<div style="font-size:10px;color:var(--td);text-align:center;line-height:1.6">Typical spend varies by venue, date, party size, and final partner confirmation.<br>Pending venue confirmation.</div>
 </div>
 </div>
 </div>
@@ -208,15 +208,15 @@ function rt(){
   v.forEach(function(x){
     html+='<div class="tc" onclick="openTM('+x.id+')">'
     +'<div class="tcimg"><img src="'+x.img+'" loading="lazy" onerror="this.style.background=\''+h2r(c.p,0.1)+'\'"/><div class="tcov"></div>'
-    +'<div class="tcbdg">'+(x.ver?'<span class="badge bv">&#10022; VERIFIED</span>':"")+'</div></div>'
+    +'<div class="tcbdg">'+(x.ver?'<span class="badge bv">&#10022; CURATED BY WTW</span>':"")+'</div></div>'
     +'<div class="tcb"><div class="tcvn">'+x.venue+'</div><div class="tctype">'+x.type+' &middot; '+x.loc+'</div>'
     +'<div class="tcdetails">'
-    +'<div class="tcd"><div class="tcdl">MIN. SPEND</div><div class="tcdv" style="color:'+c.p+'">$'+x.min.toLocaleString()+'</div></div>'
+    +'<div class="tcd"><div class="tcdl">TYPICAL SPEND</div><div class="tcdv" style="color:'+c.p+'">$'+x.min.toLocaleString()+'</div></div>'
     +'<div class="tcd"><div class="tcdl">CAPACITY</div><div class="tcdv">'+x.cap+'</div></div>'
     +'<div class="tcd"><div class="tcdl">HOURS</div><div class="tcdv">'+x.hrs+'</div></div>'
     +'<div class="tcd"><div class="tcdl">BEST FOR</div><div class="tcdv">'+x.occ[0]+'</div></div>'
     +'</div>'
-    +'<div class="tcf"><div class="tcprice"><div class="tcpfl">MINIMUM SPEND</div><div class="tcpn" style="color:'+c.p+'">$'+x.min.toLocaleString()+'</div><div class="tcleg">Access subject to confirmation</div></div>'
+    +'<div class="tcf"><div class="tcprice"><div class="tcpfl">TYPICAL SPEND</div><div class="tcpn" style="color:'+c.p+'">$'+x.min.toLocaleString()+'</div><div class="tcleg">Subject to venue confirmation</div></div>'
     +'<button class="bp" style="background:'+c.p+';font-size:10px;padding:10px 18px">RESERVE</button>'
     +'</div></div></div>';
   });
@@ -236,7 +236,7 @@ function openTM(id){
   document.getElementById("tableModal").classList.add("open");
 }
 function closeTM(){document.getElementById("tableModal").classList.remove("open");}
-function submitTM(){const n=document.getElementById("tmName").value;if(!n.trim()){document.getElementById("tmName").focus();return;}alert("Table request submitted. Venue Confirmation Pending. We will follow up within 24 hours.");closeTM();}
+function submitTM(){const n=document.getElementById("tmName").value;if(!n.trim()){document.getElementById("tmName").focus();return;}alert("Table request submitted. Access is under WTW review. We will follow up within 24 hours.");closeTM();}
 function onCity(c){const t=document.querySelector(".ft.active");if(t){t.style.background=c.p;t.style.color="#050a0b";t.style.borderColor=c.p;}rt();}
 if(document.readyState==="complete")processLogo();else window.addEventListener("load",processLogo);
 applyTheme("nyc");

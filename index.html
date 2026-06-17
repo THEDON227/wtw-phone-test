@@ -950,8 +950,8 @@ header{position:sticky;top:0;z-index:200;background:rgba(5,7,10,.78)!important;b
       </div>
       <div class="trust-item">
         <div class="trust-icon">◈</div>
-        <div class="trust-title">GUEST LIST CONFIRMED</div>
-        <div class="trust-desc">Guest list and ticket confirmations are designed for fast door decisions and clear arrival context.</div>
+        <div class="trust-title">REQUEST RECEIVED</div>
+        <div class="trust-desc">Guest list and ticket requests are routed by WTW for review, with clear arrival context for the venue partner.</div>
       </div>
       <div class="trust-item">
         <div class="trust-icon">◇</div>
@@ -962,9 +962,9 @@ header{position:sticky;top:0;z-index:200;background:rgba(5,7,10,.78)!important;b
     <div class="trust-band">
       <div class="tb-eyebrow">TABLE ACCESS IS BY REQUEST</div>
       <div class="tb-title">Ready for the right room?</div>
-      <div class="tb-sub">WTW routes requests with context. Final access remains subject to venue or partner confirmation.</div>
+      <div class="tb-sub">WTW routes requests with context. Final access remains subject to venue availability and partner confirmation.</div>
       <button class="btn-primary" onclick="openRequest()">Request Access</button>
-      <div class="tb-legal">Access subject to venue confirmation. WTW does not guarantee entry.<br>Venue approval pending until confirmed by the venue directly.</div>
+      <div class="tb-legal">Request received. Access remains subject to venue availability.<br>Final approval comes from the venue partner.</div>
     </div>
   </div>
 </section>
@@ -996,7 +996,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(5,7,10,.78)!important;b
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-legal">© 2026 Where's The Wave. All rights reserved.<br>VIP access subject to venue confirmation. WTW does not guarantee entry.</div>
+      <div class="footer-legal">© 2026 Where's The Wave. All rights reserved.<br>VIP access remains subject to venue confirmation.</div>
       <div class="footer-badges">
         <div class="f-badge">✦ CITY ROOMS</div>
         <div class="f-badge">🔒 PRIVATE CHECKOUT</div>
@@ -1022,9 +1022,9 @@ header{position:sticky;top:0;z-index:200;background:rgba(5,7,10,.78)!important;b
   <div class="request-box">
     <button class="req-close" onclick="closeRequest()">✕</button>
     <div id="reqForm">
-      <div class="req-badge">✦ VERIFIED REQUEST</div>
+      <div class="req-badge">✦ WTW REQUEST</div>
       <div class="req-title">Request Access</div>
-      <div class="req-sub">Every request is reviewed directly by the venue. Access is subject to venue confirmation — never guaranteed. We'll follow up within 24 hours.</div>
+      <div class="req-sub">Every request is routed by WTW for review. Access remains subject to venue confirmation. We'll follow up within 24 hours.</div>
       <div class="req-form">
         <input class="ri" placeholder="Full name" id="rName" type="text"/>
         <input class="ri" placeholder="Phone number" id="rPhone" type="tel"/>
@@ -1035,14 +1035,14 @@ header{position:sticky;top:0;z-index:200;background:rgba(5,7,10,.78)!important;b
         </div>
         <input class="ri" placeholder="Preferred arrival time" id="rTime" type="text"/>
         <button class="btn-primary" style="width:100%;margin-top:4px;padding:15px" onclick="submitRequest()">SUBMIT REQUEST</button>
-        <div class="req-disc">Access subject to venue confirmation. This request does not guarantee entry. Venue Confirmation Pending upon submission.</div>
+        <div class="req-disc">Request received. Access remains subject to venue confirmation. Under WTW review upon submission.</div>
       </div>
     </div>
     <div class="req-success" id="reqSuccess">
       <div class="rs-icon">✦</div>
       <div class="rs-title">Request Submitted</div>
-      <div class="rs-sub">Your access request is pending venue review.<br>We'll follow up within 24 hours.</div>
-      <div class="rs-status">VENUE CONFIRMATION PENDING</div>
+      <div class="rs-sub">Your request is under WTW review and pending venue confirmation.<br>We'll follow up within 24 hours.</div>
+      <div class="rs-status">UNDER WTW REVIEW</div>
     </div>
   </div>
 </div>
@@ -1316,7 +1316,7 @@ function applyCity(k) {
   document.getElementById('tablesGrid').innerHTML = c.tables.map(t => `
     <div class="table-card">
       <img class="table-venue-img" src="${t.img}" loading="lazy" onerror="this.style.background='${hexToRgba(c.accent,0.08)}'"/>
-      ${t.verified ? `<div class="table-badge" style="color:${c.accent};background:${hexToRgba(c.accent,0.1)};border-color:${hexToRgba(c.accent,0.25)}">✦ VERIFIED VENUE</div>` : '<div class="table-badge" style="color:rgba(240,237,232,0.35);background:transparent;border-color:rgba(255,255,255,0.1)">PENDING VERIFICATION</div>'}
+      ${t.verified ? `<div class="table-badge" style="color:${c.accent};background:${hexToRgba(c.accent,0.1)};border-color:${hexToRgba(c.accent,0.25)}">✦ WTW CURATED</div>` : '<div class="table-badge" style="color:rgba(240,237,232,0.35);background:transparent;border-color:rgba(255,255,255,0.1)">PENDING VENUE CONFIRMATION</div>'}
       <div class="table-venue">${t.venue}</div>
       <div class="table-meta">${t.meta}</div>
       <div class="table-footer">
@@ -1332,7 +1332,7 @@ function applyCity(k) {
       <div class="venue-img-wrap">
         <img class="venue-img" src="${v.img}" loading="lazy" onerror="this.style.background='${hexToRgba(c.accent,0.08)}'"/>
         <div class="venue-img-overlay"></div>
-        ${v.verified ? `<div class="venue-verified" style="color:${c.accent};border-color:${hexToRgba(c.accent,0.3)}">✦ VERIFIED</div>` : ''}
+        ${v.verified ? `<div class="venue-verified" style="color:${c.accent};border-color:${hexToRgba(c.accent,0.3)}">✦ WTW CURATED</div>` : ''}
       </div>
       <div class="venue-body">
         <div class="venue-name">${v.name}</div>

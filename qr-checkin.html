@@ -313,7 +313,7 @@
         revoked:'This credential has been revoked and cannot be used.',
         cancelled:'This credential was cancelled.',
         expired:'This credential has expired.',
-        invalid:'The provided QR token could not be verified.'
+        invalid:'This pass could not be validated. Please check the link or contact WTW support.'
       };
       if(title)title.textContent=titleMap[qrStatus]||titleMap.invalid;
       if(subtitle)subtitle.textContent=subtitleMap[qrStatus]||subtitleMap.invalid;
@@ -374,7 +374,7 @@
       }catch(err){
         console.error('WTW QR verification failed:',err);
         renderDetails({qr_status:'invalid',display_status:'INVALID'},false);
-        setNotice('The provided QR token could not be verified.',true);
+        setNotice('This pass could not be validated. Please check the link or contact WTW support.',true);
       }
     }
     async function checkInGuest(){

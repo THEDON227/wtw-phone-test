@@ -366,7 +366,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
   <div class="wrap">
     <div class="eh-eyebrow" id="heroEyebrow">NEW YORK · TONIGHT</div>
     <h1 class="eh-title" id="heroTitle">New York<br>Events</h1>
-    <p class="eh-sub" id="heroSub">Premium access to the city&#39;s most exclusive nights. Every event curated, every venue verified, every entry confirmed before you arrive.</p>
+    <p class="eh-sub" id="heroSub">Premium access to the city&#39;s most selective nights. Every event curated by WTW, every venue routed for review, and every request reviewed before venue confirmation.</p>
     <div class="eh-controls">
       <div class="search-bar">
         <span class="search-icon">⌕</span>
@@ -436,7 +436,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
     <div class="footer-inner">
       <div class="footer-legal">© 2026 Where's The Wave. All rights reserved.<br>Ticket purchases subject to venue terms. Access subject to venue confirmation.</div>
       <div class="footer-badges">
-        <div class="f-badge">✦ VERIFIED VENUES</div>
+        <div class="f-badge">✦ CURATED VENUES</div>
         <div class="f-badge">🔒 SECURE CHECKOUT</div>
         <div class="f-badge">◈ PRIVACY FIRST</div>
       </div>
@@ -463,20 +463,20 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 
 <script>
 const CITIES={
-  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1800&q=80&auto=format&fit=crop',headline:'New Jersey Events',subcopy:'Premium local nightlife, rooftops, and dinner lounges curated with verified access before you arrive.'},
-  nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT',bodyClass:'city-nyc',bgImg:'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=1800&q=80&auto=format&fit=crop',headline:'New York Events',subcopy:'An editorial view of tonight\'s verified rooms, guest lists, and table access. Curated for the city\'s most selective nights.'},
-  miami:{name:'Miami',label:'Florida',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1800&q=80&auto=format&fit=crop',headline:'Miami Events',subcopy:'Celebrity rooms, rooftops, and late-night access curated with concierge-level confidence before you arrive.'},
+  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1800&q=80&auto=format&fit=crop',headline:'New Jersey Events',subcopy:'Premium local nightlife, rooftops, and dinner lounges routed for WTW review.'},
+  nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT',bodyClass:'city-nyc',bgImg:'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=1800&q=80&auto=format&fit=crop',headline:'New York Events',subcopy:'An editorial view of tonight\'s curated rooms, guest list requests, and table access. Built for the city\'s most selective nights.'},
+  miami:{name:'Miami',label:'Florida',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1800&q=80&auto=format&fit=crop',headline:'Miami Events',subcopy:'Celebrity rooms, rooftops, and late-night access curated for WTW review.'},
   atl:{name:'Atlanta',label:'Georgia',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1800&q=80&auto=format&fit=crop',headline:'Georgia Events',subcopy:'Buckhead tables, Midtown lounges, Afrobeats rooms, and late Southern nightlife curated with WTW signal.'},
-  la:{name:'Los Angeles',label:'California',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'California Events',subcopy:'A quiet, verified map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
+  la:{name:'Los Angeles',label:'California',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'California Events',subcopy:'A curated map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
   dallas:{name:'Dallas',label:'Texas',short:'DALLAS',p:'#D6A94A',bg:'#090704',eyebrow:'DALLAS · TONIGHT',bodyClass:'city-dallas',bgImg:'https://images.unsplash.com/photo-1545470348-9717d1e4ac85?w=1800&q=80&auto=format&fit=crop',headline:'Texas Events',subcopy:'Upscale lounges, sports-weekend rooms, and skyline tables curated for Dallas nights with polish.'},
 };
 
 const ALL_EVENTS={
   nyc:[
-    {id:1,title:'Marquee Fridays',venue:'Marquee NYC',city:'New York',neighborhood:'Chelsea',date:'Fri Jun 6',time:'11:00 PM',endTime:'4:00 AM',price:65,glPrice:0,vipMin:500,wave:94,cats:['tonight','mostwanted','premium','latenight'],tags:['HIGH ENERGY','PREMIUM TABLES'],desc:'World-class DJs, immersive production, and the city\'s most watched room.',dresscode:'Upscale',age:'21+',status:'available',featured:true,img:'assets/img/venue-marquee.jpg',promoter:'Verified'},
-    {id:2,title:'The Nines Late Night',venue:'The Nines',city:'New York',neighborhood:'NoHo',date:'Fri Jun 6',time:'10:00 PM',endTime:'2:00 AM',price:35,glPrice:0,vipMin:250,wave:89,cats:['tonight','guestlist','lounge','latenight'],tags:['PIANO LOUNGE','UPSCALE'],desc:'A velvet downtown room for sharp cocktails, music heads, and late conversation.',dresscode:'Upscale',age:'21+',status:'limited',featured:false,img:'assets/img/venue-nines.jpg',promoter:'Verified'},
-    {id:3,title:'Zero Bond Selects',venue:'Zero Bond',city:'New York',neighborhood:'NoHo',date:'Fri Jun 6',time:'10:30 PM',endTime:'2:30 AM',price:75,glPrice:0,vipMin:900,wave:96,cats:['tonight','premium','mostwanted','lounge'],tags:['MEMBERS ENERGY','EDITORIAL'],desc:'A private-club style night with fashion week energy and a selective door.',dresscode:'Cocktail',age:'21+',status:'limited',featured:false,img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80&auto=format&fit=crop',promoter:'Verified'},
-    {id:4,title:'PH-D Rooftop Sessions',venue:'PH-D Rooftop',city:'New York',neighborhood:'Hudson Yards',date:'Sat Jun 7',time:'8:00 PM',endTime:'2:00 AM',price:40,glPrice:0,vipMin:300,wave:90,cats:['rooftop','weekend','guestlist','mostwanted'],tags:['ROOFTOP','SKYLINE VIEWS'],desc:'Manhattan skyline, polished cocktails, and a curated rooftop crowd.',dresscode:'Smart Casual',age:'21+',status:'available',featured:false,img:'assets/img/venue-phd.jpg',promoter:'Verified'},
+    {id:1,title:'Marquee Fridays',venue:'Marquee NYC',city:'New York',neighborhood:'Chelsea',date:'Fri Jun 6',time:'11:00 PM',endTime:'4:00 AM',price:65,glPrice:0,vipMin:500,wave:94,cats:['tonight','mostwanted','premium','latenight'],tags:['HIGH ENERGY','PREMIUM TABLES'],desc:'World-class DJs, immersive production, and the city\'s most watched room.',dresscode:'Upscale',age:'21+',status:'available',featured:true,img:'assets/img/venue-marquee.jpg',promoter:'WTW Curated Promoter'},
+    {id:2,title:'The Nines Late Night',venue:'The Nines',city:'New York',neighborhood:'NoHo',date:'Fri Jun 6',time:'10:00 PM',endTime:'2:00 AM',price:35,glPrice:0,vipMin:250,wave:89,cats:['tonight','guestlist','lounge','latenight'],tags:['PIANO LOUNGE','UPSCALE'],desc:'A velvet downtown room for sharp cocktails, music heads, and late conversation.',dresscode:'Upscale',age:'21+',status:'limited',featured:false,img:'assets/img/venue-nines.jpg',promoter:'WTW Curated Promoter'},
+    {id:3,title:'Zero Bond Selects',venue:'Zero Bond',city:'New York',neighborhood:'NoHo',date:'Fri Jun 6',time:'10:30 PM',endTime:'2:30 AM',price:75,glPrice:0,vipMin:900,wave:96,cats:['tonight','premium','mostwanted','lounge'],tags:['MEMBERS ENERGY','EDITORIAL'],desc:'A private-club style night with fashion week energy and a selective door.',dresscode:'Cocktail',age:'21+',status:'limited',featured:false,img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80&auto=format&fit=crop',promoter:'WTW Curated Promoter'},
+    {id:4,title:'PH-D Rooftop Sessions',venue:'PH-D Rooftop',city:'New York',neighborhood:'Hudson Yards',date:'Sat Jun 7',time:'8:00 PM',endTime:'2:00 AM',price:40,glPrice:0,vipMin:300,wave:90,cats:['rooftop','weekend','guestlist','mostwanted'],tags:['ROOFTOP','SKYLINE VIEWS'],desc:'Manhattan skyline, polished cocktails, and a curated rooftop crowd.',dresscode:'Smart Casual',age:'21+',status:'available',featured:false,img:'assets/img/venue-phd.jpg',promoter:'WTW Curated Promoter'},
     {id:5,title:'Afrowave Saturdays',venue:'Somewhere Nowhere',city:'New York',neighborhood:'Midtown',date:'Sat Jun 7',time:'10:00 PM',endTime:'3:00 AM',price:30,glPrice:0,vipMin:350,wave:92,cats:['rooftop','weekend','mostwanted'],tags:['AFROBEATS','ROOFTOP'],desc:'Afrobeats, Amapiano, and dancehall above the city with open-air energy.',dresscode:'Smart Casual',age:'21+',status:'available',featured:false,img:'assets/img/venue-phd.jpg',promoter:'Verified'},
     {id:6,title:'Lavo After Dark',venue:'Lavo NYC',city:'New York',neighborhood:'Midtown East',date:'Sat Jun 7',time:'11:00 PM',endTime:'4:00 AM',price:45,glPrice:0,vipMin:400,wave:87,cats:['weekend','premium','lounge','latenight'],tags:['DINNER CLUB','LATE NIGHT'],desc:'A dinner-to-dance room where celebrity culture meets Midtown polish.',dresscode:'Upscale',age:'21+',status:'available',featured:false,img:'assets/img/venue-marquee.jpg',promoter:'Verified'},
     {id:7,title:'Dumbo House Rooftop',venue:'Dumbo House',city:'New York',neighborhood:'Brooklyn',date:'Sun Jun 8',time:'7:00 PM',endTime:'12:00 AM',price:50,glPrice:0,vipMin:450,wave:88,cats:['rooftop','weekend','premium'],tags:['MEMBERS ROOFTOP','SUNSET'],desc:'East River views, fashion crowd, and a slower Sunday room.',dresscode:'Smart Casual',age:'21+',status:'available',featured:false,img:'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=80&auto=format&fit=crop',promoter:'Verified'},
@@ -696,7 +696,7 @@ function renderFeatured(){
       <div class="fc-overlay"></div>
       <div class="fc-badges">
         <span class="badge badge-featured">✦ CURATED PICK</span>
-        ${feat.promoter?'<span class="badge badge-verified">✓ VERIFIED PROMOTER</span>':''}
+          ${feat.promoter?'<span class="badge badge-verified">✓ WTW CURATED PROMOTER</span>':''}
         <span class="badge badge-age">${feat.age}</span>
       </div>
     </div>
@@ -704,7 +704,7 @@ function renderFeatured(){
       <div>
         <div class="fc-meta-top">
           <div class="wave-score"><span class="wave-score-num" style="color:${c.p}">${feat.wave}</span><span style="color:${c.p}">% WAVE</span><span class="wave-score-sub">CURATED BY WTW</span></div>
-          ${feat.status==='limited'?'<span class="badge badge-limited">SELLING FAST</span>':''}
+          ${feat.status==='limited'?'<span class="badge badge-limited">HIGH INTEREST</span>':''}
         </div>
         <div class="fc-title">${feat.title}</div>
         <div class="fc-venue-row">
@@ -747,13 +747,13 @@ function renderGrid(){
   grid.innerHTML=events.map(e=>{
     const isSaved=savedEvents.has(e.id);
     const statusClass=e.status==='limited'?'status-limited':e.status==='guestlist'?'status-gl':'status-avail';
-    const statusText=e.status==='limited'?'SELLING FAST':e.status==='guestlist'?'GUEST LIST ONLY':'TICKETS AVAILABLE';
+    const statusText=e.status==='limited'?'HIGH INTEREST':e.status==='guestlist'?'REQUEST ACCESS':'TICKETS AVAILABLE';
     return `<div class="event-card">
       <div class="ec-img">
         <img src="${e.img}" loading="lazy" onerror="this.style.background='${hexToRgba(c.p,0.1)}'"/>
         <div class="ec-img-overlay"></div>
         <div class="ec-top-badges">
-          ${e.promoter?'<span class="badge badge-verified" style="font-size:8px;padding:3px 8px">✓ VERIFIED</span>':''}
+          ${e.promoter?'<span class="badge badge-verified" style="font-size:8px;padding:3px 8px">✓ WTW CURATED</span>':''}
           <span class="badge badge-age" style="font-size:8px;padding:3px 8px">${e.age}</span>
         </div>
         <button class="ec-save ${isSaved?'saved':''}" onclick="toggleSave(${e.id},this,event)">${isSaved?'♥':'♡'}</button>
@@ -779,7 +779,7 @@ function renderGrid(){
             ${e.glPrice===0?`<div class="ec-price-row"><span class="ec-price-label">GUEST LIST</span><span class="ec-price-val free">FREE</span></div>`:e.glPrice?`<div class="ec-price-row"><span class="ec-price-label">GUEST LIST</span><span class="ec-price-val accent" style="color:${c.p}">$${e.glPrice}</span></div>`:''}
             ${e.vipMin?`<div class="ec-price-row"><span class="ec-price-label">VIP FROM</span><span class="ec-price-val">$${e.vipMin.toLocaleString()}</span></div>`:''}
           </div>
-          <button class="ec-cta" onclick="openTicketModal(${e.id})" style="background:${c.p}">${e.status==='guestlist'?'JOIN LIST':'GET TICKETS'}</button>
+          <button class="ec-cta" onclick="openTicketModal(${e.id})" style="background:${c.p}">${e.status==='guestlist'?'REQUEST ACCESS':'GET TICKETS'}</button>
         </div>
       </div>
     </div>`;
@@ -801,7 +801,7 @@ function openTicketModal(eventId){
         <span class="ticket-meta-item">🕐 ${currentEvent.time}</span>
         <span class="ticket-meta-item">📍 ${currentEvent.venue}</span>
       </div>
-      <div class="ticket-trust"><span>✦</span> VERIFIED EVENT · SECURE CHECKOUT</div>
+      <div class="ticket-trust"><span>✦</span> WTW CURATED EVENT · REQUEST ACCESS</div>
     </div>
     <div class="ticket-body">
       <div class="ticket-divider"></div>
@@ -820,7 +820,7 @@ function openTicketModal(eventId){
         <div class="ticket-type" id="tt-gl" onclick="selectTicketType('gl')">
           <div class="tt-left">
             <div class="tt-name">Guest List</div>
-            <div class="tt-desc">Priority entry · Reduced door price · Limited spots</div>
+          <div class="tt-desc">Priority review · Reduced door price · Limited spots</div>
           </div>
           <div class="tt-right">
             <div class="tt-price" style="color:#22c55e">FREE</div>
@@ -851,7 +851,7 @@ function openTicketModal(eventId){
       <div class="ticket-divider"></div>
       <div id="orderSummary"></div>
       <button class="btn-full btn-primary" id="checkoutBtn" onclick="proceedCheckout()" style="background:${c.p};color:#050a0b">Continue to Checkout →</button>
-      <div class="ticket-legal">Access subject to venue confirmation. WTW does not guarantee entry.<br>All sales final unless event is cancelled. 21+ with valid ID required.</div>
+      <div class="ticket-legal">Access remains subject to venue confirmation.<br>All sales final unless event is cancelled. 21+ with valid ID required.</div>
     </div>`;
   updateOrderSummary();
   document.getElementById('ticketModal').classList.add('open');
@@ -899,8 +899,8 @@ function updateOrderSummary(){
 
 function proceedCheckout(){
   const type=selectedTicketType;
-  if(type==='gl') { alert('You\'re on the guest list. Confirmation sent to your phone. Access subject to venue confirmation at the door.'); closeTicketModal(); return; }
-  if(type==='vip') { alert('VIP Table Request submitted. A WTW host will follow up within 24 hours. Access subject to venue confirmation.'); closeTicketModal(); return; }
+  if(type==='gl') { alert('You\'re on the guest list request. Confirmation sent to your phone. Access remains subject to venue confirmation at the door.'); closeTicketModal(); return; }
+  if(type==='vip') { alert('VIP Table Request submitted. A WTW host will follow up within 24 hours. Access remains subject to venue confirmation.'); closeTicketModal(); return; }
   alert('Redirecting to secure checkout. Stripe + Apple Pay available at checkout.');
   closeTicketModal();
 }

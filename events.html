@@ -529,11 +529,11 @@ header{position:sticky;top:0;z-index:200;background:rgba(5,7,10,.78)!important;b
 
 <script>
 const CITIES={
-  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1800&q=80&auto=format&fit=crop',headline:'New Jersey Events',subcopy:'Premium local nightlife, rooftops, and dinner lounges curated with curated access before you arrive.'},
+  nj:{name:'New Jersey',short:'NEW JERSEY',p:'#0EA5E9',bg:'#00050f',eyebrow:'NEW JERSEY · TONIGHT',bodyClass:'city-nj',bgImg:'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1800&q=80&auto=format&fit=crop',headline:'New Jersey Events',subcopy:'Premium local nightlife, rooftops, and dinner lounges routed for WTW review before you arrive.'},
   nyc:{name:'New York',short:'NEW YORK',p:'#00C2D1',bg:'#080b0f',eyebrow:'NEW YORK · TONIGHT',bodyClass:'city-nyc',bgImg:'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=1800&q=80&auto=format&fit=crop',headline:'New York Events',subcopy:'An editorial view of tonight\'s curated rooms, guest lists, and table access. Curated for the city\'s most selective nights.'},
-  miami:{name:'Miami',label:'Florida',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1800&q=80&auto=format&fit=crop',headline:'Miami Events',subcopy:'Celebrity rooms, rooftops, and late-night access curated with concierge-level confidence before you arrive.'},
+  miami:{name:'Miami',label:'Florida',short:'MIAMI',p:'#E91E8C',bg:'#06000e',eyebrow:'MIAMI · TONIGHT',bodyClass:'city-miami',bgImg:'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=1800&q=80&auto=format&fit=crop',headline:'Miami Events',subcopy:'Celebrity rooms, rooftops, and late-night access curated with concierge review before partner confirmation.'},
   atl:{name:'Atlanta',label:'Georgia',short:'ATLANTA',p:'#E84545',bg:'#0a0000',eyebrow:'ATLANTA · TONIGHT',bodyClass:'city-atl',bgImg:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1800&q=80&auto=format&fit=crop',headline:'Georgia Events',subcopy:'Buckhead tables, Midtown lounges, Afrobeats rooms, and late Southern nightlife curated with WTW signal.'},
-  la:{name:'Los Angeles',label:'California',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'California Events',subcopy:'A quiet, verified map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
+  la:{name:'Los Angeles',label:'California',short:'LOS ANGELES',p:'#8B6FE8',bg:'#06050f',eyebrow:'LOS ANGELES · TONIGHT',bodyClass:'city-la',bgImg:'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1800&q=80&auto=format&fit=crop',headline:'California Events',subcopy:'A curated map of the city\'s most selective rooms, from dinner clubs to after-dark tables.'},
   dallas:{name:'Dallas',label:'Texas',short:'DALLAS',p:'#D6A94A',bg:'#090704',eyebrow:'DALLAS · TONIGHT',bodyClass:'city-dallas',bgImg:'https://images.unsplash.com/photo-1545470348-9717d1e4ac85?w=1800&q=80&auto=format&fit=crop',headline:'Texas Events',subcopy:'Upscale lounges, sports-weekend rooms, and skyline tables curated for Dallas nights with polish.'},
 };
 
@@ -734,7 +734,7 @@ function renderFeatured(){
       <div class="fc-overlay"></div>
       <div class="fc-badges">
         <span class="badge badge-featured">✦ CURATED PICK</span>
-        ${feat.promoter?'<span class="badge badge-verified">✓ VERIFIED PROMOTER</span>':''}
+        ${feat.promoter?'<span class="badge badge-verified">✓ WTW CURATED PROMOTER</span>':''}
         <span class="badge badge-age">${feat.age}</span>
       </div>
     </div>
@@ -742,7 +742,7 @@ function renderFeatured(){
       <div>
         <div class="fc-meta-top">
           <div class="wave-score"><span class="wave-score-num" style="color:${c.p}">${feat.wave}</span><span style="color:${c.p}">% WAVE</span><span class="wave-score-sub">CURATED BY WTW</span></div>
-          ${feat.status==='limited'?'<span class="badge badge-limited">SELLING FAST</span>':''}
+          ${feat.status==='limited'?'<span class="badge badge-limited">HIGH INTEREST</span>':''}
         </div>
         <div class="fc-title">${feat.title}</div>
         <div class="fc-venue-row">
@@ -808,13 +808,13 @@ function renderGrid(){
   grid.innerHTML=events.map(e=>{
     const isSaved=savedEvents.has(e.id);
     const statusClass=e.status==='limited'?'status-limited':e.status==='guestlist'?'status-gl':'status-avail';
-    const statusText=e.status==='limited'?'SELLING FAST':e.status==='guestlist'?'GUEST LIST ONLY':'TICKETS AVAILABLE';
+    const statusText=e.status==='limited'?'HIGH INTEREST':e.status==='guestlist'?'GUEST LIST ONLY':'TICKETS AVAILABLE';
     return `<div class="event-card" onclick="openEventDetail(${e.id})">
       <div class="ec-img">
         <img src="${e.img}" loading="lazy" onerror="this.style.background='${hexToRgba(c.p,0.1)}'"/>
         <div class="ec-img-overlay"></div>
         <div class="ec-top-badges">
-          ${e.promoter?'<span class="badge badge-verified" style="font-size:8px;padding:3px 8px">✓ VERIFIED</span>':''}
+          ${e.promoter?'<span class="badge badge-verified" style="font-size:8px;padding:3px 8px">✓ CURATED BY WTW</span>':''}
           <span class="badge badge-age" style="font-size:8px;padding:3px 8px">${e.age}</span>
         </div>
         <button class="ec-save ${isSaved?'saved':''}" onclick="toggleSave(${e.id},this,event)">${isSaved?'♥':'♡'}</button>
@@ -865,7 +865,7 @@ function openTicketModal(eventId){
         <span class="ticket-meta-item">🕐 ${currentEvent.time}</span>
         <span class="ticket-meta-item">📍 ${currentEvent.venue}</span>
       </div>
-      <div class="ticket-trust"><span>✦</span> VERIFIED EVENT · PRIVATE CHECKOUT</div>
+      <div class="ticket-trust"><span>✦</span> WTW CURATED EVENT · PRIVATE CHECKOUT</div>
     </div>
     <div class="ticket-body">
       <div class="ticket-divider"></div>
@@ -916,7 +916,7 @@ function openTicketModal(eventId){
       <div id="orderSummary"></div>
       <div id="ticketStatus" style="display:none;margin-top:12px;padding:12px 14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);border-radius:12px;font-size:12px;line-height:1.65;color:#F0EDE8"></div>
       <button class="btn-full btn-primary" id="checkoutBtn" onclick="proceedCheckout()" style="background:${c.p};color:#050a0b">Continue to Checkout →</button>
-      <div class="ticket-legal">Access subject to venue confirmation. WTW does not guarantee entry.<br>All sales final unless event is cancelled. 21+ with valid ID required.</div>
+      <div class="ticket-legal">Access remains subject to venue confirmation. Requests are reviewed before venue confirmation.<br>All sales final unless event is cancelled. 21+ with valid ID required.</div>
     </div>`;
   updateOrderSummary();
   document.getElementById('ticketModal').classList.add('open');
