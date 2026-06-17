@@ -390,6 +390,20 @@ header{position:sticky;top:0;z-index:200;background:rgba(5,7,10,.78)!important;b
 /* WTW hero background repair */
 .events-hero{background-position:center}
 .events-hero::before{background:linear-gradient(90deg,rgba(5,7,10,0.92) 0%,rgba(5,7,10,0.68) 43%,rgba(5,7,10,0.2) 100%),linear-gradient(180deg,rgba(5,7,10,0.18) 0%,#080b0f 100%)}
+@supports (-webkit-touch-callout: none) {
+  body::before {
+    mix-blend-mode: normal;
+    opacity: 0;
+    filter: none;
+    background-image: none;
+  }
+  .events-hero {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: scroll;
+  }
+}
 </style>
  </head>
 <body><script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-client.js"></script>

@@ -237,9 +237,10 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 
 @media(max-width:768px){.brand-logo{width:78px;height:48px;margin:-7px 0}}
 .logo-mark{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;background:transparent!important;}
-.events-hero{padding:72px 0 76px}
-.eh-title{font-size:clamp(42px,6vw,76px);line-height:0.96;letter-spacing:-2px}
-.eh-sub{font-size:15px;margin-bottom:34px}
+.events-hero{min-height:620px;display:flex;align-items:center;padding:0}
+.eh-title{font-size:clamp(48px,7vw,92px);line-height:0.95;letter-spacing:0;margin-bottom:28px;max-width:900px}
+.eh-sub{font-size:18px;line-height:1.75;margin-bottom:34px;max-width:620px}
+.search-bar{max-width:620px;min-height:56px}
 .filter-bar{top:76px}
 @media(max-width:768px){.filter-bar{top:64px}}
 .events-main{padding:48px 0 80px}
@@ -272,16 +273,17 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 @media(max-width:768px){.filter-inner{-webkit-overflow-scrolling:touch}}
 
 /* city signal panel — hero right column */
-.events-hero .wrap{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:start}
+.events-hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:28px;align-items:center;max-width:1120px;margin:0 auto;padding:110px 0 130px}
 @media(max-width:900px){.events-hero .wrap{grid-template-columns:1fr}}
-.city-signal{grid-column:2;grid-row:1/span 4;align-self:center;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px 28px;min-width:220px}
+.events-hero .eh-eyebrow,.events-hero .eh-title,.events-hero .eh-sub,.events-hero .eh-controls{grid-column:1}
+.city-signal{grid-column:2;grid-row:1/span 4;align-self:center;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:22px 24px;min-width:220px}
 @media(max-width:900px){.city-signal{grid-column:1;grid-row:auto;margin-top:20px;min-width:0}}
 .cs-eyebrow{font-size:9px;font-weight:700;letter-spacing:3px;color:var(--accent);margin-bottom:16px;text-transform:uppercase}
 .cs-stats{display:flex;flex-direction:column;gap:10px}
 .cs-stat{font-size:13px;color:var(--text-muted);font-weight:500;line-height:1.4}
 
 /* events hero — cinematic background, set dynamically per city via JS */
-.events-hero{position:relative;background-size:cover;background-position:center 25%;background-repeat:no-repeat;background-image:url('assets/img/hero-nyc.jpg')}
+.events-hero{position:relative;background-size:cover;background-position:center 25%;background-repeat:no-repeat;background-image:url('assets/img/hero-nyc.jpg');box-shadow:inset 0 -1px 0 rgba(255,255,255,0.035)}
 .events-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,11,15,0.46) 0%,rgba(8,11,15,0.62) 34%,rgba(8,11,15,0.86) 72%,#080b0f 100%)}
 .events-hero::after{display:none}
 .events-hero .wrap{position:relative;z-index:1}
@@ -296,7 +298,7 @@ header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,0.97);border-bot
 .city-dallas .eh-title{font-size:clamp(42px,6vw,76px);letter-spacing:-2px;line-height:0.96;font-weight:900}
 
 /* mobile featured card image height */
-@media(max-width:768px){.featured-card .fc-image img{min-height:220px}}
+@media(max-width:768px){.featured-card .fc-image img{min-height:220px}.events-hero{min-height:580px}.events-hero .wrap{padding:92px 0 100px}.eh-title{font-size:52px;line-height:.96}.city-signal{display:none}}
 
 /* ── PROMO BANNER ── */
 .promo-banner{background:linear-gradient(135deg,rgba(0,194,209,0.1) 0%,rgba(0,194,209,0.03) 100%);border:1px solid rgba(0,194,209,0.2);border-radius:20px;padding:40px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;margin-bottom:64px}
@@ -335,6 +337,20 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 /* eyebrow      : 10px/700, letter-spacing 4px, var(--accent)              */
 /* section-title: Playfair Display, clamp(28px,3.5vw,42px), weight 800     */
 .filter-inner{max-width:1280px!important;margin:0 auto!important;padding:14px 28px!important}
+@supports (-webkit-touch-callout: none) {
+  body::before {
+    mix-blend-mode: normal;
+    opacity: 0;
+    filter: none;
+    background-image: none;
+  }
+  .events-hero {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: scroll;
+  }
+}
 </style>
 </head>
 <body>
@@ -365,7 +381,7 @@ footer{padding:40px 0 32px;border-top:1px solid var(--border)}
 <div class="events-hero">
   <div class="wrap">
     <div class="eh-eyebrow" id="heroEyebrow">NEW YORK · TONIGHT</div>
-    <h1 class="eh-title" id="heroTitle">New York<br>Events</h1>
+    <h1 class="eh-title" id="heroTitle">All New York Events</h1>
     <p class="eh-sub" id="heroSub">Premium access to the city&#39;s most selective nights. Every event curated by WTW, every venue routed for review, and every request reviewed before venue confirmation.</p>
     <div class="eh-controls">
       <div class="search-bar">
@@ -620,7 +636,7 @@ function applyCity(k){
   document.body.style.background=c.bg;
   document.body.className=c.bodyClass;
   document.querySelector('.events-hero').style.backgroundImage=`url('${c.bgImg}')`;
-  document.getElementById('heroTitle').innerHTML=`All Events in<br>${c.label||c.name}`;
+  document.getElementById('heroTitle').textContent=`All ${c.label||c.name} Events`;
   document.getElementById('heroSub').textContent='The complete WTW signal for this market: curated rooms, rooftops, guest lists, tables, and late-night access in one organized view.';
   document.getElementById('headerDot').style.background=c.p;
   document.getElementById('headerCity').textContent=c.label||c.name;
@@ -721,7 +737,7 @@ function renderFeatured(){
         </div>
       </div>
       <div class="fc-ctas">
-        <button class="btn-primary" onclick="openTicketModal(${feat.id})" style="background:${c.p}">Get Tickets</button>
+        <button class="btn-primary" onclick="openEventDetail(${feat.id})" style="background:${c.p}">View Details</button>
         <button class="btn-outline" onclick="openTicketModal(${feat.id})">Join Guest List</button>
         <button class="btn-ghost" onclick="openTicketModal(${feat.id})">Request Table</button>
       </div>
@@ -779,7 +795,7 @@ function renderGrid(){
             ${e.glPrice===0?`<div class="ec-price-row"><span class="ec-price-label">GUEST LIST</span><span class="ec-price-val free">FREE</span></div>`:e.glPrice?`<div class="ec-price-row"><span class="ec-price-label">GUEST LIST</span><span class="ec-price-val accent" style="color:${c.p}">$${e.glPrice}</span></div>`:''}
             ${e.vipMin?`<div class="ec-price-row"><span class="ec-price-label">VIP FROM</span><span class="ec-price-val">$${e.vipMin.toLocaleString()}</span></div>`:''}
           </div>
-          <button class="ec-cta" onclick="openTicketModal(${e.id})" style="background:${c.p}">${e.status==='guestlist'?'REQUEST ACCESS':'GET TICKETS'}</button>
+          <button class="ec-cta" onclick="openEventDetail(${e.id})" style="background:${c.p}">View Details</button>
         </div>
       </div>
     </div>`;
@@ -904,6 +920,9 @@ function proceedCheckout(){
   alert('Redirecting to secure checkout. Stripe + Apple Pay available at checkout.');
   closeTicketModal();
 }
+
+function eventDetailUrl(eventId){return 'event-detail.html?city='+encodeURIComponent(cur)+'&event='+encodeURIComponent(eventId);}
+function openEventDetail(eventId){window.location.href=eventDetailUrl(eventId);}
 
 function closeTicketModal(){ document.getElementById('ticketModal').classList.remove('open'); }
 function openCityModal(){ document.getElementById('cityModal').classList.add('open'); }
