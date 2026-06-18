@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="Private WTW post-experience feedback.">
+  <title>Feedback - Where's The Wave</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#00C2D1;
+      --accent-muted:rgba(0,194,209,.1);
+      --accent-border:rgba(0,194,209,.24);
+      --text:#F0EDE8;
+      --muted:rgba(240,237,232,.66);
+      --dim:rgba(240,237,232,.36);
+      --line:rgba(255,255,255,.09);
+      --bg:#080b0f;
+      --panel:rgba(7,10,14,.96);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 18% 0,rgba(0,194,209,.12),transparent 30%),
+        linear-gradient(180deg,rgba(8,11,15,.72),#05070a 78%),
+        var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-80px;
+      background-image:url("assets/wtw-logo-transparent.png");
+      background-size:clamp(150px,14vw,220px) auto;
+      background-position:0 0;
+      background-repeat:repeat;
+      opacity:.045;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:0;
+    }
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:linear-gradient(180deg,rgba(5,7,10,.12),rgba(5,7,10,.88));
+      pointer-events:none;
+      z-index:0;
+    }
+    .page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+    .wrap{width:calc(100% - 40px);max-width:1120px;margin:0 auto}
+    header{
+      position:sticky;
+      top:0;
+      z-index:5;
+      background:rgba(5,7,10,.84);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(18px);
+    }
+    .header-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);min-width:0}
+    .brand-logo{width:58px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .brand-logo img{display:block;width:58px;height:auto;filter:drop-shadow(0 0 12px rgba(0,194,209,.52))}
+    .brand-name{font-size:12px;font-weight:900;letter-spacing:2.8px;line-height:1;white-space:nowrap}
+    .brand-sub{margin-top:3px;font-size:8px;font-weight:800;letter-spacing:2.2px;color:var(--accent);text-transform:uppercase;white-space:nowrap}
+    .privacy-pill{
+      border:1px solid var(--accent-border);
+      background:var(--accent-muted);
+      color:var(--text);
+      padding:8px 12px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    main{flex:1;padding:30px 0 54px}
+    .panel{
+      width:100%;
+      max-width:780px;
+      min-width:0;
+      margin:0 auto;
+      border:1px solid var(--accent-border);
+      background:linear-gradient(180deg,rgba(10,13,18,.965),rgba(4,6,9,.992));
+      box-shadow:0 44px 140px rgba(0,0,0,.58);
+      overflow:hidden;
+    }
+    .intro{
+      padding:30px 30px 20px;
+      border-bottom:1px solid var(--line);
+    }
+    .eyebrow{
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:4px;
+      color:var(--accent);
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+    h1{
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:clamp(46px,8vw,76px);
+      line-height:.92;
+      font-weight:900;
+      color:var(--text);
+      letter-spacing:0;
+      overflow-wrap:break-word;
+    }
+    .sub{
+      margin-top:14px;
+      max-width:620px;
+      font-size:15px;
+      line-height:1.75;
+      color:var(--muted);
+    }
+    .speed-note{
+      margin-top:12px;
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      border:1px solid var(--accent-border);
+      background:var(--accent-muted);
+      color:var(--accent);
+      padding:0 11px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+    }
+    .private-note{
+      margin-top:16px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.03);
+      padding:12px 14px;
+      font-size:12px;
+      line-height:1.65;
+      color:rgba(240,237,232,.58);
+    }
+    .experience{
+      display:none;
+      margin:18px 30px 0;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+      padding:16px;
+    }
+    .experience.show{display:block}
+    .experience-title{
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:2.6px;
+      color:var(--accent);
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+    .summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .summary-item{
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top:9px;
+      min-width:0;
+    }
+    .summary-item span{
+      display:block;
+      font-size:8px;
+      font-weight:900;
+      letter-spacing:2px;
+      color:var(--dim);
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+    .summary-item strong{
+      display:block;
+      font-size:13px;
+      line-height:1.55;
+      font-weight:700;
+      color:var(--text);
+      word-break:break-word;
+    }
+    form{padding:22px 30px 28px;display:grid;gap:16px}
+    .question{
+      border:1px solid rgba(255,255,255,.085);
+      background:rgba(255,255,255,.025);
+      padding:16px;
+    }
+    .q-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:11px}
+    .q-title{
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:1.3px;
+      text-transform:uppercase;
+      color:var(--text);
+    }
+    .q-hint{font-size:11px;color:var(--dim);line-height:1.5}
+    .rating-row,.choice-row,.tag-row{display:flex;gap:10px;flex-wrap:wrap}
+    .chip{
+      min-height:54px;
+      min-width:54px;
+      border:1px solid rgba(255,255,255,.13);
+      background:rgba(255,255,255,.035);
+      color:rgba(240,237,232,.76);
+      font-family:Inter,sans-serif;
+      font-size:15px;
+      font-weight:900;
+      letter-spacing:.8px;
+      cursor:pointer;
+      padding:0 18px;
+      transition:background .16s,border-color .16s,color .16s,box-shadow .16s,transform .16s;
+    }
+    .chip.rating{padding:0;display:inline-flex;align-items:center;justify-content:center}
+    .chip.tag{min-width:0;font-size:12px;text-transform:uppercase;letter-spacing:1.2px}
+    .chip:hover{border-color:var(--accent-border);color:var(--text);transform:translateY(-1px)}
+    .chip.selected{
+      background:var(--accent);
+      border-color:var(--accent);
+      color:#020607;
+      box-shadow:0 0 0 2px rgba(0,194,209,.18),0 0 30px rgba(0,194,209,.28);
+      transform:translateY(-1px);
+    }
+    .note-field{display:grid;gap:8px}
+    label{
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:1.3px;
+      text-transform:uppercase;
+      color:var(--text);
+    }
+    textarea{
+      width:100%;
+      min-height:96px;
+      resize:vertical;
+      border:1px solid rgba(255,255,255,.13);
+      background:rgba(0,0,0,.28);
+      color:var(--text);
+      font:500 14px/1.65 Inter,sans-serif;
+      padding:13px 15px;
+      outline:none;
+    }
+    textarea:focus{border-color:var(--accent-border);box-shadow:0 0 0 3px var(--accent-muted)}
+    textarea::placeholder{color:rgba(240,237,232,.28)}
+    .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .submit-btn{
+      min-height:54px;
+      border:0;
+      background:var(--accent);
+      color:#020607;
+      font-family:Inter,sans-serif;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+      padding:0 24px;
+      cursor:pointer;
+      box-shadow:0 16px 48px rgba(0,194,209,.18);
+    }
+    .submit-btn:hover{opacity:.9}
+    .fine-print{font-size:12px;line-height:1.55;color:rgba(240,237,232,.5);max-width:420px}
+    .thanks{
+      display:none;
+      border:1px solid var(--accent-border);
+      background:linear-gradient(135deg,var(--accent-muted),rgba(255,255,255,.025));
+      padding:16px;
+      color:var(--text);
+      font-size:14px;
+      line-height:1.7;
+    }
+    .thanks.show{display:block}
+    .thanks strong{
+      display:block;
+      margin-bottom:6px;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:28px;
+      line-height:1;
+      font-weight:900;
+    }
+    @supports (-webkit-touch-callout: none){
+      body::before{mix-blend-mode:normal;opacity:.03}
+    }
+    @media(max-width:680px){
+      body{width:100%;max-width:100vw;overflow-x:hidden}
+      .page{width:100%;max-width:100vw;overflow-x:hidden}
+      .wrap{width:100%;max-width:390px;margin:0;padding:0 12px}
+      .panel{width:100%;max-width:100%;overflow:hidden}
+      .header-inner{height:68px}
+      .brand-logo,.brand-logo img{width:50px}
+      .brand-name{font-size:11px;letter-spacing:2px}
+      .brand-sub{font-size:7px;letter-spacing:1.8px}
+      .privacy-pill{display:none}
+      main{padding:18px 0 34px}
+      h1{max-width:310px;font-size:42px;line-height:.96}
+      .sub{max-width:310px}
+      .intro{padding:24px 18px 18px}
+      .speed-note{margin-top:10px}
+      .private-note{margin-top:12px}
+      .experience{margin:14px 18px 0;padding:14px}
+      .summary-grid{grid-template-columns:1fr}
+      form{padding:18px 18px 22px;gap:14px}
+      .question{padding:14px}
+      .q-head{display:block}
+      .q-hint{margin-top:6px}
+      .rating-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+      .choice-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+      .tag-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+      .chip{width:100%;min-width:0}
+      .chip.rating,.chip.choice{min-height:58px}
+      .actions{display:grid}
+      .submit-btn{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="wrap header-inner">
+        <a class="brand" href="index.html">
+          <div class="brand-logo"><img src="assets/wtw-logo-transparent.png" alt="WTW"></div>
+          <div>
+            <div class="brand-name">WHERE'S THE WAVE</div>
+            <div class="brand-sub">PRIVATE NIGHTLIFE ACCESS</div>
+          </div>
+        </a>
+        <div class="privacy-pill">Private to WTW</div>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <section class="panel" aria-labelledby="feedbackTitle">
+          <div class="intro">
+            <div class="eyebrow">Member Signal</div>
+            <h1 id="feedbackTitle">How was the night?</h1>
+            <p class="sub">Your feedback helps WTW route better rooms and protect the member experience.</p>
+            <div class="speed-note">Takes under 30 seconds.</div>
+            <div class="private-note">This feedback is private to WTW. It is used internally for routing quality, partner review, and future recommendations.</div>
+          </div>
+
+          <section class="experience" id="experienceSummary" aria-label="Experience summary">
+            <div class="experience-title">Experience</div>
+            <div class="summary-grid" id="summaryGrid"></div>
+          </section>
+
+          <form id="feedbackForm">
+            <section class="question" data-field="overall_rating">
+              <div class="q-head">
+                <div class="q-title">Overall experience</div>
+                <div class="q-hint">1 is weak, 5 is excellent</div>
+              </div>
+              <div class="rating-row" role="group" aria-label="Overall experience rating"></div>
+            </section>
+
+            <section class="question" data-field="door_flow">
+              <div class="q-head">
+                <div class="q-title">Door / reservation flow</div>
+                <div class="q-hint">Arrival, check-in, host flow</div>
+              </div>
+              <div class="rating-row" role="group" aria-label="Door or reservation flow rating"></div>
+            </section>
+
+            <section class="question" data-field="vibe_rating">
+              <div class="q-head">
+                <div class="q-title">Crowd / vibe</div>
+                <div class="q-hint">Room energy and fit</div>
+              </div>
+              <div class="rating-row" role="group" aria-label="Crowd or vibe rating"></div>
+            </section>
+
+            <section class="question" data-field="service_rating">
+              <div class="q-head">
+                <div class="q-title">Service</div>
+                <div class="q-hint">Staff, table, or reservation support</div>
+              </div>
+              <div class="rating-row" role="group" aria-label="Service rating"></div>
+            </section>
+
+            <section class="question" data-field="would_return">
+              <div class="q-head">
+                <div class="q-title">Would you go back?</div>
+                <div class="q-hint">Return intent helps routing</div>
+              </div>
+              <div class="choice-row" role="group" aria-label="Would you go back">
+                <button class="chip choice" type="button" data-value="yes">Yes</button>
+                <button class="chip choice" type="button" data-value="maybe">Maybe</button>
+                <button class="chip choice" type="button" data-value="no">No</button>
+              </div>
+            </section>
+
+            <section class="question" data-field="best_for_tags">
+              <div class="q-head">
+                <div class="q-title">Best for</div>
+                <div class="q-hint">Select all that fit</div>
+              </div>
+              <div class="tag-row" role="group" aria-label="Best for tags">
+                <button class="chip tag" type="button" data-value="date_night">Date night</button>
+                <button class="chip tag" type="button" data-value="birthday">Birthday</button>
+                <button class="chip tag" type="button" data-value="rooftop">Rooftop</button>
+                <button class="chip tag" type="button" data-value="dinner">Dinner</button>
+                <button class="chip tag" type="button" data-value="dancing">Dancing</button>
+                <button class="chip tag" type="button" data-value="vip_table">VIP table</button>
+                <button class="chip tag" type="button" data-value="casual_drinks">Casual drinks</button>
+                <button class="chip tag" type="button" data-value="group_night">Group night</button>
+              </div>
+            </section>
+
+            <div class="note-field">
+              <label for="privateNote">Optional private note</label>
+              <textarea id="privateNote" name="private_note" placeholder="Anything WTW should know about the room, arrival, crowd, service, or fit?"></textarea>
+            </div>
+
+            <div class="thanks" id="thanksMessage" role="status" aria-live="polite">
+              <strong>Feedback received.</strong>
+              WTW will use this privately to improve routing and partner review.
+            </div>
+
+            <div class="actions">
+              <button class="submit-btn" type="submit">Submit Private Feedback</button>
+              <p class="fine-print">This static MVP does not send data yet. Backend saving, follow-up emails, and admin review will be added in a later phase.</p>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const state={
+      overall_rating:"",
+      door_flow:"",
+      vibe_rating:"",
+      service_rating:"",
+      would_return:"",
+      best_for_tags:[]
+    };
+
+    document.querySelectorAll(".rating-row").forEach(row=>{
+      const field=row.closest(".question").dataset.field;
+      for(let i=1;i<=5;i++){
+        const btn=document.createElement("button");
+        btn.type="button";
+        btn.className="chip rating";
+        btn.dataset.value=String(i);
+        btn.textContent=String(i);
+        btn.addEventListener("click",()=>selectSingle(field,btn));
+        row.appendChild(btn);
+      }
+    });
+
+    document.querySelectorAll(".choice").forEach(btn=>{
+      btn.addEventListener("click",()=>selectSingle("would_return",btn));
+    });
+
+    document.querySelectorAll(".tag").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const value=btn.dataset.value;
+        btn.classList.toggle("selected");
+        state.best_for_tags=Array.from(document.querySelectorAll(".tag.selected")).map(tag=>tag.dataset.value);
+      });
+    });
+
+    document.getElementById("feedbackForm").addEventListener("submit",event=>{
+      event.preventDefault();
+      document.getElementById("thanksMessage").classList.add("show");
+      document.querySelector(".submit-btn").textContent="Feedback Saved Locally";
+    });
+
+    function selectSingle(field,btn){
+      const group=btn.closest(".question");
+      group.querySelectorAll(".chip").forEach(item=>item.classList.remove("selected"));
+      btn.classList.add("selected");
+      state[field]=btn.dataset.value;
+    }
+
+    function labelize(value){
+      return value.replace(/[_-]+/g," ").replace(/\b\w/g,char=>char.toUpperCase());
+    }
+
+    function readParams(){
+      const params=new URLSearchParams(window.location.search);
+      const allowed=[
+        ["source","Source"],
+        ["request","Request"],
+        ["city","City"],
+        ["venue","Venue"],
+        ["event","Event"],
+        ["date","Date"]
+      ];
+      const values=allowed
+        .map(([key,label])=>({key,label,value:params.get(key)}))
+        .filter(item=>item.value);
+
+      if(!values.length) return;
+
+      document.getElementById("experienceSummary").classList.add("show");
+      document.getElementById("summaryGrid").innerHTML=values.map(item=>`
+        <div class="summary-item">
+          <span>${item.label}</span>
+          <strong>${item.key==="source" || item.key==="city" ? labelize(item.value) : item.value}</strong>
+        </div>
+      `).join("");
+    }
+
+    readParams();
+  </script>
+</body>
+</html>
