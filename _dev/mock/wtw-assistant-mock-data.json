@@ -1,0 +1,158 @@
+{
+  "note": "MOCK LOCAL DATA — not live Supabase yet.",
+  "events": [
+    {
+      "id": "EVT-1001",
+      "title": "Downtown Night Room",
+      "city": "New York",
+      "date": "2026-06-20",
+      "venue_name": "Downtown Night Room",
+      "status": "high-interest"
+    },
+    {
+      "id": "EVT-1002",
+      "title": "Rooftop Social Club",
+      "city": "New York",
+      "date": "2026-06-20",
+      "venue_name": "Rooftop Social Club",
+      "status": "curated"
+    },
+    {
+      "id": "EVT-2001",
+      "title": "Midtown Dinner Club",
+      "city": "Miami",
+      "date": "2026-06-21",
+      "venue_name": "Midtown Dinner Club",
+      "status": "high-interest"
+    }
+  ],
+  "tickets": {
+    "EVT-1001": { "sold": 68, "pending": 9, "remaining": 23 },
+    "EVT-1002": { "sold": 41, "pending": 6, "remaining": 13 },
+    "EVT-2001": { "sold": 57, "pending": 8, "remaining": 15 }
+  },
+  "guestListRequests": [
+    {
+      "id": "GL-9001",
+      "customer_name": "A. Mensah",
+      "phone": "+1-555-0101",
+      "city": "New York",
+      "event_or_venue": "Downtown Night Room",
+      "party_size": 4,
+      "status": "pending"
+    }
+  ],
+  "vipRequests": [
+    {
+      "id": "VIP-7001",
+      "customer_name": "J. Blake",
+      "phone": "+1-555-0102",
+      "city": "New York",
+      "event_or_venue": "Rooftop Social Club",
+      "party_size": 6,
+      "status": "pending"
+    },
+    {
+      "id": "VIP-7002",
+      "customer_name": "N. Carter",
+      "phone": "+1-555-0103",
+      "city": "Miami",
+      "event_or_venue": "Midtown Dinner Club",
+      "party_size": 8,
+      "status": "in_review"
+    }
+  ],
+  "restaurants": [
+    {
+      "id": "RST-3001",
+      "name": "Downtown Supper Club",
+      "city": "New York",
+      "type": "restaurant",
+      "vibe": "late-night dining",
+      "status": "active"
+    },
+    {
+      "id": "RST-3002",
+      "name": "SoHo Members Lounge",
+      "city": "New York",
+      "type": "lounge",
+      "vibe": "private dining",
+      "status": "active"
+    },
+    {
+      "id": "RST-3003",
+      "name": "Waterfront Dinner House",
+      "city": "Miami",
+      "type": "restaurant",
+      "vibe": "waterfront dinner",
+      "status": "active"
+    },
+    {
+      "id": "RST-3004",
+      "name": "After-Dark Lounge",
+      "city": "Los Angeles",
+      "type": "lounge",
+      "vibe": "nightcap room",
+      "status": "active"
+    }
+  ],
+  "reservationRequests": [
+    {
+      "id": "RES-5001",
+      "customer_name": "M. Okafor",
+      "phone": "+1-555-0104",
+      "city": "New York",
+      "event_or_venue": "Downtown Supper Club",
+      "party_size": 2,
+      "status": "pending"
+    },
+    {
+      "id": "RES-5002",
+      "customer_name": "S. Grant",
+      "phone": "+1-555-0105",
+      "city": "Miami",
+      "event_or_venue": "Waterfront Dinner House",
+      "party_size": 5,
+      "status": "approved"
+    }
+  ],
+  "partners": [
+    {
+      "id": "PAR-8001",
+      "name": "Harbor City Hospitality",
+      "city": "New York",
+      "status": "active"
+    },
+    {
+      "id": "PAR-8002",
+      "name": "Palm Night Group",
+      "city": "Miami",
+      "status": "active"
+    }
+  ],
+  "wavePassRequests": [
+    {
+      "id": "WP-6001",
+      "customer_name": "K. Young",
+      "phone": "+1-555-0106",
+      "city": "New York",
+      "event_or_venue": "Wave Pass",
+      "party_size": 1,
+      "status": "pending"
+    }
+  ],
+  "feedback": [
+    {
+      "id": "FB-4001",
+      "city": "New York",
+      "venue_name": "Downtown Night Room",
+      "rating": 5,
+      "status": "new"
+    }
+  ],
+  "revenueEstimates": {
+    "tonight": "$8.4K",
+    "weekend": "$21.2K",
+    "monthToDate": "$74.0K"
+  }
+}
