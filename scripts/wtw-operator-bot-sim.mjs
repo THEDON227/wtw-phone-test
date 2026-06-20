@@ -91,9 +91,9 @@ function statusText() {
     '',
     formatBlock('Latest commit', log),
     '',
-    'Next known fix',
-    '--------------',
-    'Mobile overflow on index.html and events.html at 390px.',
+    'Next known action',
+    '-----------------',
+    'Final mobile/Safari QA, then presentation demo script.',
   ].join('\n');
 }
 
@@ -150,7 +150,7 @@ function presentationReadyText() {
     'Laptop demo: yes',
     'Controlled club-owner demo: yes',
     'Investor walkthrough: yes, with live-vs-planned framing',
-    'Phone demo: almost, mobile overflow fix recommended first',
+    'Phone demo: yes, mobile overflow fix completed; final device QA recommended',
   ].join('\n');
 }
 
