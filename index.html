@@ -520,7 +520,7 @@ section{padding:80px 0}
 .venue-img-wrap{position:relative;height:180px}
 .venue-img{width:100%;height:100%;object-fit:cover;display:block;background:rgba(255,255,255,0.05)}
 .venue-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,11,15,0.85) 0%,transparent 55%)}
-.venue-verified{
+.venue-curated{
   position:absolute;top:12px;left:12px;
   display:flex;align-items:center;gap:5px;
   font-size:9px;font-weight:700;letter-spacing:1px;
@@ -1082,14 +1082,14 @@ const CITIES = {
       {name:'The Nines Late Night',venue:'The Nines',city:'New York',time:'Fri 10PM',price:'$35',tags:['VIP TABLES','DJ SET'],img:'assets/img/venue-nines.jpg'},
     ],
     tables:[
-      {venue:'Marquee NYC',meta:'VIP Section · Min. $500 · Up to 10 guests',img:'assets/img/venue-marquee.jpg',verified:true},
-      {venue:'PH-D Rooftop',meta:'Rooftop Table · Min. $300 · Up to 6 guests',img:'assets/img/venue-phd.jpg',verified:true},
-      {venue:'The Nines',meta:'Booth Package · Min. $250 · Up to 8 guests',img:'assets/img/venue-nines.jpg',verified:true},
+      {venue:'Marquee NYC',meta:'VIP Section · Min. $500 · Up to 10 guests',img:'assets/img/venue-marquee.jpg',curated:true},
+      {venue:'PH-D Rooftop',meta:'Rooftop Table · Min. $300 · Up to 6 guests',img:'assets/img/venue-phd.jpg',curated:true},
+      {venue:'The Nines',meta:'Booth Package · Min. $250 · Up to 8 guests',img:'assets/img/venue-nines.jpg',curated:true},
     ],
     venues:[
-      {name:'Marquee NYC',location:'Chelsea, Manhattan',chips:['HIGH ENERGY','VIP TABLES','UPSCALE'],signal:94,img:'assets/img/venue-marquee.jpg',verified:true},
-      {name:'PH-D Rooftop',location:'Manhattan',chips:['ROOFTOP','LOUNGE','SKYLINE VIEWS'],signal:90,img:'assets/img/venue-phd.jpg',verified:true},
-      {name:'The Nines',location:'Manhattan',chips:['DJ SET','SOCIAL CROWD','UPSCALE'],signal:89,img:'assets/img/venue-nines.jpg',verified:true},
+      {name:'Marquee NYC',location:'Chelsea, Manhattan',chips:['HIGH ENERGY','VIP TABLES','UPSCALE'],signal:94,img:'assets/img/venue-marquee.jpg',curated:true},
+      {name:'PH-D Rooftop',location:'Manhattan',chips:['ROOFTOP','LOUNGE','SKYLINE VIEWS'],signal:90,img:'assets/img/venue-phd.jpg',curated:true},
+      {name:'The Nines',location:'Manhattan',chips:['DJ SET','SOCIAL CROWD','UPSCALE'],signal:89,img:'assets/img/venue-nines.jpg',curated:true},
     ],
     picks:[
       {name:'Lavo After Dark',meta:'LAVO NYC · VIP TABLES · $45',img:'assets/img/venue-marquee.jpg'},
@@ -1108,14 +1108,14 @@ const CITIES = {
       {name:'E11EVEN All Night',venue:'E11EVEN',city:'Miami',time:'24HRS',price:'$60',tags:['CELEBRITY','ULTRA VIP'],img:'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80&auto=format&fit=crop'},
     ],
     tables:[
-      {venue:'LIV Miami',meta:'Celebrity Section · Min. $1000 · Up to 12 guests',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',verified:true},
-      {venue:'Story Miami',meta:'VIP Booth · Min. $600 · Up to 8 guests',img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',verified:true},
-      {venue:'E11EVEN',meta:'Ultra VIP · Min. $800 · Up to 10 guests',img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80&auto=format&fit=crop',verified:true},
+      {venue:'LIV Miami',meta:'Celebrity Section · Min. $1000 · Up to 12 guests',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',curated:true},
+      {venue:'Story Miami',meta:'VIP Booth · Min. $600 · Up to 8 guests',img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',curated:true},
+      {venue:'E11EVEN',meta:'Ultra VIP · Min. $800 · Up to 10 guests',img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80&auto=format&fit=crop',curated:true},
     ],
     venues:[
-      {name:'LIV Miami',location:'South Beach',chips:['AFTER HOURS','VIP TABLES','CELEBRITY'],signal:94,img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',verified:true},
-      {name:'Story Miami',location:'Miami Beach',chips:['EDM','BIG ROOM','DANCE FLOOR'],signal:93,img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',verified:true},
-      {name:'E11EVEN',location:'Downtown Miami',chips:['24HRS','CELEBRITY','ULTRA VIP'],signal:88,img:'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80&auto=format&fit=crop',verified:true},
+      {name:'LIV Miami',location:'South Beach',chips:['AFTER HOURS','VIP TABLES','CELEBRITY'],signal:94,img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',curated:true},
+      {name:'Story Miami',location:'Miami Beach',chips:['EDM','BIG ROOM','DANCE FLOOR'],signal:93,img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',curated:true},
+      {name:'E11EVEN',location:'Downtown Miami',chips:['24HRS','CELEBRITY','ULTRA VIP'],signal:88,img:'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80&auto=format&fit=crop',curated:true},
     ],
     picks:[
       {name:'LIV After Dark',meta:'LIV MIAMI · VIP TABLES · $80',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=200&q=80&auto=format&fit=crop'},
@@ -1134,14 +1134,14 @@ const CITIES = {
       {name:'Highlight Room',venue:'Highlight Room',city:'Los Angeles',time:'Sat 9PM',price:'$40',tags:['ROOFTOP','VIEWS'],img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80&auto=format&fit=crop'},
     ],
     tables:[
-      {venue:'Poppy',meta:'Private Room · Min. $600 · Up to 8 guests',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',verified:true},
-      {venue:'Delilah',meta:'Dinner Table · Min. $400 · Up to 6 guests',img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',verified:true},
-      {venue:'Highlight Room',meta:'Rooftop Section · Min. $350 · Up to 8 guests',img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80&auto=format&fit=crop',verified:true},
+      {venue:'Poppy',meta:'Private Room · Min. $600 · Up to 8 guests',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',curated:true},
+      {venue:'Delilah',meta:'Dinner Table · Min. $400 · Up to 6 guests',img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',curated:true},
+      {venue:'Highlight Room',meta:'Rooftop Section · Min. $350 · Up to 8 guests',img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80&auto=format&fit=crop',curated:true},
     ],
     venues:[
-      {name:'Poppy',location:'Los Angeles',chips:['CELEBRITY CROWD','LATE NIGHT','UPSCALE'],signal:93,img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',verified:true},
-      {name:'Delilah',location:'West Hollywood',chips:['DINNER CLUB','VIP TABLES'],signal:90,img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',verified:true},
-      {name:'Highlight Room',location:'Los Angeles',chips:['ROOFTOP','VIEWS','CELEBRITY'],signal:98,img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80&auto=format&fit=crop',verified:true},
+      {name:'Poppy',location:'Los Angeles',chips:['CELEBRITY CROWD','LATE NIGHT','UPSCALE'],signal:93,img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',curated:true},
+      {name:'Delilah',location:'West Hollywood',chips:['DINNER CLUB','VIP TABLES'],signal:90,img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',curated:true},
+      {name:'Highlight Room',location:'Los Angeles',chips:['ROOFTOP','VIEWS','CELEBRITY'],signal:98,img:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80&auto=format&fit=crop',curated:true},
     ],
     picks:[
       {name:'Poppy Late Night',meta:'POPPY · CELEBRITY · $50',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=200&q=80&auto=format&fit=crop'},
@@ -1160,14 +1160,14 @@ const CITIES = {
       {name:'Maritime Night',venue:'Maritime Parc',city:'Newport',time:'Sat 8PM',price:'$20',tags:['WATERFRONT','UPSCALE'],img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop'},
     ],
     tables:[
-      {venue:'Porta',meta:'Rooftop Table · Min. $200 · Up to 6 guests',img:'assets/img/venue-phd.jpg',verified:true},
-      {venue:'Hudson Social',meta:'Lounge Table · Min. $150 · Up to 4 guests',img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',verified:false},
-      {venue:'Maritime Parc',meta:'Waterfront Section · Min. $175 · Up to 6 guests',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',verified:true},
+      {venue:'Porta',meta:'Rooftop Table · Min. $200 · Up to 6 guests',img:'assets/img/venue-phd.jpg',curated:true},
+      {venue:'Hudson Social',meta:'Lounge Table · Min. $150 · Up to 4 guests',img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',curated:false},
+      {venue:'Maritime Parc',meta:'Waterfront Section · Min. $175 · Up to 6 guests',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',curated:true},
     ],
     venues:[
-      {name:'Porta',location:'Jersey City',chips:['ROOFTOP','SKYLINE'],signal:91,img:'assets/img/venue-phd.jpg',verified:true},
-      {name:'Hudson Social',location:'Hoboken',chips:['LOUNGE','PREMIUM'],signal:87,img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',verified:true},
-      {name:'Maritime Parc',location:'Newport',chips:['WATERFRONT','UPSCALE'],signal:83,img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',verified:false},
+      {name:'Porta',location:'Jersey City',chips:['ROOFTOP','SKYLINE'],signal:91,img:'assets/img/venue-phd.jpg',curated:true},
+      {name:'Hudson Social',location:'Hoboken',chips:['LOUNGE','PREMIUM'],signal:87,img:'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop',curated:true},
+      {name:'Maritime Parc',location:'Newport',chips:['WATERFRONT','UPSCALE'],signal:83,img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',curated:false},
     ],
     picks:[
       {name:'Porta Rooftop',meta:'PORTA · ROOFTOP · $30',img:'assets/img/venue-phd.jpg'},
@@ -1186,14 +1186,14 @@ const CITIES = {
       {name:'Believe Live',venue:'Believe Music Hall',city:'Downtown',time:'Sat 9PM',price:'$30',tags:['LIVE MUSIC','PREMIUM'],img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80&auto=format&fit=crop'},
     ],
     tables:[
-      {venue:'Gold Room',meta:'VIP Section · Min. $500 · Up to 10 guests',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',verified:true},
-      {venue:'Compound',meta:'Open Air Section · Min. $300 · Up to 8 guests',img:'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=600&q=80&auto=format&fit=crop',verified:true},
-      {venue:'Believe Music Hall',meta:'Premium Section · Min. $250 · Up to 6 guests',img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80&auto=format&fit=crop',verified:false},
+      {venue:'Gold Room',meta:'VIP Section · Min. $500 · Up to 10 guests',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',curated:true},
+      {venue:'Compound',meta:'Open Air Section · Min. $300 · Up to 8 guests',img:'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=600&q=80&auto=format&fit=crop',curated:true},
+      {venue:'Believe Music Hall',meta:'Premium Section · Min. $250 · Up to 6 guests',img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80&auto=format&fit=crop',curated:false},
     ],
     venues:[
-      {name:'Gold Room',location:'Buckhead, Atlanta',chips:['HIP-HOP','SECTIONS','PREMIUM'],signal:95,img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',verified:true},
-      {name:'Compound',location:'Westside, Atlanta',chips:['OPEN AIR','LIVE MUSIC'],signal:91,img:'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=600&q=80&auto=format&fit=crop',verified:true},
-      {name:'Believe Music Hall',location:'Downtown Atlanta',chips:['LIVE MUSIC','PREMIUM'],signal:87,img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80&auto=format&fit=crop',verified:false},
+      {name:'Gold Room',location:'Buckhead, Atlanta',chips:['HIP-HOP','SECTIONS','PREMIUM'],signal:95,img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=600&q=80&auto=format&fit=crop',curated:true},
+      {name:'Compound',location:'Westside, Atlanta',chips:['OPEN AIR','LIVE MUSIC'],signal:91,img:'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=600&q=80&auto=format&fit=crop',curated:true},
+      {name:'Believe Music Hall',location:'Downtown Atlanta',chips:['LIVE MUSIC','PREMIUM'],signal:87,img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80&auto=format&fit=crop',curated:false},
     ],
     picks:[
       {name:'Gold Room Friday',meta:'GOLD ROOM · SECTIONS · $40',img:'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=200&q=80&auto=format&fit=crop'},
@@ -1244,7 +1244,7 @@ const SEARCH_LIBRARY = (() => {
       list.push({kind:'venue',type,cityKey,cityName:city.name,title:venue.name,subtitle:venue.location,meta:`Signal ${venue.signal}%`,description:`${(venue.chips || []).join(' · ')}`,image:venue.img,route:`events.html?city=${cityKey}`,cta:'Open Market',keywords:[venue.name,venue.location,city.name].concat(venue.chips || []).join(' ').toLowerCase()});
     });
     city.tables.forEach(table => {
-      list.push({kind:'guest-list',type:table.verified ? 'Guest List' : 'Table Request',cityKey,cityName:city.name,title:table.venue,subtitle:table.meta,meta:table.verified ? 'Reviewed access' : 'By request',description:table.meta,image:table.img,route:`events.html?city=${cityKey}`,cta:'View Access',keywords:[table.venue,table.meta,city.name,'guest list','vip table','table request'].join(' ').toLowerCase()});
+      list.push({kind:'guest-list',type:table.curated ? 'Guest List' : 'Table Request',cityKey,cityName:city.name,title:table.venue,subtitle:table.meta,meta:table.curated ? 'Curated access' : 'By request',description:table.meta,image:table.img,route:`events.html?city=${cityKey}`,cta:'View Access',keywords:[table.venue,table.meta,city.name,'guest list','vip table','table request'].join(' ').toLowerCase()});
     });
     (DINING_SEARCH[cityKey] || []).forEach(item => {
       list.push({kind:'dining',type:item.turnsIntoNightlife ? 'Dinner' : (item.vibe.toLowerCase().includes('rooftop') ? 'Rooftop' : 'Restaurant'),cityKey,cityName:city.name,title:item.name,subtitle:`${item.area} · ${item.priceTier}`,meta:`${item.bestFor} · ${item.turnsIntoNightlife ? 'Turns into nightlife' : 'Dinner starts the night'}`,description:`${item.vibe} · ${item.description}`,image:item.image,route:`indulge-detail.html?city=${cityKey}&venue=${encodeURIComponent(item.name)}`,cta:'Request Through WTW',keywords:[item.name,item.area,item.vibe,item.bestFor,item.priceTier,city.name,'dinner','restaurant','rooftop','lounge'].join(' ').toLowerCase()});
@@ -1332,7 +1332,7 @@ function applyCity(k) {
   document.getElementById('tablesGrid').innerHTML = c.tables.map(t => `
     <div class="table-card">
       <img class="table-venue-img" src="${t.img}" loading="lazy" onerror="this.style.background='${hexToRgba(c.accent,0.08)}'"/>
-      ${t.verified ? `<div class="table-badge" style="color:${c.accent};background:${hexToRgba(c.accent,0.1)};border-color:${hexToRgba(c.accent,0.25)}">✦ WTW CURATED</div>` : '<div class="table-badge" style="color:rgba(240,237,232,0.35);background:transparent;border-color:rgba(255,255,255,0.1)">PENDING VENUE CONFIRMATION</div>'}
+      ${t.curated ? `<div class="table-badge" style="color:${c.accent};background:${hexToRgba(c.accent,0.1)};border-color:${hexToRgba(c.accent,0.25)}">✦ WTW CURATED</div>` : '<div class="table-badge" style="color:rgba(240,237,232,0.35);background:transparent;border-color:rgba(255,255,255,0.1)">PENDING VENUE CONFIRMATION</div>'}
       <div class="table-venue">${t.venue}</div>
       <div class="table-meta">${t.meta}</div>
       <div class="table-footer">
@@ -1348,7 +1348,7 @@ function applyCity(k) {
       <div class="venue-img-wrap">
         <img class="venue-img" src="${v.img}" loading="lazy" onerror="this.style.background='${hexToRgba(c.accent,0.08)}'"/>
         <div class="venue-img-overlay"></div>
-        ${v.verified ? `<div class="venue-verified" style="color:${c.accent};border-color:${hexToRgba(c.accent,0.3)}">✦ WTW CURATED</div>` : ''}
+        ${v.curated ? `<div class="venue-curated" style="color:${c.accent};border-color:${hexToRgba(c.accent,0.3)}">✦ WTW CURATED</div>` : ''}
       </div>
       <div class="venue-body">
         <div class="venue-name">${v.name}</div>
