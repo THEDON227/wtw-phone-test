@@ -381,6 +381,15 @@ body{background:radial-gradient(circle at 18% 0,rgba(255,255,255,0.035),transpar
 .search-bar{max-width:620px;min-height:56px}
 .search-bar input{font-size:15px}
 @media(max-width:768px){.events-hero{min-height:580px}.events-hero .wrap{padding:92px 0 100px}.eh-title{font-size:52px;line-height:.96}}
+@media(max-width:768px){
+  .events-hero{min-height:auto}
+  .events-hero .wrap{padding:84px 0 92px;max-width:100%;width:100%}
+  .eh-title{font-size:clamp(40px,12vw,52px);line-height:.96;letter-spacing:-1.1px;max-width:100%}
+  .eh-sub{font-size:15px;line-height:1.65;max-width:100%;margin-bottom:26px}
+  .eh-controls{width:100%;gap:12px;align-items:stretch}
+  .search-bar{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+  .search-bar input{min-width:0;font-size:14px}
+}
 
 
 /* Global header and city modal consistency */
