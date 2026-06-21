@@ -3,3 +3,4 @@ supabase/seed.sql
 supabase/
 template.
 the
+_dev/operator-bot-draft-log.jsonl

@@ -2,7 +2,7 @@
 // WTW Operator Bot Simulator — local read-only prototype.
 
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { appendFileSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -11,6 +11,7 @@ const cmd = argv[0] || '/help';
 const cmdText = argv.slice(1).join(' ').trim();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const mockDataPath = resolve(__dirname, '../_dev/mock/wtw-assistant-mock-data.json');
+const draftLogPath = resolve(__dirname, '../_dev/operator-bot-draft-log.jsonl');
 const mockData = loadMockData();
 
 function runGitStatus() {
@@ -77,6 +78,22 @@ function approvalReminder() {
 
 function normalizeRequest(input) {
   return input || 'No request text provided.';
+}
+
+function logDraftRequest({ command, requestType, riskLevel, summary }) {
+  const entry = {
+    timestamp: new Date().toISOString(),
+    command,
+    raw_request: cmdText,
+    request_type: requestType,
+    risk_level: riskLevel,
+    safety_status: 'local-only; no live edits; no Supabase; no messages',
+    approval_required: true,
+    production_push_requires: 'APPROVE PUSH',
+    generated_prompt_summary: summary,
+  };
+
+  appendFileSync(draftLogPath, `${JSON.stringify(entry)}\n`, 'utf8');
 }
 
 function promptShell(title, requestType, targetArea, riskLevel, assumptions, missingDetails, promptBody, reminder = approvalReminder()) {
@@ -403,6 +420,12 @@ function makePromptText() {
 }
 
 function draftEditText() {
+  logDraftRequest({
+    command: '/draft_edit',
+    requestType: 'site_copy_update / site_visual_fix',
+    riskLevel: 'Medium',
+    summary: 'Draft prompt for a safe copy, layout, or text edit request.',
+  });
   return promptShell(
     'Draft: Edit Request',
     'site_copy_update / site_visual_fix',
@@ -444,6 +467,12 @@ function draftEditText() {
 }
 
 function draftEventText() {
+  logDraftRequest({
+    command: '/draft_event',
+    requestType: 'event_create / event_update',
+    riskLevel: 'Medium',
+    summary: 'Draft prompt for a safe event create or update request.',
+  });
   return promptShell(
     'Draft: Event Request',
     'event_create / event_update',
@@ -485,6 +514,12 @@ function draftEventText() {
 }
 
 function draftPriceText() {
+  logDraftRequest({
+    command: '/draft_price',
+    requestType: 'event_price_update / pricing language update',
+    riskLevel: 'Medium',
+    summary: 'Draft prompt for a safe pricing copy or ticket price request.',
+  });
   return promptShell(
     'Draft: Price Update',
     'event_price_update / pricing language update',
@@ -526,6 +561,12 @@ function draftPriceText() {
 }
 
 function draftMobileFixText() {
+  logDraftRequest({
+    command: '/draft_mobile_fix',
+    requestType: 'site_visual_fix',
+    riskLevel: 'Medium',
+    summary: 'Draft prompt for a minimal mobile layout fix request.',
+  });
   return promptShell(
     'Draft: Mobile Fix',
     'site_visual_fix',
@@ -569,6 +610,12 @@ function draftMobileFixText() {
 }
 
 function draftOutreachText() {
+  logDraftRequest({
+    command: '/draft_outreach',
+    requestType: 'outreach_task',
+    riskLevel: 'Low to Medium',
+    summary: 'Draft outreach message request for a venue, restaurant, promoter, or investor.',
+  });
   return [
     'DRAFT ONLY',
     'NO FILES EDITED',
