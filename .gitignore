@@ -4,3 +4,4 @@ supabase/
 template.
 the
 _dev/operator-bot-draft-log.jsonl
+.env
