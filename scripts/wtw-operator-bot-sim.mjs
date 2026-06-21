@@ -169,6 +169,7 @@ function helpText() {
     '/draft_mobile_fix - generate a safe Codex prompt for mobile fixes',
     '/draft_outreach - generate a safe outreach prompt and message draft',
     '/issue_draft - generates a GitHub issue-style brief only. Does not create the issue.',
+    '/build_draft - generates a Codex build prompt only. Does not edit files.',
     '/logs - show the most recent local draft log entries',
     '/next - show the next safest WTW build or business move',
     '',
@@ -202,6 +203,7 @@ function statusText() {
     '- /draft_mobile_fix',
     '- /draft_outreach',
     '- /issue_draft',
+    '- /build_draft',
     '- /logs',
     '- /next',
     '',
@@ -291,6 +293,56 @@ function issueDraftText() {
     'Approval required: APPROVE ISSUE',
     'Approval required for build: APPROVE BUILD',
     'Approval required for push: APPROVE PUSH',
+  ].join('\n');
+}
+
+function buildDraftText() {
+  const request = normalizeRequest(cmdText);
+  logDraftRequest({
+    command: '/build_draft',
+    requestType: 'codex_build_prompt_draft',
+    riskLevel: 'Medium',
+    summary: 'Draft prompt for a safe Codex build request without editing files.',
+  });
+  return [
+    'BUILD DRAFT ONLY',
+    'NO FILES EDITED',
+    'NO COMMIT',
+    'NO PUSH',
+    'KWAME APPROVAL REQUIRED',
+    'BUILD REQUIRES: APPROVE BUILD',
+    'PUSH REQUIRES: APPROVE PUSH',
+    '',
+    'Task title: ' + request,
+    'User request: ' + request,
+    'Build type: Codex build prompt draft',
+    'Risk level: Medium',
+    '',
+    'Files to inspect: [determine exact files during review]',
+    'Files likely to edit: [determine exact files during review]',
+    'Rules for minimal safe edits:',
+    '- Make the smallest change needed.',
+    '- Preserve the current design unless the request explicitly changes it.',
+    '- Do not touch unrelated files.',
+    '- Keep public site pages frozen unless fixing a real bug.',
+    '',
+    'WTW brand/language rules:',
+    '- Keep language premium, honest, and approval-based.',
+    '- Do not imply guaranteed entry, guaranteed tables, official partnership, or instant confirmation.',
+    '',
+    'QA checklist:',
+    '- git diff --check',
+    '- bash scripts/wtw-pre-commit-check.sh',
+    '- manual smoke test for the affected page or command',
+    '',
+    'Stop conditions:',
+    '- Stop after a draft plan and do not edit files.',
+    '- Stop if the request is ambiguous and ask for details.',
+    '',
+    'Final response requirements:',
+    '- Summarize the exact files and checks.',
+    '- Return the draft only.',
+    '- Do not commit or push.',
   ].join('\n');
 }
 
@@ -801,6 +853,7 @@ const outputs = {
   '/draft_mobile_fix': draftMobileFixText,
   '/draft_outreach': draftOutreachText,
   '/issue_draft': issueDraftText,
+  '/build_draft': buildDraftText,
   '/logs': logsText,
   '/next': nextText,
 };
