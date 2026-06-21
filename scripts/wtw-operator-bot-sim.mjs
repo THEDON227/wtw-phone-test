@@ -44,6 +44,21 @@ function supabaseHeaders() {
   };
 }
 
+function classifySupabaseFailure(status) {
+  switch (Number(status) || 0) {
+    case 0:
+      return 'network/error';
+    case 401:
+      return 'unauthorized';
+    case 403:
+      return 'forbidden/RLS likely';
+    case 404:
+      return 'table not found';
+    default:
+      return 'unknown';
+  }
+}
+
 function supabaseTableUrl(tableName, params) {
   const base = supabaseConfig.url.replace(/\/+$/, '');
   return `${base}/rest/v1/${tableName}${params ? `?${params.toString()}` : ''}`;
@@ -62,7 +77,7 @@ function parseSupabaseCount(contentRange, fallbackCount = 0) {
 
 async function supabaseSelect(tableName, { select = '*', filters = [], order = null, limit = null } = {}) {
   if (!hasSupabaseConfig()) {
-    return { ok: false, configured: false, error: 'Supabase is not configured for this worker yet.' };
+    return { ok: false, configured: false, status: null, reason: 'missing env', error: 'Supabase is not configured for this worker yet.' };
   }
 
   const params = new URLSearchParams();
@@ -78,35 +93,49 @@ async function supabaseSelect(tableName, { select = '*', filters = [], order = n
     params.set('limit', String(limit));
   }
 
-  const response = await fetch(supabaseTableUrl(tableName, params), {
-    method: 'GET',
-    headers: supabaseHeaders(),
-  });
+  try {
+    const response = await fetch(supabaseTableUrl(tableName, params), {
+      method: 'GET',
+      headers: supabaseHeaders(),
+    });
 
-  const text = await response.text();
-  if (!response.ok) {
+    if (!response.ok) {
+      return {
+        ok: false,
+        configured: true,
+        status: response.status,
+        reason: classifySupabaseFailure(response.status),
+        error: `Supabase query failed for ${tableName}.`,
+      };
+    }
+
+    const text = await response.text();
+    let rows = [];
+    if (text) {
+      try {
+        rows = JSON.parse(text);
+      } catch {
+        rows = [];
+      }
+    }
+
+    return {
+      ok: true,
+      configured: true,
+      status: response.status,
+      reason: 'ok',
+      count: parseSupabaseCount(response.headers.get('content-range'), Array.isArray(rows) ? rows.length : 0),
+      rows: Array.isArray(rows) ? rows : [],
+    };
+  } catch (error) {
     return {
       ok: false,
       configured: true,
-      error: `Supabase query failed for ${tableName}.`,
+      status: 0,
+      reason: classifySupabaseFailure(0),
+      error: 'Supabase query failed for this table.',
     };
   }
-
-  let rows = [];
-  if (text) {
-    try {
-      rows = JSON.parse(text);
-    } catch {
-      rows = [];
-    }
-  }
-
-  return {
-    ok: true,
-    configured: true,
-    count: parseSupabaseCount(response.headers.get('content-range'), Array.isArray(rows) ? rows.length : 0),
-    rows: Array.isArray(rows) ? rows : [],
-  };
 }
 
 function formatShortTime(value) {
@@ -695,6 +724,15 @@ function readOnlySupabaseUnavailableText() {
   return 'Supabase is not configured for this worker yet.';
 }
 
+function formatSupabaseTableLine(tableName, result) {
+  if (!result.ok) {
+    const status = result.status ? ` (${result.status}, ${result.reason || 'unknown'})` : ` (${result.reason || 'unknown'})`;
+    return `- ${tableName}: unavailable${status}`;
+  }
+  const status = result.status ? ` (${result.status})` : '';
+  return `- ${tableName}: ok${status} (${result.count ?? 0})`;
+}
+
 async function dataStatusText() {
   if (!hasSupabaseConfig()) {
     return readOnlySupabaseUnavailableText();
@@ -717,11 +755,7 @@ async function dataStatusText() {
 
   const lines = ['Supabase data status:', ''];
   for (const [label, result] of results) {
-    if (!result.ok) {
-      lines.push(`- ${label}: unavailable`);
-      continue;
-    }
-    lines.push(`- ${label}: ${result.count ?? 0}`);
+    lines.push(formatSupabaseTableLine(label, result));
   }
   return lines.join('\n');
 }
@@ -773,10 +807,14 @@ async function requestsTodayText() {
   ]);
 
   if (!reservations.ok || !tickets.ok || !guestLists.ok) {
-    return [
-      'Supabase query failed for one or more request tables.',
-      'Please verify Railway env vars, RLS, and table access.',
-    ].join('\n');
+    const failures = [
+      ['reservation_requests', reservations],
+      ['ticket_requests', tickets],
+      ['guest_list_requests', guestLists],
+    ]
+      .filter(([, result]) => !result.ok)
+      .map(([label, result]) => formatSupabaseTableLine(label, result));
+    return ['Supabase query failed for one or more request tables.', ...failures, 'Please verify Railway env vars and RLS/select policies.'].join('\n');
   }
 
   const latest = [
@@ -818,7 +856,8 @@ async function wavePassRequestsText() {
   if (!result.ok) {
     return [
       'Supabase query failed for wave_pass_requests.',
-      'Please verify Railway env vars, RLS, and table access.',
+      formatSupabaseTableLine('wave_pass_requests', result),
+      'Please verify Railway env vars and RLS/select policies.',
     ].join('\n');
   }
 
@@ -847,7 +886,8 @@ async function partnerRequestsText() {
   if (!result.ok) {
     return [
       'Supabase query failed for partner_applications.',
-      'Please verify Railway env vars, RLS, and table access.',
+      formatSupabaseTableLine('partner_applications', result),
+      'Please verify Railway env vars and RLS/select policies.',
     ].join('\n');
   }
 
