@@ -172,6 +172,7 @@ function helpText() {
     '/build_draft - generates a Codex build prompt draft only. Does not edit files, commit, or push.',
     '/qa_draft - generates a structured QA checklist and commit/push readiness review only. Does not edit files, commit, or push.',
     '/push_draft - generates an exact commit+push prompt draft only. Does not commit or push.',
+    '/rollback_draft - generates a rollback prompt draft only. Does not rollback, commit, or push.',
     '/logs - show the most recent local draft log entries',
     '/next - show the next safest WTW build or business move',
     '',
@@ -208,6 +209,7 @@ function statusText() {
     '- /build_draft',
     '- /qa_draft',
     '- /push_draft',
+    '- /rollback_draft',
     '- /logs',
     '- /next',
     '',
@@ -466,6 +468,54 @@ function pushDraftText() {
   ].join('\n');
 }
 
+function rollbackDraftText() {
+  const request = normalizeRequest(cmdText);
+  return [
+    'ROLLBACK DRAFT ONLY',
+    'NO FILES EDITED',
+    'NO COMMIT',
+    'NO PUSH',
+    'KWAME APPROVAL REQUIRED',
+    'ROLLBACK REQUIRES: APPROVE ROLLBACK',
+    'PUSH REQUIRES: APPROVE PUSH',
+    '',
+    'Rollback title: ' + request,
+    'Reason for rollback: ' + request,
+    'Risk level: Medium',
+    '',
+    'Commit/file scope to inspect: [identify the exact commit and files first]',
+    'Safe rollback options:',
+    '- revert the specific commit',
+    '- restore the smallest affected file set',
+    '- pause and inspect if the change touched multiple pages',
+    'Recommended rollback approach:',
+    '- choose the smallest safe revert path after reviewing the diff',
+    '',
+    'Pre-rollback checks:',
+    '- git status --short',
+    '- git log --oneline -5',
+    '- git diff --check',
+    '- manual review of the exact change to revert',
+    'Exact git safety checks:',
+    '- confirm branch is main before any push',
+    '- confirm working tree is clean after rollback',
+    '- stop if unexpected files appear',
+    '- do not stage _dev/operator-bot-draft-log.jsonl',
+    'QA checklist after rollback:',
+    '- rerun local smoke test for the affected page',
+    '- verify mobile and desktop behavior',
+    '- confirm WTW language stays safe and honest',
+    '- confirm redirects still work',
+    'Stop conditions:',
+    '- stop if the rollback target is unclear',
+    '- stop if the rollback changes unrelated files',
+    '- stop if APPROVE ROLLBACK is not explicit',
+    '',
+    'Approval requirement: APPROVE ROLLBACK',
+    'Push reminder: push only from main after clean status and APPROVE PUSH',
+  ].join('\n');
+}
+
 function nextText() {
   return [
     'Next safest WTW move',
@@ -473,13 +523,13 @@ function nextText() {
     'Do not touch the public site unless you are fixing a real bug.',
     '',
     'Recommended next technical move:',
-    'Add a /rollback_draft command to generate a safe rollback prompt if a pushed change needs to be reverted, still read-only and requiring APPROVE ROLLBACK.',
+    'Stop expanding simulator commands for now. Create a final WTW Operator Bot command checkpoint doc, then switch back to outreach/business execution.',
     '',
     'Recommended next business move:',
-    'Use the presentation site and outreach docs to contact the first 20 venues, restaurants, and promoters.',
+    'Use the presentation site, outreach docs, and first 20 target list to start contacting venues, restaurants, lounges, promoters, and potential partners.',
     '',
     'Recommended safety rule:',
-    'Any build or push still requires explicit APPROVE BUILD and APPROVE PUSH.',
+    'Public site stays frozen unless fixing a real bug. Build requires APPROVE BUILD. Push requires APPROVE PUSH. Rollback requires APPROVE ROLLBACK.',
   ].join('\n');
 }
 
@@ -976,6 +1026,7 @@ const outputs = {
   '/build_draft': buildDraftText,
   '/qa_draft': qaDraftText,
   '/push_draft': pushDraftText,
+  '/rollback_draft': rollbackDraftText,
   '/logs': logsText,
   '/next': nextText,
 };
