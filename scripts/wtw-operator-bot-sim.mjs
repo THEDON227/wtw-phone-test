@@ -6,7 +6,9 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
-const cmd = process.argv[2] || '/help';
+const argv = process.argv.slice(2);
+const cmd = argv[0] || '/help';
+const cmdText = argv.slice(1).join(' ').trim();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const mockDataPath = resolve(__dirname, '../_dev/mock/wtw-assistant-mock-data.json');
 const mockData = loadMockData();
@@ -58,6 +60,50 @@ function formatBlock(title, body) {
   return `${title}\n${'-'.repeat(title.length)}\n${body}`;
 }
 
+function approvalReminder() {
+  return [
+    'Approval phrases:',
+    '- APPROVE DRAFT',
+    '- APPROVE ISSUE',
+    '- APPROVE BUILD',
+    '- APPROVE PUSH',
+    '- APPROVE ROLLBACK',
+    '- REJECT',
+    '- HOLD',
+    '',
+    'Vague approvals like "ok", "yes", "cool", or "do it" are not valid for production changes.',
+  ].join('\n');
+}
+
+function normalizeRequest(input) {
+  return input || 'No request text provided.';
+}
+
+function promptShell(title, requestType, targetArea, riskLevel, assumptions, missingDetails, promptBody, reminder = approvalReminder()) {
+  return [
+    `${title}`,
+    '',
+    'DRAFT ONLY',
+    'NO FILES EDITED',
+    'KWAME APPROVAL REQUIRED',
+    'PRODUCTION PUSH REQUIRES: APPROVE PUSH',
+    '',
+    `Request type: ${requestType}`,
+    `Target area: ${targetArea}`,
+    `Risk level: ${riskLevel}`,
+    '',
+    `Request text: ${normalizeRequest(cmdText)}`,
+    '',
+    `Assumptions: ${assumptions}`,
+    `Missing details: ${missingDetails}`,
+    '',
+    'Safe Codex prompt:',
+    promptBody,
+    '',
+    reminder,
+  ].join('\n');
+}
+
 function helpText() {
   return [
     'WTW Operator Bot Simulator',
@@ -80,6 +126,11 @@ function helpText() {
     '/money - show mock local revenue estimates',
     '/brief - show a mock local owner-style daily brief',
     '/make_prompt - return a safe Codex prompt template',
+    '/draft_edit - generate a safe Codex prompt for copy/layout/text edits',
+    '/draft_event - generate a safe Codex prompt for event updates',
+    '/draft_price - generate a safe Codex prompt for pricing updates',
+    '/draft_mobile_fix - generate a safe Codex prompt for mobile fixes',
+    '/draft_outreach - generate a safe outreach prompt and message draft',
   ].join('\n');
 }
 
@@ -316,6 +367,223 @@ function makePromptText() {
   ].join('\n');
 }
 
+function draftEditText() {
+  return promptShell(
+    'Draft: Edit Request',
+    'site_copy_update / site_visual_fix',
+    'Public site copy, layout, or text',
+    'Medium',
+    'Make the smallest safe change, preserve the current design, and do not edit anything yet.',
+    'Which page and which exact section should change?',
+    [
+      'You are Codex continuing WTW.',
+      '',
+      'CURRENT LOOP:',
+      `Edit request: ${normalizeRequest(cmdText)}`,
+      '',
+      'GOAL:',
+      'Create a safe, minimal edit plan for the requested page or copy change.',
+      '',
+      'ALLOWED FILES:',
+      '[list only the exact files needed]',
+      '',
+      'DO NOT TOUCH:',
+      'backend/Supabase, SQL/RLS, admin/partner logic, email/SMS, and any public files not needed for the request.',
+      '',
+      'TASK:',
+      '1. Identify the target area.',
+      '2. Propose the smallest safe change.',
+      '3. Note any missing details.',
+      '4. Produce a Codex-ready prompt only.',
+      '',
+      'VALIDATION:',
+      'git diff --check',
+      'bash scripts/wtw-pre-commit-check.sh',
+      '',
+      'STOP RULES:',
+      '- Stop after report.',
+      '- Do not commit.',
+      '- Do not push.',
+    ].join('\n'),
+  );
+}
+
+function draftEventText() {
+  return promptShell(
+    'Draft: Event Request',
+    'event_create / event_update',
+    'Event title, date, city, ticket, or request copy',
+    'Medium',
+    'Use WTW-safe language, keep access subject to availability, and avoid implying guaranteed entry.',
+    'Which event, city, date, and field need the update?',
+    [
+      'You are Codex continuing WTW.',
+      '',
+      'CURRENT LOOP:',
+      `Event request: ${normalizeRequest(cmdText)}`,
+      '',
+      'GOAL:',
+      'Create a safe event update or event creation prompt.',
+      '',
+      'ALLOWED FILES:',
+      '[list only the exact files needed]',
+      '',
+      'DO NOT TOUCH:',
+      'backend/Supabase, SQL/RLS, admin/partner logic, email/SMS, and any unrelated public pages.',
+      '',
+      'TASK:',
+      '1. Identify the exact event target.',
+      '2. Keep language curated and access-based.',
+      '3. Avoid guaranteeing availability or entry.',
+      '4. Produce a Codex-ready prompt only.',
+      '',
+      'VALIDATION:',
+      'git diff --check',
+      'bash scripts/wtw-pre-commit-check.sh',
+      '',
+      'STOP RULES:',
+      '- Stop after report.',
+      '- Do not commit.',
+      '- Do not push.',
+    ].join('\n'),
+  );
+}
+
+function draftPriceText() {
+  return promptShell(
+    'Draft: Price Update',
+    'event_price_update / pricing language update',
+    'Visible pricing, spend language, or ticket copy',
+    'Medium',
+    'Keep pricing honest, avoid guaranteed entry language, and treat venue minimums as partner-confirmed only.',
+    'Which event or page and which price field needs the update?',
+    [
+      'You are Codex continuing WTW.',
+      '',
+      'CURRENT LOOP:',
+      `Price request: ${normalizeRequest(cmdText)}`,
+      '',
+      'GOAL:',
+      'Create a safe pricing edit prompt.',
+      '',
+      'ALLOWED FILES:',
+      '[list only the exact files needed]',
+      '',
+      'DO NOT TOUCH:',
+      'backend/Supabase, SQL/RLS, admin/partner logic, email/SMS, and any unrelated public pages.',
+      '',
+      'TASK:',
+      '1. Identify the current visible price or spend language.',
+      '2. Propose the new price wording.',
+      '3. Keep entry and availability language non-guaranteed.',
+      '4. Produce a Codex-ready prompt only.',
+      '',
+      'VALIDATION:',
+      'git diff --check',
+      'bash scripts/wtw-pre-commit-check.sh',
+      '',
+      'STOP RULES:',
+      '- Stop after report.',
+      '- Do not commit.',
+      '- Do not push.',
+    ].join('\n'),
+  );
+}
+
+function draftMobileFixText() {
+  return promptShell(
+    'Draft: Mobile Fix',
+    'site_visual_fix',
+    'Mobile layout, spacing, overflow, clipping, or hero behavior',
+    'Medium',
+    'Inspect the smallest set of files, preserve the current design, and fix only what is necessary.',
+    'Which page and which mobile width / device issue should be addressed?',
+    [
+      'You are Codex continuing WTW.',
+      '',
+      'CURRENT LOOP:',
+      `Mobile fix request: ${normalizeRequest(cmdText)}`,
+      '',
+      'GOAL:',
+      'Create a safe, minimal mobile layout fix prompt.',
+      '',
+      'ALLOWED FILES:',
+      '[list only the exact files needed]',
+      '',
+      'DO NOT TOUCH:',
+      'backend/Supabase, SQL/RLS, admin/partner logic, email/SMS, and any unrelated public pages.',
+      '',
+      'TASK:',
+      '1. Inspect the mobile width issue.',
+      '2. Fix only the smallest necessary files.',
+      '3. Preserve desktop layout.',
+      '4. Run QA after the change.',
+      '5. Produce a Codex-ready prompt only.',
+      '',
+      'VALIDATION:',
+      'git diff --check',
+      'bash scripts/wtw-qa-scan.sh',
+      'bash scripts/wtw-pre-commit-check.sh',
+      '',
+      'STOP RULES:',
+      '- Stop after report.',
+      '- Do not commit.',
+      '- Do not push.',
+    ].join('\n'),
+  );
+}
+
+function draftOutreachText() {
+  return [
+    'DRAFT ONLY',
+    'NO FILES EDITED',
+    'KWAME APPROVAL REQUIRED',
+    'PRODUCTION PUSH REQUIRES: APPROVE PUSH',
+    '',
+    'Request type: outreach_task',
+    'Target area: venue / restaurant / promoter / investor outreach',
+    'Risk level: Low to Medium',
+    '',
+    `Request text: ${normalizeRequest(cmdText)}`,
+    '',
+    'Assumptions: Use curated demand, request routing, priority review, and partner confirmation language only.',
+    'Missing details: Which market, target type, and tone should this outreach use?',
+    '',
+    'Safe outreach prompt:',
+    [
+      'You are Codex continuing WTW.',
+      '',
+      'CURRENT LOOP:',
+      `Draft outreach for: ${normalizeRequest(cmdText)}`,
+      '',
+      'GOAL:',
+      'Write an internal outreach message that is premium, honest, and approval-based.',
+      '',
+      'ALLOWED FILES:',
+      '[no file edits; output only the outreach draft]',
+      '',
+      'DO NOT TOUCH:',
+      'Do not claim official partnership, guaranteed entry, guaranteed tables, instant confirmation, or final pricing.',
+      '',
+      'TASK:',
+      '1. Identify the target type and market.',
+      '2. Draft a short and a longer outreach version if useful.',
+      '3. Keep the language curated and request-based.',
+      '4. End with a low-pressure pilot ask.',
+      '',
+      'VALIDATION:',
+      'No edits. No sends. No commits.',
+      '',
+      'STOP RULES:',
+      '- Stop after report.',
+      '- Do not commit.',
+      '- Do not push.',
+    ].join('\n'),
+    '',
+    approvalReminder(),
+  ].join('\n');
+}
+
 const outputs = {
   '/help': helpText,
   '/status': statusText,
@@ -334,6 +602,11 @@ const outputs = {
   '/money': moneyText,
   '/brief': briefText,
   '/make_prompt': makePromptText,
+  '/draft_edit': draftEditText,
+  '/draft_event': draftEventText,
+  '/draft_price': draftPriceText,
+  '/draft_mobile_fix': draftMobileFixText,
+  '/draft_outreach': draftOutreachText,
 };
 
 const handler = outputs[cmd];
