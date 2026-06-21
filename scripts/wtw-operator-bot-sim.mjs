@@ -108,6 +108,8 @@ function helpText() {
   return [
     'WTW Operator Bot Simulator',
     '',
+    'This simulator is read-only. It does not edit files, push code, write to Supabase, or message anyone.',
+    '',
     'Commands:',
     '/help - show this menu',
     '/status - show git status, latest commit, and next known fix',
@@ -131,6 +133,17 @@ function helpText() {
     '/draft_price - generate a safe Codex prompt for pricing updates',
     '/draft_mobile_fix - generate a safe Codex prompt for mobile fixes',
     '/draft_outreach - generate a safe outreach prompt and message draft',
+    '',
+    'Approval phrases:',
+    'APPROVE DRAFT',
+    'APPROVE ISSUE',
+    'APPROVE BUILD',
+    'APPROVE PUSH',
+    'APPROVE ROLLBACK',
+    'REJECT',
+    'HOLD',
+    '',
+    'Vague approvals like "ok," "yes," "cool," or "looks good" are not valid for production changes.',
   ].join('\n');
 }
 
