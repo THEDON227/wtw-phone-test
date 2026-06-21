@@ -171,6 +171,7 @@ function helpText() {
     '/issue_draft - generates a GitHub issue-style brief only. Does not create the issue.',
     '/build_draft - generates a Codex build prompt draft only. Does not edit files, commit, or push.',
     '/qa_draft - generates a structured QA checklist and commit/push readiness review only. Does not edit files, commit, or push.',
+    '/push_draft - generates an exact commit+push prompt draft only. Does not commit or push.',
     '/logs - show the most recent local draft log entries',
     '/next - show the next safest WTW build or business move',
     '',
@@ -206,6 +207,7 @@ function statusText() {
     '- /issue_draft',
     '- /build_draft',
     '- /qa_draft',
+    '- /push_draft',
     '- /logs',
     '- /next',
     '',
@@ -406,6 +408,64 @@ function qaDraftText() {
   ].join('\n');
 }
 
+function pushDraftText() {
+  const request = normalizeRequest(cmdText);
+  logDraftRequest({
+    command: '/push_draft',
+    requestType: 'commit_push_prompt',
+    riskLevel: 'Medium',
+    summary: 'Draft prompt for a safe commit and push workflow after QA passes.',
+  });
+  return [
+    'PUSH DRAFT ONLY',
+    'NO FILES EDITED',
+    'NO COMMIT',
+    'NO PUSH',
+    'KWAME APPROVAL REQUIRED',
+    'PUSH REQUIRES: APPROVE PUSH',
+    '',
+    'Approved files: [list exact file paths only]',
+    'Commit message: [write the exact commit message]',
+    'Pre-push checks:',
+    '- git diff --check',
+    '- bash scripts/wtw-pre-commit-check.sh',
+    '- manual review of the approved diff',
+    '',
+    'Exact staging command using specific file paths only:',
+    '- git add [exact file paths only]',
+    '',
+    'Commit command:',
+    '- git commit -m "[exact commit message]"',
+    '',
+    'Clean status check:',
+    '- git status --short',
+    '',
+    'Branch check:',
+    '- git branch --show-current',
+    '',
+    'Push command:',
+    '- git push origin main',
+    '',
+    'Final status check:',
+    '- git status --short',
+    '',
+    'Stop conditions:',
+    '- Stop if unexpected files appear.',
+    '- Stop if the branch is not main.',
+    '- Stop if working tree is not clean after commit.',
+    '- Do not stage _dev/operator-bot-draft-log.jsonl.',
+    '',
+    'Request text: ' + request,
+    'Safety notes:',
+    '- This is a draft only.',
+    '- No commit was created.',
+    '- No push was performed.',
+    '- No files were edited.',
+    '- No Supabase writes.',
+    '- No messages were sent.',
+  ].join('\n');
+}
+
 function nextText() {
   return [
     'Next safest WTW move',
@@ -413,7 +473,7 @@ function nextText() {
     'Do not touch the public site unless you are fixing a real bug.',
     '',
     'Recommended next technical move:',
-    'Add a /push_draft command to generate an exact commit+push prompt after QA passes, still read-only and requiring APPROVE PUSH.',
+    'Add a /rollback_draft command to generate a safe rollback prompt if a pushed change needs to be reverted, still read-only and requiring APPROVE ROLLBACK.',
     '',
     'Recommended next business move:',
     'Use the presentation site and outreach docs to contact the first 20 venues, restaurants, and promoters.',
@@ -915,6 +975,7 @@ const outputs = {
   '/issue_draft': issueDraftText,
   '/build_draft': buildDraftText,
   '/qa_draft': qaDraftText,
+  '/push_draft': pushDraftText,
   '/logs': logsText,
   '/next': nextText,
 };
