@@ -13,6 +13,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const mockDataPath = resolve(__dirname, '../_dev/mock/wtw-assistant-mock-data.json');
 const draftLogPath = resolve(__dirname, '../_dev/operator-bot-draft-log.jsonl');
 const mockData = loadMockData();
+const supabaseConfig = {
+  url: (process.env.WTW_SUPABASE_URL || '').trim(),
+  anonKey: (process.env.WTW_SUPABASE_ANON_KEY || '').trim(),
+};
 
 function runGitStatus() {
   return runCapture('git', ['status', '--short']);
@@ -24,6 +28,94 @@ function runGitLog() {
 
 function runReadOnlyScript(scriptPath) {
   return runCapture('bash', [scriptPath]);
+}
+
+function hasSupabaseConfig() {
+  return !!(supabaseConfig.url && supabaseConfig.anonKey);
+}
+
+function supabaseHeaders() {
+  return {
+    apikey: supabaseConfig.anonKey,
+    Authorization: `Bearer ${supabaseConfig.anonKey}`,
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    Prefer: 'count=exact',
+  };
+}
+
+function supabaseTableUrl(tableName, params) {
+  const base = supabaseConfig.url.replace(/\/+$/, '');
+  return `${base}/rest/v1/${tableName}${params ? `?${params.toString()}` : ''}`;
+}
+
+function parseSupabaseCount(contentRange, fallbackCount = 0) {
+  const raw = String(contentRange || '').trim();
+  if (!raw) return fallbackCount;
+  const slashIndex = raw.lastIndexOf('/');
+  if (slashIndex < 0) return fallbackCount;
+  const total = raw.slice(slashIndex + 1).trim();
+  if (!total || total === '*') return fallbackCount;
+  const parsed = Number.parseInt(total, 10);
+  return Number.isFinite(parsed) ? parsed : fallbackCount;
+}
+
+async function supabaseSelect(tableName, { select = '*', filters = [], order = null, limit = null } = {}) {
+  if (!hasSupabaseConfig()) {
+    return { ok: false, configured: false, error: 'Supabase is not configured for this worker yet.' };
+  }
+
+  const params = new URLSearchParams();
+  params.set('select', select);
+  for (const filter of filters) {
+    if (!filter || !filter.column || !filter.operator) continue;
+    params.append(filter.column, `${filter.operator}.${filter.value ?? ''}`);
+  }
+  if (order && order.column) {
+    params.set('order', `${order.column}.${order.direction === 'desc' ? 'desc' : 'asc'}`);
+  }
+  if (typeof limit === 'number') {
+    params.set('limit', String(limit));
+  }
+
+  const response = await fetch(supabaseTableUrl(tableName, params), {
+    method: 'GET',
+    headers: supabaseHeaders(),
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    return {
+      ok: false,
+      configured: true,
+      error: `Supabase query failed for ${tableName}.`,
+    };
+  }
+
+  let rows = [];
+  if (text) {
+    try {
+      rows = JSON.parse(text);
+    } catch {
+      rows = [];
+    }
+  }
+
+  return {
+    ok: true,
+    configured: true,
+    count: parseSupabaseCount(response.headers.get('content-range'), Array.isArray(rows) ? rows.length : 0),
+    rows: Array.isArray(rows) ? rows : [],
+  };
+}
+
+function formatShortTime(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return 'unknown';
+  if (raw.length >= 16 && raw.includes('T')) {
+    return raw.slice(0, 16).replace('T', ' ');
+  }
+  return raw;
 }
 
 function loadMockData() {
@@ -162,6 +254,10 @@ function helpText() {
     '/vip - show mock local VIP and table requests',
     '/money - show mock local revenue estimates',
     '/brief - show a mock local owner-style daily brief',
+    '/data_status - show whether Supabase is configured and queue counts',
+    '/requests_today - show today\'s reservation, ticket, and guest list requests',
+    '/wave_pass_requests - show latest Wave Pass requests from Supabase',
+    '/partner_requests - show latest partner applications from Supabase',
     '/make_prompt - return a safe Codex prompt template',
     '/draft_edit - generate a safe Codex prompt for copy/layout/text edits',
     '/draft_event - generate a safe Codex prompt for event updates',
@@ -205,6 +301,10 @@ function statusText() {
     '- /draft_price',
     '- /draft_mobile_fix',
     '- /draft_outreach',
+    '- /data_status',
+    '- /requests_today',
+    '- /wave_pass_requests',
+    '- /partner_requests',
     '- /issue_draft',
     '- /build_draft',
     '- /qa_draft',
@@ -588,6 +688,173 @@ function presentationReadyText() {
     'Controlled club-owner demo: yes',
     'Investor walkthrough: yes, with live-vs-planned framing',
     'Phone demo: yes, mobile overflow fix completed; final device QA recommended',
+  ].join('\n');
+}
+
+function readOnlySupabaseUnavailableText() {
+  return 'Supabase is not configured for this worker yet.';
+}
+
+async function dataStatusText() {
+  if (!hasSupabaseConfig()) {
+    return readOnlySupabaseUnavailableText();
+  }
+
+  const tables = [
+    ['reservation_requests', 'reservation_requests'],
+    ['ticket_requests', 'ticket_requests'],
+    ['guest_list_requests', 'guest_list_requests'],
+    ['wave_pass_requests', 'wave_pass_requests'],
+    ['partner_applications', 'partner_applications'],
+  ];
+
+  const results = await Promise.all(
+    tables.map(async ([label, tableName]) => {
+      const result = await supabaseSelect(tableName, { select: 'id', limit: 1 });
+      return [label, result];
+    }),
+  );
+
+  const lines = ['Supabase data status:', ''];
+  for (const [label, result] of results) {
+    if (!result.ok) {
+      lines.push(`- ${label}: unavailable`);
+      continue;
+    }
+    lines.push(`- ${label}: ${result.count ?? 0}`);
+  }
+  return lines.join('\n');
+}
+
+function formatRequestSummary(tableName, row) {
+  const createdAt = formatShortTime(row.created_at);
+  if (tableName === 'reservation_requests') {
+    return `- ${createdAt} | reservation | ${row.market || 'unknown market'} | ${row.venue_name || 'unknown venue'} | ${row.status || 'unknown'}`;
+  }
+  if (tableName === 'ticket_requests') {
+    return `- ${createdAt} | ticket | ${row.event_title || 'unknown event'} | ${row.ticket_type || 'unknown type'} | ${row.status || 'unknown'}`;
+  }
+  return `- ${createdAt} | guest list | ${row.event_title || 'unknown event'} | party ${row.party_size || '1'} | ${row.status || 'unknown'}`;
+}
+
+async function requestsTodayText() {
+  if (!hasSupabaseConfig()) {
+    return readOnlySupabaseUnavailableText();
+  }
+
+  const today = new Date();
+  const start = new Date(today);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+
+  const query = {
+    filters: [
+      { column: 'created_at', operator: 'gte', value: start.toISOString() },
+      { column: 'created_at', operator: 'lt', value: end.toISOString() },
+    ],
+    order: { column: 'created_at', direction: 'desc' },
+    limit: 5,
+  };
+
+  const [reservations, tickets, guestLists] = await Promise.all([
+    supabaseSelect('reservation_requests', {
+      select: 'id,user_name,market,venue_name,party_size,status,created_at',
+      ...query,
+    }),
+    supabaseSelect('ticket_requests', {
+      select: 'id,user_name,event_title,ticket_type,quantity,status,created_at',
+      ...query,
+    }),
+    supabaseSelect('guest_list_requests', {
+      select: 'id,user_name,event_title,market,party_size,arrival_time,status,created_at',
+      ...query,
+    }),
+  ]);
+
+  if (!reservations.ok || !tickets.ok || !guestLists.ok) {
+    return [
+      'Supabase query failed for one or more request tables.',
+      'Please verify Railway env vars, RLS, and table access.',
+    ].join('\n');
+  }
+
+  const latest = [
+    ...(reservations.rows || []).map((row) => ({ table: 'reservation_requests', row })),
+    ...(tickets.rows || []).map((row) => ({ table: 'ticket_requests', row })),
+    ...(guestLists.rows || []).map((row) => ({ table: 'guest_list_requests', row })),
+  ]
+    .sort((a, b) => new Date(b.row.created_at || 0).getTime() - new Date(a.row.created_at || 0).getTime())
+    .slice(0, 5);
+
+  const lines = [
+    'Requests today:',
+    `- reservation_requests: ${reservations.count ?? 0}`,
+    `- ticket_requests: ${tickets.count ?? 0}`,
+    `- guest_list_requests: ${guestLists.count ?? 0}`,
+    '',
+    'Latest few records:',
+    ...(latest.length ? latest.map(({ table, row }) => formatRequestSummary(table, row)) : ['- none']),
+  ];
+
+  return lines.join('\n');
+}
+
+function formatWavePassSummary(row) {
+  return `- ${formatShortTime(row.created_at)} | ${row.market || 'unknown market'} | ${row.status || 'unknown'} | ${row.nightlife_interest || 'no interest'} | ${row.full_name || 'unknown'}`;
+}
+
+async function wavePassRequestsText() {
+  if (!hasSupabaseConfig()) {
+    return readOnlySupabaseUnavailableText();
+  }
+
+  const result = await supabaseSelect('wave_pass_requests', {
+    select: 'id,full_name,market,nightlife_interest,status,created_at',
+    order: { column: 'created_at', direction: 'desc' },
+    limit: 5,
+  });
+
+  if (!result.ok) {
+    return [
+      'Supabase query failed for wave_pass_requests.',
+      'Please verify Railway env vars, RLS, and table access.',
+    ].join('\n');
+  }
+
+  return [
+    `Wave Pass requests: ${result.count ?? 0}`,
+    '',
+    ...(result.rows.length ? result.rows.map((row) => formatWavePassSummary(row)) : ['- none']),
+  ].join('\n');
+}
+
+function formatPartnerRequestSummary(row) {
+  return `- ${formatShortTime(row.created_at)} | ${row.market || 'unknown market'} | ${row.business_name || 'unknown business'} | ${row.status || 'unknown'} | ${row.contact_name || 'unknown contact'}`;
+}
+
+async function partnerRequestsText() {
+  if (!hasSupabaseConfig()) {
+    return readOnlySupabaseUnavailableText();
+  }
+
+  const result = await supabaseSelect('partner_applications', {
+    select: 'id,business_name,business_type,market,contact_name,contact_role,status,created_at',
+    order: { column: 'created_at', direction: 'desc' },
+    limit: 5,
+  });
+
+  if (!result.ok) {
+    return [
+      'Supabase query failed for partner_applications.',
+      'Please verify Railway env vars, RLS, and table access.',
+    ].join('\n');
+  }
+
+  return [
+    `Partner applications: ${result.count ?? 0}`,
+    '',
+    ...(result.rows.length ? result.rows.map((row) => formatPartnerRequestSummary(row)) : ['- none']),
   ].join('\n');
 }
 
@@ -1017,6 +1284,10 @@ const outputs = {
   '/vip': vipText,
   '/money': moneyText,
   '/brief': briefText,
+  '/data_status': dataStatusText,
+  '/requests_today': requestsTodayText,
+  '/wave_pass_requests': wavePassRequestsText,
+  '/partner_requests': partnerRequestsText,
   '/make_prompt': makePromptText,
   '/draft_edit': draftEditText,
   '/draft_event': draftEventText,
@@ -1040,5 +1311,6 @@ if (!handler) {
   console.error(helpText());
   process.exitCode = 1;
 } else {
-  console.log(handler());
+  const output = await handler();
+  console.log(output);
 }
