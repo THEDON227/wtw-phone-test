@@ -80,6 +80,24 @@ function normalizeRequest(input) {
   return input || 'No request text provided.';
 }
 
+function readDraftLogEntries(limit = 5) {
+  try {
+    const text = readFileSync(draftLogPath, 'utf8').trim();
+    if (!text) {
+      return [];
+    }
+
+    return text
+      .split('\n')
+      .filter(Boolean)
+      .map((line) => JSON.parse(line))
+      .slice(-limit)
+      .reverse();
+  } catch (error) {
+    return [];
+  }
+}
+
 function logDraftRequest({ command, requestType, riskLevel, summary }) {
   const entry = {
     timestamp: new Date().toISOString(),
@@ -150,6 +168,7 @@ function helpText() {
     '/draft_price - generate a safe Codex prompt for pricing updates',
     '/draft_mobile_fix - generate a safe Codex prompt for mobile fixes',
     '/draft_outreach - generate a safe outreach prompt and message draft',
+    '/logs - show the most recent local draft log entries',
     '',
     'Approval phrases:',
     'APPROVE DRAFT',
@@ -198,6 +217,35 @@ function statusText() {
     '',
     formatBlock('Latest commit', log),
   ].join('\n');
+}
+
+function logsText() {
+  const entries = readDraftLogEntries(5);
+  if (!entries.length) {
+    return [
+      'No draft logs exist yet.',
+      '',
+      'Logs are local-only. Production still requires APPROVE PUSH.',
+    ].join('\n');
+  }
+
+  const lines = ['Most recent draft logs (latest 5):', ''];
+  for (const entry of entries) {
+    lines.push([
+      `timestamp: ${entry.timestamp || 'unknown'}`,
+      `command: ${entry.command || 'unknown'}`,
+      `raw_request: ${entry.raw_request || 'unknown'}`,
+      `request_type: ${entry.request_type || 'unknown'}`,
+      `risk_level: ${entry.risk_level || 'unknown'}`,
+      `approval_required: ${String(entry.approval_required ?? true)}`,
+      `production_push_requires: ${entry.production_push_requires || 'APPROVE PUSH'}`,
+      `generated_prompt_summary: ${entry.generated_prompt_summary || 'unknown'}`,
+    ].join('\n'));
+    lines.push('');
+  }
+
+  lines.push('Logs are local-only. Production still requires APPROVE PUSH.');
+  return lines.join('\n');
 }
 
 function qaText() {
@@ -689,6 +737,7 @@ const outputs = {
   '/draft_price': draftPriceText,
   '/draft_mobile_fix': draftMobileFixText,
   '/draft_outreach': draftOutreachText,
+  '/logs': logsText,
 };
 
 const handler = outputs[cmd];
