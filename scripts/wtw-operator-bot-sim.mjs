@@ -169,6 +169,7 @@ function helpText() {
     '/draft_mobile_fix - generate a safe Codex prompt for mobile fixes',
     '/draft_outreach - generate a safe outreach prompt and message draft',
     '/logs - show the most recent local draft log entries',
+    '/next - show the next safest WTW build or business move',
     '',
     'Approval phrases:',
     'APPROVE DRAFT',
@@ -199,6 +200,8 @@ function statusText() {
     '- /draft_price',
     '- /draft_mobile_fix',
     '- /draft_outreach',
+    '- /logs',
+    '- /next',
     '',
     'Safety status:',
     '- no live edits',
@@ -246,6 +249,23 @@ function logsText() {
 
   lines.push('Logs are local-only. Production still requires APPROVE PUSH.');
   return lines.join('\n');
+}
+
+function nextText() {
+  return [
+    'Next safest WTW move',
+    '--------------------',
+    'Do not touch the public site unless you are fixing a real bug.',
+    '',
+    'Recommended next technical move:',
+    'Add an /issue_draft command that turns a draft request into a GitHub issue-style brief, but does not create the issue yet.',
+    '',
+    'Recommended next business move:',
+    'Use the presentation site and outreach docs to contact the first 20 venues, restaurants, and promoters.',
+    '',
+    'Recommended safety rule:',
+    'Any build or push still requires explicit APPROVE BUILD and APPROVE PUSH.',
+  ].join('\n');
 }
 
 function qaText() {
@@ -738,6 +758,7 @@ const outputs = {
   '/draft_mobile_fix': draftMobileFixText,
   '/draft_outreach': draftOutreachText,
   '/logs': logsText,
+  '/next': nextText,
 };
 
 const handler = outputs[cmd];
