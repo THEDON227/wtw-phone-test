@@ -168,6 +168,7 @@ function helpText() {
     '/draft_price - generate a safe Codex prompt for pricing updates',
     '/draft_mobile_fix - generate a safe Codex prompt for mobile fixes',
     '/draft_outreach - generate a safe outreach prompt and message draft',
+    '/issue_draft - generate a GitHub issue-style brief without creating an issue',
     '/logs - show the most recent local draft log entries',
     '/next - show the next safest WTW build or business move',
     '',
@@ -249,6 +250,47 @@ function logsText() {
 
   lines.push('Logs are local-only. Production still requires APPROVE PUSH.');
   return lines.join('\n');
+}
+
+function issueDraftText() {
+  const request = normalizeRequest(cmdText);
+  return [
+    'ISSUE DRAFT ONLY',
+    'NO GITHUB ISSUE CREATED',
+    'NO FILES EDITED',
+    'KWAME APPROVAL REQUIRED',
+    'BUILD REQUIRES: APPROVE BUILD',
+    'PUSH REQUIRES: APPROVE PUSH',
+    '',
+    'Title: ' + request,
+    'Type: Bug fix / implementation brief',
+    'Priority: Medium',
+    'Risk level: Medium',
+    '',
+    'User request: ' + request,
+    'Problem summary: Drafted from the requested change only; verify exact page and expected behavior before any build.',
+    'Recommended scope: smallest safe change needed to address the issue.',
+    'Files to inspect: [determine exact files during review]',
+    'Acceptance criteria:',
+    '- Requested behavior is clear and testable',
+    '- Desktop layout is preserved unless the request is about desktop',
+    '- Mobile behavior is checked if the issue affects mobile',
+    '- No unrelated files are changed',
+    'QA checklist:',
+    '- git diff --check',
+    '- bash scripts/wtw-pre-commit-check.sh',
+    '- manual smoke test for the affected page or command',
+    'Safety notes:',
+    '- This is a draft only.',
+    '- No GitHub issue was created.',
+    '- No files were edited.',
+    '- No Supabase writes.',
+    '- No messages were sent.',
+    '',
+    'Approval required: APPROVE ISSUE',
+    'Approval required for build: APPROVE BUILD',
+    'Approval required for push: APPROVE PUSH',
+  ].join('\n');
 }
 
 function nextText() {
@@ -757,6 +799,7 @@ const outputs = {
   '/draft_price': draftPriceText,
   '/draft_mobile_fix': draftMobileFixText,
   '/draft_outreach': draftOutreachText,
+  '/issue_draft': issueDraftText,
   '/logs': logsText,
   '/next': nextText,
 };
