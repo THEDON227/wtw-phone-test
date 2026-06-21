@@ -1,0 +1,11 @@
+{
+  "name": "wtw-operator-bot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/wtw-telegram-bot.mjs",
+    "telegram:bot": "node scripts/wtw-telegram-bot.mjs",
+    "operator:help": "node scripts/wtw-operator-bot-sim.mjs /help",
+    "operator:status": "node scripts/wtw-operator-bot-sim.mjs /status"
+  }
+}
