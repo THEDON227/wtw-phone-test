@@ -48,6 +48,8 @@ function classifySupabaseFailure(status) {
   switch (Number(status) || 0) {
     case 0:
       return 'network/error';
+    case 400:
+      return 'bad request/column mismatch likely';
     case 401:
       return 'unauthorized';
     case 403:
@@ -146,6 +148,14 @@ function formatShortTime(value) {
   }
   return raw;
 }
+
+const EVENT_DATE_FIELD = 'event_date';
+const CITY_FILTERABLE_REQUEST_TABLES = new Set([
+  'reservation_requests',
+  'guest_list_requests',
+  'wave_pass_requests',
+  'partner_applications',
+]);
 
 function loadMockData() {
   try {
@@ -782,10 +792,10 @@ function formatEventSummary(row) {
 }
 
 function formatVenueSummary(row) {
-  return `- ${formatShortTime(row.created_at)} | ${row.market || 'unknown market'} | ${row.name || 'unknown venue'} | ${row.type || row.category || 'unknown type'} | ${row.status || 'unknown'}`;
+  return `- ${formatShortTime(row.created_at)} | ${row.market || 'unknown market'} | ${row.name || 'unknown venue'} | ${row.type || 'unknown type'} | ${row.status || 'unknown'}`;
 }
 
-const KNOWN_CITY_ORDER = ['NYC', 'NJ', 'Miami', 'LA', 'Dallas', 'Philadelphia'];
+const KNOWN_CITY_ORDER = ['NYC', 'NJ', 'Miami', 'LA', 'Dallas', 'Philadelphia', 'Atlanta'];
 const CITY_ALIASES = [
   ['new york city', 'NYC'],
   ['new york', 'NYC'],
@@ -800,6 +810,8 @@ const CITY_ALIASES = [
   ['losangeles', 'LA'],
   ['la', 'LA'],
   ['dallas', 'Dallas'],
+  ['atlanta', 'Atlanta'],
+  ['atl', 'Atlanta'],
   ['philadelphia', 'Philadelphia'],
   ['philly', 'Philadelphia'],
 ];
@@ -866,10 +878,6 @@ function latestRowsByCreatedAt(rows, limit = 5) {
     .slice(0, limit);
 }
 
-function eventDateValue(row) {
-  return row?.event_date || row?.start_date || row?.date || row?.created_at || null;
-}
-
 function formatRequestRowSummary(tableName, row) {
   const createdAt = formatShortTime(row.created_at);
   const city = rowCity(row) || 'unknown city';
@@ -901,22 +909,8 @@ async function supabaseRows(tableName, select, options = {}) {
   return result;
 }
 
-function detectEventDateField(row) {
-  if (!row || typeof row !== 'object') return null;
-  const candidates = ['event_date', 'start_date', 'date'];
-  return candidates.find((field) => Object.prototype.hasOwnProperty.call(row, field) && row[field]) || null;
-}
-
 function rangeDateString(value) {
   return new Date(value).toISOString().slice(0, 10);
-}
-
-async function getSupabaseTableSample(tableName) {
-  return supabaseSelect(tableName, {
-    select: '*',
-    order: { column: 'created_at', direction: 'desc' },
-    limit: 1,
-  });
 }
 
 async function eventsStatusText() {
@@ -939,7 +933,7 @@ async function eventsStatusText() {
   }
 
   if (!result.rows.length) {
-    return 'No Supabase events found yet. Public site may still be using hardcoded event data.';
+    return 'No visible Supabase events found yet. Public site may still be using static event data.';
   }
 
   const lines = [
@@ -959,21 +953,6 @@ async function eventsThisWeekText() {
     return readOnlySupabaseUnavailableText();
   }
 
-  const sample = await getSupabaseTableSample('events');
-  if (!sample.ok) {
-    return [
-      'Supabase query failed for events.',
-      formatSupabaseTableLine('events', sample),
-      'Please verify Railway env vars and RLS/select policies.',
-    ].join('\n');
-  }
-
-  const sampleRow = sample.rows[0] || null;
-  const dateField = detectEventDateField(sampleRow);
-  if (!dateField) {
-    return 'Events table found, but date field needs mapping.';
-  }
-
   const start = new Date();
   start.setHours(0, 0, 0, 0);
   const end = new Date(start);
@@ -982,10 +961,10 @@ async function eventsThisWeekText() {
   const result = await supabaseSelect('events', {
     select: 'id,title,venue_name,market,category,event_date,start_time,end_time,status,created_at',
     filters: [
-      { column: dateField, operator: 'gte', value: rangeDateString(start) },
-      { column: dateField, operator: 'lte', value: rangeDateString(end) },
+      { column: EVENT_DATE_FIELD, operator: 'gte', value: rangeDateString(start) },
+      { column: EVENT_DATE_FIELD, operator: 'lte', value: rangeDateString(end) },
     ],
-    order: { column: dateField, direction: 'asc' },
+    order: { column: EVENT_DATE_FIELD, direction: 'asc' },
     limit: 10,
   });
 
@@ -998,7 +977,7 @@ async function eventsThisWeekText() {
   }
 
   if (!result.rows.length) {
-    return 'No Supabase events found this week yet. Public site may still be using hardcoded event data.';
+    return 'No Supabase events found this week yet. Public site may still be using static event data.';
   }
 
   return [
@@ -1014,7 +993,7 @@ async function venuesStatusText() {
   }
 
   const result = await supabaseSelect('venues', {
-    select: 'id,name,market,type,category,neighborhood,status,created_at',
+    select: 'id,name,market,type,neighborhood,status,created_at',
     order: { column: 'created_at', direction: 'desc' },
     limit: 20,
   });
@@ -1028,15 +1007,13 @@ async function venuesStatusText() {
   }
 
   if (!result.rows.length) {
-    return 'No Supabase venues found yet. Public site may still be using hardcoded venue data.';
+    return 'No visible Supabase venues found yet. Public site may still be using static venue data.';
   }
 
   const lines = [
     `Venues total: ${result.count ?? result.rows.length}`,
     formatCityCounts(result.rows) ? `By city: ${formatCityCounts(result.rows)}` : null,
-    listFieldValues(result.rows, 'type').length
-      ? `By type: ${formatCountByValue(result.rows, 'type')}`
-      : (listFieldValues(result.rows, 'category').length ? `By category: ${formatCountByValue(result.rows, 'category')}` : null),
+    listFieldValues(result.rows, 'type').length ? `By type: ${formatCountByValue(result.rows, 'type')}` : null,
     '',
     'Latest few venues:',
     ...result.rows.slice(0, 5).map((row) => formatVenueSummary(row)),
@@ -1113,20 +1090,7 @@ async function citiesStatusText() {
   ].join('\n');
 }
 
-async function eventsByCityStatusText(city) {
-  const result = await supabaseRows('events', 'id,title,venue_name,market,category,event_date,start_time,end_time,status,created_at');
-  if (!result.ok) {
-    return [
-      'Supabase query failed for events.',
-      formatSupabaseTableLine('events', result),
-      'Please verify Railway env vars and RLS/select policies.',
-    ].join('\n');
-  }
-  const rows = rowsForCity(result.rows, city);
-  return rows;
-}
-
-async function requestsTodayByTableText(tableName, select, rowFormatter) {
+async function requestsTodayByTableText(tableName, select, rowFormatter, cityInput = '') {
   if (!hasSupabaseConfig()) {
     return readOnlySupabaseUnavailableText();
   }
@@ -1137,11 +1101,14 @@ async function requestsTodayByTableText(tableName, select, rowFormatter) {
   const end = new Date(start);
   end.setDate(end.getDate() + 1);
 
+  const city = canonicalCity(cityInput);
+  const filters = [
+    { column: 'created_at', operator: 'gte', value: start.toISOString() },
+    { column: 'created_at', operator: 'lt', value: end.toISOString() },
+  ];
+
   const result = await supabaseRows(tableName, select, {
-    filters: [
-      { column: 'created_at', operator: 'gte', value: start.toISOString() },
-      { column: 'created_at', operator: 'lt', value: end.toISOString() },
-    ],
+    filters,
     order: { column: 'created_at', direction: 'desc' },
     limit: 10,
   });
@@ -1155,37 +1122,61 @@ async function requestsTodayByTableText(tableName, select, rowFormatter) {
   }
 
   if (!result.rows.length) {
-    return `No ${tableName} found today.`;
+    if (city && !CITY_FILTERABLE_REQUEST_TABLES.has(tableName)) {
+      return `No visible ${tableName} rows found today. City-specific filtering is unavailable because ${tableName} has no market field.`;
+    }
+    return `No visible ${tableName} rows found today.`;
   }
 
-  return [
-    `${tableName}: ${result.count ?? result.rows.length} today`,
+  const visibleRows = city && CITY_FILTERABLE_REQUEST_TABLES.has(tableName)
+    ? rowsForCity(result.rows, city)
+    : (result.rows || []);
+  const count = visibleRows.length;
+  const header = city && CITY_FILTERABLE_REQUEST_TABLES.has(tableName)
+    ? `${tableName} in ${city}: ${count} today`
+    : `${tableName}: ${result.count ?? result.rows.length} today`;
+
+  const lines = [
+    header,
     '',
-    ...latestRowsByCreatedAt(result.rows, 5).map((row) => rowFormatter(row)),
-  ].join('\n');
+    ...latestRowsByCreatedAt(visibleRows, 5).map((row) => rowFormatter(row)),
+  ];
+
+  if (city && !CITY_FILTERABLE_REQUEST_TABLES.has(tableName)) {
+    lines.push('');
+    lines.push(`Note: city-specific filtering is unavailable for ${tableName} because the table has no market field.`);
+  } else if (city && CITY_FILTERABLE_REQUEST_TABLES.has(tableName) && count === 0) {
+    lines.push('');
+    lines.push(`Note: no visible ${tableName} rows matched ${city} today.`);
+  }
+
+  return lines.join('\n');
 }
 
-async function reservationsTodayText() {
+async function reservationsTodayText(cityInput = '') {
   return requestsTodayByTableText(
     'reservation_requests',
     'id,user_name,market,venue_name,requested_date,requested_time,party_size,status,created_at',
     (row) => formatRequestRowSummary('reservation_requests', row),
+    cityInput,
   );
 }
 
-async function guestListTodayText() {
+async function guestListTodayText(cityInput = '') {
   return requestsTodayByTableText(
     'guest_list_requests',
     'id,user_name,event_title,market,party_size,arrival_time,status,created_at',
     (row) => formatRequestRowSummary('guest_list_requests', row),
+    cityInput,
   );
 }
 
-async function ticketsTodayText() {
+async function ticketsTodayText(cityInput = '') {
   return requestsTodayByTableText(
     'ticket_requests',
     'id,user_name,event_title,ticket_type,quantity,status,created_at',
     (row) => formatRequestRowSummary('ticket_requests', row),
+    cityInput,
   );
 }
 
@@ -1344,18 +1335,6 @@ async function cityBriefText(cityInput) {
   ].join('\n');
 }
 
-async function todaysCityText(tableName, select, city) {
-  const result = await requestsTodayByTableText(
-    tableName,
-    select,
-    (row) => formatRequestRowSummary(tableName, row),
-  );
-  if (!hasSupabaseConfig()) return result;
-  if (!city) return result;
-  if (result === readOnlySupabaseUnavailableText()) return result;
-  return result.split('\n').join('\n');
-}
-
 async function tonightTextByCity(cityInput) {
   if (!hasSupabaseConfig()) {
     return tonightText();
@@ -1420,7 +1399,7 @@ async function tonightTextByCity(cityInput) {
   const cityLabel = city || 'all cities';
   return [
     `Tonight (${cityLabel}):`,
-    ...cityEvents.slice(0, 5).map((row) => `- event | ${row.market || 'unknown'} | ${row.title || 'unknown'} | ${eventDateValue(row) || 'unknown date'} | ${row.venue_name || 'unknown venue'} | ${row.status || 'unknown'}`),
+    ...cityEvents.slice(0, 5).map((row) => `- event | ${row.market || 'unknown'} | ${row.title || 'unknown'} | ${row.event_date || 'unknown date'} | ${row.venue_name || 'unknown venue'} | ${row.status || 'unknown'}`),
     ...cityVenues.slice(0, 5).map((row) => `- venue | ${row.market || 'unknown'} | ${row.name || 'unknown'} | ${row.type || 'unknown'} | ${row.status || 'unknown'}`),
     ...cityRequests.slice(0, 5).map(({ table, row }) => formatRequestRowSummary(table, row)),
     ...(cityEvents.length + cityVenues.length + cityRequests.length ? [] : ['- no matching Supabase rows found yet.']),
@@ -1433,20 +1412,6 @@ async function weekendTextByCity(cityInput) {
   }
 
   const city = cityInput ? canonicalCity(cityInput) : '';
-  const sample = await getSupabaseTableSample('events');
-  if (!sample.ok) {
-    return [
-      'Supabase query failed for events.',
-      formatSupabaseTableLine('events', sample),
-      'Please verify Railway env vars and RLS/select policies.',
-    ].join('\n');
-  }
-
-  const dateField = detectEventDateField(sample.rows[0] || null);
-  if (!dateField) {
-    return 'Events table found, but date field needs mapping.';
-  }
-
   const today = new Date();
   const friday = new Date(today);
   friday.setDate(today.getDate() + ((5 - today.getDay() + 7) % 7));
@@ -1456,10 +1421,10 @@ async function weekendTextByCity(cityInput) {
 
   const events = await supabaseRows('events', 'id,title,venue_name,market,event_date,start_time,end_time,status,created_at', {
     filters: [
-      { column: dateField, operator: 'gte', value: rangeDateString(friday) },
-      { column: dateField, operator: 'lte', value: rangeDateString(sunday) },
+      { column: EVENT_DATE_FIELD, operator: 'gte', value: rangeDateString(friday) },
+      { column: EVENT_DATE_FIELD, operator: 'lte', value: rangeDateString(sunday) },
     ],
-    order: { column: dateField, direction: 'asc' },
+    order: { column: EVENT_DATE_FIELD, direction: 'asc' },
     limit: 1000,
   });
 
@@ -1481,23 +1446,7 @@ async function weekendTextByCity(cityInput) {
     `Weekend (${cityLabel}):`,
     ...(cityEvents.length ? cityEvents.slice(0, 10).map((row) => formatEventSummary(row)) : ['- no matching weekend events found.']),
     ...(cityVenues.length ? cityVenues.slice(0, 5).map((row) => formatVenueSummary(row)) : ['- no matching venues found.']),
-    'Note: weekend event date mapping uses Supabase event_date.',
-  ].join('\n');
-}
-
-async function latestRequestsByCityText(cityInput) {
-  const city = cityInput ? canonicalCity(cityInput) : '';
-  const text = await latestRequestsText();
-  if (!city || !hasSupabaseConfig() || text.startsWith('Supabase query failed')) {
-    return text;
-  }
-  const filtered = text
-    .split('\n')
-    .filter((line) => line.startsWith('- ') && line.toLowerCase().includes(city.toLowerCase()));
-  return [
-    `Latest requests for ${city}:`,
-    '',
-    ...(filtered.length ? filtered.slice(0, 8) : ['- none found for that city.']),
+    'Note: weekend query uses Supabase event_date.',
   ].join('\n');
 }
 
@@ -1515,16 +1464,16 @@ async function eventsCountText(cityInput) {
   }
   const city = cityInput ? canonicalCity(cityInput) : '';
   const rows = city ? rowsForCity(result.rows, city) : (result.rows || []);
-  return city
-    ? `Events in ${city}: ${rows.length}`
-    : `Events total: ${result.count ?? rows.length}`;
+  const count = city ? rows.length : (result.count ?? rows.length);
+  const label = city ? `Events in ${city}` : 'Events total';
+  return `${label}: ${count}${count === 0 ? ' visible rows' : ''}`;
 }
 
 async function venuesCountText(cityInput) {
   if (!hasSupabaseConfig()) {
     return readOnlySupabaseUnavailableText();
   }
-  const result = await supabaseRows('venues', 'id,market,type,category,status', { limit: 1000 });
+  const result = await supabaseRows('venues', 'id,market,type,status', { limit: 1000 });
   if (!result.ok) {
     return [
       'Supabase query failed for venues.',
@@ -1534,9 +1483,9 @@ async function venuesCountText(cityInput) {
   }
   const city = cityInput ? canonicalCity(cityInput) : '';
   const rows = city ? rowsForCity(result.rows, city) : (result.rows || []);
-  return city
-    ? `Venues in ${city}: ${rows.length}`
-    : `Venues total: ${result.count ?? rows.length}`;
+  const count = city ? rows.length : (result.count ?? rows.length);
+  const label = city ? `Venues in ${city}` : 'Venues total';
+  return `${label}: ${count}${count === 0 ? ' visible rows' : ''}`;
 }
 
 async function requestCountText(cityInput) {
@@ -1568,9 +1517,11 @@ async function requestCountText(cityInput) {
     ...(city ? rowsForCity(wavePassRequests.rows, city) : wavePassRequests.rows || []),
     ...(city ? rowsForCity(partnerApplications.rows, city) : partnerApplications.rows || []),
   ];
-  return city
-    ? `Requests in ${city}: ${requestRows.length}`
-    : `Requests total: ${(reservations.rows || []).length + (guestLists.rows || []).length + (wavePassRequests.rows || []).length + (partnerApplications.rows || []).length}`;
+  const count = city
+    ? requestRows.length
+    : (reservations.rows || []).length + (guestLists.rows || []).length + (wavePassRequests.rows || []).length + (partnerApplications.rows || []).length;
+  const label = city ? `Requests in ${city}` : 'Requests total';
+  return `${label}: ${count}${count === 0 ? ' visible rows' : ''}`;
 }
 
 async function askText() {
@@ -1588,16 +1539,16 @@ async function askText() {
     return latestRequestsText();
   }
   if (/reservations today|show reservations today/.test(lower)) {
-    return city ? requestsTodayByTableText('reservation_requests', 'id,user_name,market,venue_name,party_size,status,created_at', (row) => formatRequestRowSummary('reservation_requests', row)) : reservationsTodayText();
+    return reservationsTodayText(city || '');
   }
   if (/ticket requests today|tickets today|show ticket requests today/.test(lower)) {
-    return city ? latestRequestsByCityText(city) : ticketsTodayText();
+    return ticketsTodayText(city || '');
   }
   if (/guest list today|show guest list today/.test(lower)) {
-    return city ? latestRequestsByCityText(city) : guestListTodayText();
+    return guestListTodayText(city || '');
   }
   if (/what events are this week|events are this week|this week.*events/.test(lower)) {
-    return city ? eventsThisWeekText() : eventsThisWeekText();
+    return eventsThisWeekText();
   }
   if (/what is happening tonight|happening tonight|tonight in/.test(lower)) {
     return tonightTextByCity(city || '');
@@ -1612,13 +1563,13 @@ async function askText() {
     return city ? cityBriefText(city) : venuesStatusText();
   }
   if (/show.*reservations today/.test(lower)) {
-    return reservationsTodayText();
+    return reservationsTodayText(city || '');
   }
   if (/show.*guest list today/.test(lower)) {
-    return guestListTodayText();
+    return guestListTodayText(city || '');
   }
   if (/show.*ticket requests today/.test(lower)) {
-    return ticketsTodayText();
+    return ticketsTodayText(city || '');
   }
   if (/show miami brief|give me dallas brief|show la brief|show nyc brief|show nj brief|show philadelphia brief/.test(lower)) {
     return cityBriefText(city || detectCityFromText(question) || '');
@@ -1774,7 +1725,7 @@ async function wavePassRequestsText() {
   }
 
   return [
-    `Wave Pass requests: ${result.count ?? 0}`,
+    `Wave Pass requests: ${result.count ?? 0}${(result.count ?? 0) === 0 ? ' visible rows' : ''}`,
     '',
     ...(result.rows.length ? result.rows.map((row) => formatWavePassSummary(row)) : ['- none']),
   ].join('\n');
@@ -1804,7 +1755,7 @@ async function partnerRequestsText() {
   }
 
   return [
-    `Partner applications: ${result.count ?? 0}`,
+    `Partner applications: ${result.count ?? 0}${(result.count ?? 0) === 0 ? ' visible rows' : ''}`,
     '',
     ...(result.rows.length ? result.rows.map((row) => formatPartnerRequestSummary(row)) : ['- none']),
   ].join('\n');
