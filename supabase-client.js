@@ -277,6 +277,29 @@
     return Array.isArray(data) ? data[0] : data;
   }
 
+  async function fetchPublicEvents() {
+    const client = getClientOrThrow();
+    const { data, error } = await client
+      .from(TABLES.events)
+      .select('id,title,venue_name,market,category,event_date,start_time,end_time,address,image_url,description,music,dress_code,age_requirement,ticket_price,guest_list_available,vip_table_available,status,created_at')
+      .order('event_date', { ascending: true, nullsLast: true })
+      .order('start_time', { ascending: true, nullsLast: true })
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function fetchPublicVenues() {
+    const client = getClientOrThrow();
+    const { data, error } = await client
+      .from(TABLES.venues)
+      .select('id,name,market,type,neighborhood,address,image_url,price_tier,atmosphere,best_for,dress_code,reservation_available,table_available,guest_list_available,description,status,created_at')
+      .order('market', { ascending: true, nullsLast: true })
+      .order('name', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  }
+
   async function updateRequestStatus(tableName, id, status) {
     const allowed = new Set([
       TABLES.reservationRequests,
@@ -802,6 +825,8 @@
     createReservationRequest,
     createTicketRequest,
     createGuestListRequest,
+    fetchPublicEvents,
+    fetchPublicVenues,
     updateRequestStatus,
     updatePartnerLevel,
     fetchPartners,

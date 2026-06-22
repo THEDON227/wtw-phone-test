@@ -661,8 +661,134 @@ function backToEvents(){
   window.location.href=`events.html?city=${cur}`;
 }
 
+const PUBLIC_EVENT_CITY_KEYS={nyc:'nyc','new york':'nyc',nj:'nj','new jersey':'nj',miami:'miami',florida:'miami',atl:'atl','atlanta':'atl',georgia:'atl',la:'la','los angeles':'la',california:'la',dallas:'dallas',texas:'dallas'};
+const PUBLIC_EVENT_CITY_NAMES={nyc:'New York',nj:'New Jersey',miami:'Miami',atl:'Atlanta',la:'Los Angeles',dallas:'Dallas'};
+let PUBLIC_EVENT_BUCKETS=null;
+
+function normalizePublicEventCity(value){
+  const raw=String(value||'').trim().toLowerCase();
+  return PUBLIC_EVENT_CITY_KEYS[raw]||'nyc';
+}
+
+function formatPublicEventDate(value){
+  const raw=String(value||'').trim();
+  if(!raw) return 'TBD';
+  const date=new Date(`${raw}T00:00:00Z`);
+  if(Number.isNaN(date.getTime())) return raw;
+  return date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',timeZone:'UTC'}).replace(',','');
+}
+
+function formatPublicEventTime(value){
+  const raw=String(value||'').trim();
+  if(!raw) return 'TBD';
+  if(raw.toLowerCase()==='open') return 'Open';
+  const match=raw.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i);
+  if(!match) return raw;
+  let hour=parseInt(match[1],10);
+  const minute=match[2];
+  const period=(match[4]||'').toUpperCase();
+  if(period){
+    if(hour===0) hour=12;
+    if(hour>12) hour-=12;
+    return `${hour}:${minute} ${period}`;
+  }
+  if(hour===0) return `12:${minute} AM`;
+  if(hour===12) return `12:${minute} PM`;
+  if(hour>12) return `${hour-12}:${minute} PM`;
+  return `${hour}:${minute} AM`;
+}
+
+function publicEventDayLabel(value){
+  const raw=String(value||'').trim();
+  if(!raw) return '';
+  const date=new Date(`${raw}T00:00:00Z`);
+  if(Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('en-US',{weekday:'short',timeZone:'UTC'}).toLowerCase();
+}
+
+function inferPublicEventCats(row){
+  const cats=[];
+  const status=String(row&&row.status||'').trim().toLowerCase();
+  const category=String(row&&row.category||'').trim().toLowerCase();
+  const day=publicEventDayLabel(row&&row.event_date);
+  if(status==='high-interest'){
+    cats.push('mostwanted','premium');
+  }
+  if(status==='guestlist' || row&&row.guest_list_available){
+    cats.push('guestlist');
+  }
+  if(row&&row.vip_table_available){
+    cats.push('premium');
+  }
+  if(/rooftop/.test(category)) cats.push('rooftop');
+  if(/lounge|supper|dinner|salon|social|members/.test(category)) cats.push('lounge');
+  if(/club|night|late|after|dj/.test(category)) cats.push('latenight');
+  if(day==='fri' || day==='sat' || day==='sun') cats.push('weekend');
+  return Array.from(new Set(cats));
+}
+
+function mapPublicEventRow(row, featured){
+  const marketKey=normalizePublicEventCity(row.market);
+  const cityName=PUBLIC_EVENT_CITY_NAMES[marketKey]||CITIES[marketKey]?.name||String(row.market||'').trim()||'New York';
+  const category=String(row.category||'').trim();
+  const status=String(row.status||'').trim().toLowerCase()||'available';
+  const price=Number(row.ticket_price||0)||0;
+  const guestListAvailable=row.guest_list_available===true || String(row.guest_list_available).toLowerCase()==='true';
+  const vipTableAvailable=row.vip_table_available===true || String(row.vip_table_available).toLowerCase()==='true';
+  const isHighInterest=status==='high-interest';
+  return {
+    id: row.id,
+    title: row.title || 'Untitled Event',
+    venue: row.venue_name || row.address || 'Venue',
+    city: cityName,
+    neighborhood: row.address ? String(row.address).split(',')[0] : cityName,
+    date: formatPublicEventDate(row.event_date),
+    time: formatPublicEventTime(row.start_time),
+    endTime: formatPublicEventTime(row.end_time),
+    price,
+    glPrice: guestListAvailable ? 0 : 0,
+    vipMin: vipTableAvailable ? Math.max(250, Math.round(price * 12)) : 0,
+    wave: isHighInterest ? 94 : guestListAvailable ? 88 : vipTableAvailable ? 86 : 82,
+    cats: inferPublicEventCats(row),
+    tags: [category, cityName, row.venue_name].filter(Boolean).slice(0, 3),
+    desc: row.description || `${row.title || 'This event'} in ${cityName}.`,
+    dresscode: row.dress_code || 'Smart Casual',
+    age: row.age_requirement || '21+',
+    status: isHighInterest ? 'high-interest' : (status || 'available'),
+    featured: !!featured || isHighInterest,
+    img: row.image_url || 'assets/img/venue-marquee.jpg',
+    promoter: isHighInterest ? 'WTW Curated' : null
+  };
+}
+
+function mapPublicEventRows(rows){
+  const grouped={nyc:[],nj:[],miami:[],atl:[],la:[],dallas:[]};
+  (rows||[]).forEach(function(row){
+    const key=normalizePublicEventCity(row&&row.market);
+    const bucket=grouped[key]||grouped.nyc;
+    bucket.push(mapPublicEventRow(row,bucket.length===0));
+  });
+  return grouped;
+}
+
 function getEvents(){
+  const remote=PUBLIC_EVENT_BUCKETS&&PUBLIC_EVENT_BUCKETS[cur];
+  if(remote&&remote.length) return remote;
   return ALL_EVENTS[cur]||[];
+}
+
+async function hydratePublicEvents(){
+  if(!window.WTWBackend||typeof WTWBackend.fetchPublicEvents!=='function') return;
+  try{
+    const rows=await WTWBackend.fetchPublicEvents();
+    if(Array.isArray(rows)&&rows.length){
+      PUBLIC_EVENT_BUCKETS=mapPublicEventRows(rows);
+      renderFeatured();
+      renderGrid();
+    }
+  }catch(error){
+    console.warn('WTW public events loader failed:',error);
+  }
 }
 
 function filterAndSort(events){
@@ -963,6 +1089,7 @@ let _storedCity='';
 try{_storedCity=localStorage.getItem('wtwSelectedCity')||'';}catch(e){}
 const _cityKey = (_urlCityRaw||_storedCity||'nyc').toLowerCase();
 applyCity(CITIES[_cityKey] ? _cityKey : CITY_ALIASES[_cityKey] || 'nyc');
+hydratePublicEvents();
 
 // Style first filter tab on load
 window.addEventListener('load',function(){
