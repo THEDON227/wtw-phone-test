@@ -15,10 +15,52 @@ WaveBot v1 is rules-based and data-driven:
 
 - no Supabase writes
 - no request submission
-- no service_role key
+- no elevated backend key
 - no private table reads
 - no customer data collection beyond the browser session used for planning
-- no guaranteed entry or guaranteed table language
+- no overpromising access language
+
+## WaveBot v2 UX direction
+
+WaveBot v2 should feel like a premium nightlife concierge instead of a long form.
+
+Design goals:
+- chat-first and mobile-first
+- large hero prompt box up front
+- quick chips instead of a heavy form
+- hidden advanced details behind a collapsed section
+- visible response panel near the top
+- 2 to 3 obvious plan cards after submit
+- dark, polished, nightlife-forward visual language
+- Wave Pass stays the premium routing layer, not a replacement for WaveBot
+
+Rules:
+- no external AI yet
+- no private table reads
+- no public customer data exposure
+- no overpromising access language
+- no frontend API keys for future AI
+- keep static fallback inventory available if Supabase fails
+
+Future direction:
+- keep planning rules-based for now
+- keep public inventory read-only
+- move any future AI to a server-side flow only
+- keep Wave Pass as the priority review / upgrade layer
+
+## WaveBot v2 professional polish pass
+
+The polish pass should make WaveBot feel more like a premium nightlife concierge and less like a developer form.
+
+Focus areas:
+- chat-first UI with one clear prompt and quick chips
+- less text-heavy result cards with a stronger recommended card
+- a Best Match treatment for the first route
+- tighter CTA hierarchy with clear primary and secondary actions
+- Wave Pass positioned as an upgrade layer, not a replacement
+- no external AI yet
+- no private table reads
+- no overpromising language
 
 ## Public inventory only
 
@@ -43,11 +85,7 @@ Use:
 - high interest
 
 Avoid:
-- guaranteed
-- verified partner
-- confirmed entry
-- guaranteed table
-- instant approval
+- overpromising access language
 
 ## Future WaveBot requests table
 
@@ -109,6 +147,7 @@ WaveBot can eventually route members into Wave Pass when the night needs:
 - dinner-to-night routing
 
 Wave Pass should still not promise guaranteed access.
+Wave Pass should still not promise access certainty.
 
 ## Recommended next implementation step
 

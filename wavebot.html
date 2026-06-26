@@ -1,402 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="WTW WaveBot — a concierge planner for dinner-to-night routes, birthdays, date nights, brunch, guest lists, and VIP access.">
-<meta property="og:title" content="WaveBot — Plan My Night">
-<meta property="og:description" content="Tell WTW your city, vibe, group, and timing. WaveBot builds curated dinner-to-night options from public inventory.">
-<title>WaveBot — Plan My Night</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:#080b0f;color:#F0EDE8;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-:root{
-  --accent:#00C2D1;--accent-muted:rgba(0,194,209,.1);--accent-border:rgba(0,194,209,.22);
-  --bg:#080b0f;--surface:rgba(255,255,255,.03);--surface-hover:rgba(255,255,255,.05);
-  --border:rgba(255,255,255,.08);--text:#F0EDE8;--text-muted:rgba(240,237,232,.55);--text-dim:rgba(240,237,232,.28);
-  --am:var(--accent-muted);--ab:var(--accent-border);--sf:var(--surface);--bd:var(--border);--tx:var(--text);--tm:var(--text-muted);--td:var(--text-dim);
-  --hero-img:url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1800&q=80&auto=format&fit=crop');
-  --lg:rgba(0,194,209,.55);--lf:rgba(0,194,209,.18);--space-xs:8px;--space-sm:16px;--space-md:24px;--space-lg:48px;--space-xl:80px;--space-2xl:120px;
-  --z-base:1;--z-sticky:100;--z-header:200;--z-overlay:300;--z-modal:400;--z-toast:500;
-}
-body{background:radial-gradient(circle at 18% 0,rgba(255,255,255,.035),transparent 34%),#080b0f;position:relative}
-body::before{content:'';position:fixed;inset:-80px;background-image:url('assets/wtw-logo-transparent.png');background-size:clamp(150px,14vw,240px) auto;background-position:0 0;background-repeat:repeat;opacity:.04;mix-blend-mode:screen;pointer-events:none;z-index:0}
-body>*{position:relative;z-index:1}
-.wrap{max-width:1280px;margin:0 auto;padding:0 48px}
-@media(max-width:768px){.wrap{padding:0 20px}}
-header{position:sticky;top:0;z-index:200;background:rgba(6,8,11,.97);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(18px)}
-.header-inner{display:flex;align-items:center;gap:28px;padding:0 48px;height:92px;max-width:1280px;margin:0 auto}
-@media(max-width:768px){.header-inner{padding:0 20px;gap:14px;height:72px}}
-.brand{display:flex;align-items:center;gap:14px;flex-shrink:0;cursor:pointer;text-decoration:none;color:var(--text)}
-.brand-logo{width:88px;height:88px;flex-shrink:0;background:transparent}
-.brand-logo img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 12px var(--lg))}
-.brand-name{font-size:14px;font-weight:800;letter-spacing:1.5px;line-height:1;white-space:nowrap}
-.brand-sub{font-size:7px;font-weight:700;letter-spacing:3.5px;color:var(--accent);opacity:.65;white-space:nowrap;text-transform:uppercase}
-.nav{display:flex;align-items:center;gap:1px;flex:1}
-@media(max-width:1000px){.nav{display:none}}
-.nav-link{font-size:11px;font-weight:600;letter-spacing:.4px;color:rgba(240,237,232,.45);padding:7px 13px;border-radius:7px;cursor:pointer;transition:all .16s;white-space:nowrap;position:relative;text-decoration:none}
-.nav-link:hover{color:rgba(240,237,232,.9);background:rgba(255,255,255,.04)}
-.nav-link.active{color:var(--accent)}
-.nav-link.active::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:60%;height:1px;background:var(--accent);border-radius:1px}
-.header-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
-.city-select{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 14px;cursor:pointer;transition:border-color .18s,background .18s}
-.city-select:hover{border-color:var(--ab);background:rgba(255,255,255,.06)}
-.city-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 5px var(--accent)}
-.city-label{font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--text)}
-.btn-app{background:var(--accent);color:#050a0b;font-size:11px;font-weight:700;letter-spacing:.8px;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .18s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-.btn-app:hover{opacity:.9}
-.btn-primary{background:var(--accent);color:#050a0b;font-size:12px;font-weight:800;letter-spacing:1px;padding:14px 26px;border-radius:10px;border:none;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .18s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-.btn-primary:hover{opacity:.88}
-.btn-outline{background:transparent;color:var(--text);font-size:12px;font-weight:700;padding:14px 24px;border-radius:10px;border:1px solid rgba(255,255,255,.18);cursor:pointer;font-family:'Inter',sans-serif;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-.btn-outline:hover{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.04)}
-.page{padding:24px 0 80px}
-.hero{padding:36px 0 28px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,rgba(0,194,209,.04),transparent)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:24px;align-items:stretch}
-.hero-copy{padding:18px 0 10px}
-.eyebrow{font-size:10px;font-weight:900;letter-spacing:5px;color:var(--accent);text-transform:uppercase;margin-bottom:18px}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(42px,5.8vw,78px);line-height:.95;font-weight:900;color:var(--text);letter-spacing:-1.6px;max-width:760px}
-.hero-sub{max-width:680px;margin-top:18px;font-size:18px;line-height:1.8;color:rgba(240,237,232,.72)}
-.hero-note{margin-top:14px;font-size:13px;line-height:1.7;color:rgba(240,237,232,.48)}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
-.hero-panel{border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.18));border-radius:22px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,.22)}
-.panel-kicker{font-size:9px;font-weight:900;letter-spacing:2.2px;color:var(--accent);text-transform:uppercase;margin-bottom:12px}
-.panel-list{display:grid;gap:10px}
-.panel-item{display:grid;grid-template-columns:18px 1fr;gap:10px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.06)}
-.panel-item:first-child{border-top:none;padding-top:0}
-.panel-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:4px;box-shadow:0 0 8px var(--accent)}
-.panel-item h3{font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px}
-.panel-item p{font-size:12px;line-height:1.65;color:var(--text-muted)}
-.section{padding:54px 0}
-.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:24px;flex-wrap:wrap}
-.section-kicker{font-size:10px;font-weight:900;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(30px,4vw,46px);line-height:1;font-weight:900;color:var(--text);letter-spacing:-1px}
-.section-note{max-width:420px;font-size:14px;line-height:1.7;color:rgba(240,237,232,.52)}
-.quick-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-@media(max-width:1100px){.quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:640px){.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.quick-card{min-height:112px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);border-radius:16px;padding:16px;cursor:pointer;transition:transform .16s,border-color .16s,background .16s;text-align:left;display:flex;flex-direction:column;justify-content:space-between}
-.quick-card:hover{transform:translateY(-2px);border-color:var(--ab);background:rgba(255,255,255,.055)}
-.quick-label{font-size:9px;font-weight:900;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.quick-card h3{font-family:'Playfair Display',serif;font-size:21px;line-height:1.03;color:var(--text);margin-bottom:8px}
-.quick-card p{font-size:12px;line-height:1.55;color:rgba(240,237,232,.58)}
-.planner-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:18px;align-items:start}
-@media(max-width:960px){.hero-grid,.planner-grid{grid-template-columns:1fr}}
-.card{border:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(0,0,0,.16));border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,.2)}
-.planner-card{padding:24px}
-.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-@media(max-width:720px){.field-grid{grid-template-columns:1fr}}
-.field{display:flex;flex-direction:column;gap:7px}
-.field.full{grid-column:1/-1}
-.field label,.field-note{font-size:9px;font-weight:900;letter-spacing:1.7px;text-transform:uppercase;color:rgba(240,237,232,.42)}
-.field input,.field select,.field textarea{width:100%;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);border-radius:12px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:13px 14px;outline:none}
-.field textarea{min-height:92px;resize:vertical}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--ab);box-shadow:0 0 0 3px var(--am)}
-.field select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%);background-position:calc(100% - 18px) 20px,calc(100% - 13px) 20px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:44px}
-.form-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
-.question-card{padding:24px;display:grid;gap:12px}
-.question-card textarea{width:100%;min-height:160px;resize:vertical;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);border-radius:14px;color:var(--text);font-family:'Inter',sans-serif;font-size:15px;padding:15px 16px;outline:none}
-.question-card textarea:focus{border-color:var(--ab);box-shadow:0 0 0 3px var(--am)}
-.examples{display:grid;gap:8px}
-.example{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);border-radius:12px;padding:11px 12px;font-size:12px;line-height:1.55;color:rgba(240,237,232,.68)}
-.results-wrap{display:grid;gap:16px}
-.status-banner{border:1px solid rgba(0,194,209,.22);background:rgba(0,194,209,.08);border-radius:16px;padding:14px 16px;font-size:13px;line-height:1.65;color:rgba(240,237,232,.76)}
-.status-banner strong{color:var(--text)}
-.results-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-@media(max-width:1100px){.results-grid{grid-template-columns:1fr}}
-.plan-card{border:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(7,10,14,.96),rgba(4,6,9,.99));border-radius:20px;overflow:hidden;box-shadow:0 22px 80px rgba(0,0,0,.22);display:flex;flex-direction:column}
-.plan-hero{min-height:160px;background-size:cover;background-position:center;position:relative}
-.plan-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.58))}
-.plan-body{padding:20px;display:grid;gap:14px;flex:1}
-.plan-kicker{font-size:9px;font-weight:900;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent)}
-.plan-title{font-family:'Playfair Display',serif;font-size:28px;line-height:1.02;color:var(--text);font-weight:900}
-.plan-copy{font-size:13px;line-height:1.7;color:rgba(240,237,232,.58)}
-.plan-meta{display:grid;gap:8px}
-.plan-line{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.55;color:rgba(240,237,232,.66)}
-.plan-line span{font-size:8px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent);min-width:82px}
-.plan-tags{display:flex;gap:8px;flex-wrap:wrap}
-.tag{font-size:9px;font-weight:900;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent);border:1px solid var(--ab);background:var(--am);border-radius:999px;padding:6px 10px}
-.plan-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
-.action{font-size:10px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;padding:11px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-.action.primary{background:var(--accent);color:#050a0b;border-color:transparent}
-.action:hover{border-color:var(--ab);background:rgba(255,255,255,.06)}
-.empty-state{padding:34px 24px;border:1px dashed rgba(255,255,255,.12);border-radius:18px;text-align:center;color:rgba(240,237,232,.58);line-height:1.75}
-.empty-state h3{font-family:'Playfair Display',serif;font-size:28px;color:var(--text);margin-bottom:8px}
-.foot{padding:44px 0 32px;border-top:1px solid rgba(255,255,255,.08);margin-top:70px}
-.foot-inner{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
-.foot-copy{font-size:11px;line-height:1.7;color:rgba(240,237,232,.3)}
-.foot-badges{display:flex;gap:8px;flex-wrap:wrap}
-.foot-badge{font-size:9px;font-weight:900;letter-spacing:1px;color:var(--accent);background:var(--am);border:1px solid var(--ab);padding:4px 10px;border-radius:999px}
-.hide{display:none!important}
-@media(max-width:768px){
-  .header-inner{height:68px;padding:0 20px;gap:12px}
-  .brand-logo{width:50px;height:34px}
-  .brand-name{font-size:11px;letter-spacing:2.1px}
-  .brand-sub{font-size:7px;letter-spacing:1.9px}
-  .header-right{display:flex}
-  .btn-app{display:none}
-  .hero{padding-top:22px}
-  .hero-title{font-size:clamp(30px,8.8vw,42px);line-height:.98;max-width:100%;word-break:normal;overflow-wrap:anywhere}
-  .hero-sub{font-size:16px;max-width:100%}
-  .hero-actions .btn-primary,.hero-actions .btn-outline{width:100%}
-  .section{padding:42px 0}
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>WaveBot | Where's The Wave</title>
+  <meta name="description" content="WaveBot is WTW's Plan My Night concierge for curated dinner-to-night routes.">
+  <style>
+    :root{
+      --bg:#05070b;
+      --panel:rgba(12,14,20,.78);
+      --panel-2:rgba(255,255,255,.04);
+      --line:rgba(255,255,255,.1);
+      --text:#f2eee8;
+      --muted:rgba(242,238,232,.68);
+      --muted-2:rgba(242,238,232,.42);
+      --accent:#00c9d7;
+      --accent-2:#9a6cff;
+      --glow:rgba(0,201,215,.18);
+      --glow-2:rgba(154,108,255,.16);
+      --shadow:0 30px 80px rgba(0,0,0,.38);
+      --radius:24px;
+      --radius-sm:16px;
+      --max:1180px;
+      color-scheme:dark;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(0,201,215,.14), transparent 30%),
+        radial-gradient(circle at 85% 0%, rgba(154,108,255,.18), transparent 34%),
+        linear-gradient(180deg,#06070b 0%,#05060a 48%,#040506 100%);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.24;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.08), transparent 20%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,.04), transparent 18%),
+        radial-gradient(circle at 50% 80%, rgba(255,255,255,.03), transparent 22%);
+      mix-blend-mode:screen;
+    }
+    a{color:inherit}
+    button,input,textarea{font:inherit}
+    .wrap{width:min(var(--max),calc(100% - 32px));margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:40;
+      backdrop-filter:saturate(160%) blur(18px);
+      background:rgba(5,7,11,.72);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0}
+    .brand-logo{
+      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+      background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow)
+    }
+    .brand-logo img{width:28px;height:28px;object-fit:contain;display:block}
+    .brand-copy{min-width:0}
+    .brand-name{font-size:11px;letter-spacing:.28em;font-weight:800;color:rgba(242,238,232,.9)}
+    .brand-sub{font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--muted-2);margin-top:3px}
+    .topnav{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+    .nav-link{
+      text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      padding:10px 12px;border-radius:999px;color:var(--muted);border:1px solid transparent
+    }
+    .nav-link:hover,.nav-link.active{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);color:var(--text)}
+    .cta-mini{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      text-decoration:none;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+      padding:11px 16px;border-radius:999px;border:1px solid rgba(0,201,215,.36);
+      background:linear-gradient(135deg,rgba(0,201,215,.18),rgba(154,108,255,.14));
+      color:var(--text);box-shadow:0 18px 40px rgba(0,201,215,.08)
+    }
+    main{padding:26px 0 48px}
+    .hero{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(520px,1fr));
+      gap:18px;
+      align-items:stretch;
+      margin-top:10px
+    }
+    .panel{
+      background:linear-gradient(180deg,rgba(18,20,28,.84),rgba(10,12,18,.72));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+    }
+    .hero-copy{padding:30px}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 11px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);
+      color:rgba(242,238,232,.84);font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase
+    }
+    .hero h1{
+      margin:18px 0 12px;
+      font-size:clamp(36px,6vw,72px);
+      line-height:.94;
+      letter-spacing:-.05em;
+      max-width:10ch;
+      overflow-wrap:anywhere;
+      word-break:normal;
+    }
+    .hero h1 span{display:block}
+    .hero p{
+      margin:0;color:var(--muted);font-size:clamp(15px,1.2vw,18px);line-height:1.7;max-width:64ch
+    }
+    .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .btn-primary,.btn-secondary,.chip-btn,.card-btn{
+      border:0;cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease
+    }
+    .btn-primary,.btn-secondary{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      min-height:48px;padding:0 18px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.11em;text-transform:uppercase
+    }
+    .btn-primary{
+      color:#021114;background:linear-gradient(135deg,var(--accent),#6ff1ff);
+      box-shadow:0 16px 28px rgba(0,201,215,.22)
+    }
+    .btn-secondary{
+      color:var(--text);border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)
+    }
+    .btn-primary:hover,.btn-secondary:hover,.chip-btn:hover,.card-btn:hover{transform:translateY(-1px)}
+    .safety{
+      margin-top:18px;font-size:12px;line-height:1.7;color:rgba(242,238,232,.56);max-width:70ch
+    }
+    .prompt-box{padding:22px}
+    .prompt-label,.section-label{
+      font-size:11px;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:rgba(242,238,232,.5)
+    }
+    .prompt-input{
+      width:100%;min-height:162px;resize:vertical;margin-top:12px;padding:18px 18px 20px;
+      border-radius:20px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.24);color:var(--text);
+      font-size:16px;line-height:1.65;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)
+    }
+    .prompt-input::placeholder{color:rgba(242,238,232,.42)}
+    .prompt-input:focus{border-color:rgba(0,201,215,.5);box-shadow:0 0 0 4px rgba(0,201,215,.08)}
+    .prompt-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .prompt-pill,.chip-btn{
+      min-height:38px;padding:0 14px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.02em
+    }
+    .prompt-pill{
+      color:var(--text);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)
+    }
+    .prompt-pill:hover{background:rgba(255,255,255,.08)}
+    .hero-side{padding:22px}
+    .hero-side .panel-title{font-size:13px;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:rgba(242,238,232,.58)}
+    .hero-side .panel-copy{margin-top:12px;color:var(--muted);line-height:1.72;font-size:14px}
+    .bot-status{
+      display:flex;align-items:center;gap:12px;padding:16px 16px 4px
+    }
+    .bot-orb{
+      width:40px;height:40px;border-radius:14px;flex:0 0 auto;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.85), rgba(255,255,255,.05) 28%, transparent 29%),
+        radial-gradient(circle at 50% 50%, rgba(0,201,215,.6), rgba(0,201,215,.12) 40%, transparent 42%),
+        linear-gradient(135deg, rgba(0,201,215,.26), rgba(154,108,255,.22));
+      border:1px solid rgba(0,201,215,.24);
+      box-shadow:0 0 24px rgba(0,201,215,.16), 0 0 42px rgba(154,108,255,.1) inset
+    }
+    .bot-status-copy{display:grid;gap:4px}
+    .bot-status-copy strong{font-size:14px;letter-spacing:.08em}
+    .bot-status-copy span{font-size:12px;color:rgba(242,238,232,.58);line-height:1.5}
+    .chip-panel{margin-top:18px;padding:22px}
+    .chip-group{display:grid;gap:10px;margin-top:18px}
+    .chip-row{display:flex;flex-wrap:wrap;gap:10px}
+    .chip-btn{
+      color:var(--text);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);padding:0 14px
+    }
+    .chip-btn.active{
+      border-color:rgba(0,201,215,.42);background:linear-gradient(135deg,rgba(0,201,215,.18),rgba(154,108,255,.18));
+      box-shadow:0 0 0 1px rgba(0,201,215,.12) inset
+    }
+    details.more-details{
+      margin-top:18px;border-top:1px solid rgba(255,255,255,.08);padding-top:16px
+    }
+    details.more-details>summary{
+      list-style:none;cursor:pointer;font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+      color:rgba(242,238,232,.74);display:flex;align-items:center;gap:8px
+    }
+    details.more-details>summary::-webkit-details-marker{display:none}
+    details.more-details>summary::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-top:-3px;transition:transform .18s ease}
+    details.more-details[open]>summary::after{transform:rotate(225deg);margin-top:3px}
+    .advanced-grid{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px
+    }
+    .advanced-stack{display:grid;gap:10px}
+    .mini-label{font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:rgba(242,238,232,.48)}
+    .mini-input,.mini-select{
+      width:100%;min-height:46px;padding:0 14px;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);color:var(--text);outline:none
+    }
+    .mini-select option{background:#111827;color:#f3f4f6}
+    .response-shell{
+      margin-top:18px;padding:22px;position:relative;overflow:hidden
+    }
+    .response-shell::before{
+      content:"";position:absolute;inset:-1px;
+      background:linear-gradient(135deg,rgba(0,201,215,.12),transparent 32%,rgba(154,108,255,.1) 72%,transparent);
+      pointer-events:none;opacity:.65
+    }
+    .response-shell > *{position:relative;z-index:1}
+    .response-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .response-title{font-size:14px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:rgba(242,238,232,.56)}
+    .response-note{font-size:12px;color:rgba(242,238,232,.45);line-height:1.6}
+    .response-summary{margin-top:16px;display:grid;gap:10px}
+    .summary-line{font-size:16px;line-height:1.75;color:var(--text)}
+    .inventory-note{font-size:12px;line-height:1.7;color:rgba(242,238,232,.52);padding-top:12px}
+    .inventory-note strong{color:rgba(242,238,232,.84)}
+    .plan-grid{
+      margin-top:18px;
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(80%,340px);
+      gap:14px;
+      overflow-x:auto;
+      padding-bottom:4px;
+      scroll-snap-type:x proximity;
+    }
+    .plan-card{
+      scroll-snap-align:start;
+      display:grid;gap:14px;
+      padding:18px;border-radius:22px;
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.08);
+      min-height:100%;
+    }
+    .plan-card.best{
+      border-color:rgba(0,201,215,.42);
+      box-shadow:0 0 0 1px rgba(0,201,215,.12) inset, 0 0 44px rgba(0,201,215,.06);
+      background:linear-gradient(180deg,rgba(0,201,215,.08),rgba(255,255,255,.03))
+    }
+    .plan-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .plan-kicker{font-size:10px;font-weight:900;letter-spacing:.28em;text-transform:uppercase;color:rgba(242,238,232,.45)}
+    .plan-title{margin:6px 0 0;font-size:22px;line-height:1.08;letter-spacing:-.04em}
+    .best-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      min-height:28px;padding:0 10px;border-radius:999px;
+      background:linear-gradient(135deg,rgba(0,201,215,.18),rgba(154,108,255,.16));
+      border:1px solid rgba(0,201,215,.28);
+      color:var(--text);font-size:10px;font-weight:900;letter-spacing:.24em;text-transform:uppercase
+    }
+    .best-reason{font-size:12px;line-height:1.5;color:rgba(242,238,232,.62);margin-top:8px}
+    .route-line{
+      display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+      color:rgba(242,238,232,.86);font-size:14px;font-weight:800;letter-spacing:.02em
+    }
+    .route-line span{color:rgba(242,238,232,.42);font-size:10px;letter-spacing:.24em;text-transform:uppercase}
+    .route-line strong{font-weight:900}
+    .plan-chipline{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .small-chip{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-height:28px;padding:0 10px;border-radius:999px;
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+      color:rgba(242,238,232,.82);font-size:11px;font-weight:800
+    }
+    .plan-copy{display:grid;gap:8px;color:rgba(242,238,232,.74);line-height:1.7;font-size:14px}
+    .plan-copy strong{color:var(--text)}
+    .plan-copy.short{gap:10px}
+    .plan-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+    .card-btn{
+      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+      min-height:40px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.04);color:var(--text);font-size:12px;font-weight:800
+    }
+    .card-btn.primary{
+      color:#021114;background:linear-gradient(135deg,var(--accent),#76f0ff);border-color:transparent
+    }
+    .footer-cta{
+      margin-top:18px;padding:16px 18px;border-radius:20px;
+      border:1px solid rgba(0,201,215,.22);background:linear-gradient(135deg,rgba(0,201,215,.09),rgba(154,108,255,.08));
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap
+    }
+    .footer-cta a{font-weight:800;text-decoration:none;color:var(--text)}
+    .footer-cta span{color:rgba(242,238,232,.68);font-size:13px;line-height:1.7}
+    .status-line{
+      margin-top:12px;font-size:12px;line-height:1.7;color:rgba(242,238,232,.55)
+    }
+    .divider{height:1px;background:rgba(255,255,255,.08);margin:18px 0}
+    .wtw-compact .hero{grid-template-columns:1fr !important}
+    .wtw-compact .hero h1{max-width:100% !important;font-size:clamp(26px,7.2vw,36px) !important;line-height:.98 !important}
+    .wtw-compact .topbar-inner{flex-wrap:wrap}
+    .wtw-compact .topnav{justify-content:flex-start}
+    .wtw-compact .advanced-grid{grid-template-columns:1fr}
+    .wtw-compact .plan-grid{grid-auto-columns:minmax(86%,320px)}
+    @media (min-width: 960px){
+      .hero-copy{padding:36px}
+      .hero-side{padding:26px}
+      .plan-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:initial;overflow:visible}
+    }
+    @media (max-width: 1200px), (hover: none), (pointer: coarse){
+      .topbar-inner{flex-wrap:wrap}
+      .topnav{justify-content:flex-start}
+      .hero{grid-template-columns:1fr}
+      .hero h1{max-width:100%;font-size:clamp(28px,8vw,40px);line-height:.98}
+      .advanced-grid{grid-template-columns:1fr}
+      .plan-grid{grid-auto-columns:minmax(86%,320px)}
+    }
+  </style>
 </head>
 <body>
-<script src="supabase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-client.js"></script>
-
-<header>
-  <div class="header-inner">
-    <a class="brand" href="index.html">
-      <div class="brand-logo"><img src="assets/wtw-logo-transparent.png" alt="WTW"></div>
-      <div>
-        <div class="brand-name">WHERE'S THE WAVE</div>
-        <div class="brand-sub">PLAN MY NIGHT</div>
-      </div>
-    </a>
-    <nav class="nav">
-      <a class="nav-link" href="events.html">Events</a>
-      <a class="nav-link" href="indulge.html">Indulge</a>
-      <a class="nav-link" href="pass.html">Wave Pass</a>
-      <a class="nav-link" href="partners.html">Partners</a>
-      <a class="nav-link active" href="wavebot.html">WaveBot</a>
-    </nav>
-    <div class="header-right">
-      <div class="city-select" onclick="openCityModal()">
-        <div class="city-dot" id="headerDot"></div>
-        <span class="city-label" id="headerCity">New York</span>
-        <span style="font-size:9px;color:rgba(240,237,232,.28)">▾</span>
-      </div>
-      <a class="btn-app" href="pass.html">Join Wave Pass</a>
-    </div>
-  </div>
-</header>
-
-<main class="page">
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <div class="eyebrow">Public-facing: Plan My Night</div>
-        <h1 class="hero-title">Plan the night with WaveBot</h1>
-        <p class="hero-sub">Tell WTW your city, vibe, group, and timing. WaveBot builds curated dinner-to-night options from the WTW network.</p>
-        <p class="hero-note">Requests remain subject to availability and venue/partner confirmation.</p>
-        <div class="hero-actions">
-          <a class="btn-primary" href="#planner">Build My Plan</a>
-          <a class="btn-outline" href="events.html">Browse Events</a>
-          <a class="btn-outline" href="indulge.html">Browse Indulge</a>
-          <a class="btn-outline" href="pass.html">Wave Pass</a>
-        </div>
-      </div>
-      <aside class="hero-panel">
-        <div class="panel-kicker">What WaveBot can do</div>
-        <div class="panel-list">
-          <div class="panel-item"><div class="panel-dot"></div><div><h3>Night planning</h3><p>What should we do tonight, this weekend, or for a birthday group?</p></div></div>
-          <div class="panel-item"><div class="panel-dot"></div><div><h3>Food-first routing</h3><p>Where should we eat before going out, then which lounge or event fits next?</p></div></div>
-          <div class="panel-item"><div class="panel-dot"></div><div><h3>Access guidance</h3><p>What has guest list, table/VIP potential, or Wave Pass routing.</p></div></div>
-          <div class="panel-item"><div class="panel-dot"></div><div><h3>Safety-first answers</h3><p>Nothing is guaranteed. WTW curates and routes; final access stays subject to confirmation.</p></div></div>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <section class="section">
+  <header class="topbar">
     <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Quick prompts</div>
-          <h2 class="section-title">Start with a common night.</h2>
-        </div>
-        <p class="section-note">Tap a prompt and WaveBot will fill the planner with a matching route.</p>
+      <div class="topbar-inner">
+        <a class="brand" href="index.html" aria-label="WTW home">
+          <div class="brand-logo"><img src="assets/wtw-logo-transparent.png" alt="WTW"></div>
+          <div class="brand-copy">
+            <div class="brand-name">WHERE'S THE WAVE</div>
+            <div class="brand-sub">PLAN MY NIGHT</div>
+          </div>
+        </a>
+        <nav class="topnav" aria-label="Primary">
+          <a class="nav-link" href="events.html">Events</a>
+          <a class="nav-link" href="indulge.html">Indulge</a>
+          <a class="nav-link active" href="wavebot.html">WaveBot</a>
+          <a class="nav-link" href="pass.html">Wave Pass</a>
+        </nav>
+        <a class="cta-mini" href="pass.html">Join Wave Pass</a>
       </div>
-      <div class="quick-grid" id="quickGrid"></div>
     </div>
-  </section>
-
-  <section class="section" id="planner">
+  </header>
+  <main>
     <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Guided planner</div>
-          <h2 class="section-title">Tell WaveBot what the night needs.</h2>
+      <section class="hero">
+        <div class="panel hero-copy">
+          <div class="eyebrow">Public-facing · Plan My Night</div>
+          <h1><span>Ask WaveBot</span><span>what to do tonight.</span></h1>
+          <p>Tell WTW your city, vibe, group, and timing. WaveBot builds dinner-to-night options from the WTW network.</p>
+          <div class="hero-actions">
+            <button class="btn-primary" id="planButton" type="button">Plan My Night</button>
+            <button class="btn-secondary" id="quickButton" type="button">Use quick prompts</button>
+          </div>
+          <p class="safety">WTW routes requests for review. Final access, reservations, and tables remain subject to venue or partner confirmation.</p>
         </div>
-        <p class="section-note">Use the form, or ask in your own words. WaveBot uses public events and venues only.</p>
-      </div>
-      <div class="planner-grid">
-        <form class="card planner-card" id="wavebotForm">
-          <div class="field-grid">
-            <div class="field">
-              <label for="wavebotCity">City / market</label>
-              <select id="wavebotCity">
-                <option value="nyc">New York / NYC</option>
-                <option value="nj">New Jersey / NJ</option>
-                <option value="miami">Miami</option>
-                <option value="la">Los Angeles / LA</option>
-                <option value="dallas">Dallas</option>
-                <option value="philadelphia">Philadelphia</option>
-                <option value="atlanta">Atlanta</option>
-                <option value="jersey city">Jersey City</option>
-                <option value="hoboken">Hoboken</option>
-                <option value="newark">Newark</option>
-                <option value="asbury park">Asbury Park</option>
-                <option value="edgewater">Edgewater</option>
-                <option value="montclair">Montclair</option>
-                <option value="weehawken">Weehawken</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="wavebotTiming">Timing</label>
-              <select id="wavebotTiming">
-                <option value="tonight">Tonight</option>
-                <option value="tomorrow">Tomorrow</option>
-                <option value="weekend">This weekend</option>
-                <option value="custom">Custom date</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="wavebotDate">Custom date</label>
-              <input id="wavebotDate" type="date">
-            </div>
-            <div class="field">
-              <label for="wavebotOccasion">Occasion</label>
-              <select id="wavebotOccasion">
-                <option value="casual">Casual</option>
-                <option value="birthday">Birthday</option>
-                <option value="date night">Date night</option>
-                <option value="friends">Friends</option>
-                <option value="business dinner">Business dinner</option>
-                <option value="celebration">Celebration</option>
-                <option value="brunch">Brunch</option>
-                <option value="club night">Club night</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="wavebotGroup">Group size</label>
-              <input id="wavebotGroup" type="number" min="1" max="30" value="2">
-            </div>
-            <div class="field">
-              <label for="wavebotBudget">Budget / spend</label>
-              <select id="wavebotBudget">
-                <option value="flexible">Flexible</option>
-                <option value="moderate">Moderate</option>
-                <option value="premium">Premium</option>
-                <option value="vip">VIP</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="wavebotVibe">Vibe</label>
-              <select id="wavebotVibe">
-                <option value="chill">Chill</option>
-                <option value="upscale">Upscale</option>
-                <option value="high-energy">High-energy</option>
-                <option value="rooftop">Rooftop</option>
-                <option value="hip-hop">Hip-hop</option>
-                <option value="afrobeats">Afrobeats</option>
-                <option value="latin">Latin</option>
-                <option value="house">House</option>
-                <option value="open format">Open format</option>
-                <option value="food-first">Food-first</option>
-                <option value="photo-friendly">Photo-friendly</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="wavebotFlow">Desired flow</label>
-              <select id="wavebotFlow">
-                <option value="dinner only">Dinner only</option>
-                <option value="dinner + lounge">Dinner + lounge</option>
-                <option value="brunch + day party">Brunch + day party</option>
-                <option value="rooftop + late night">Rooftop + late night</option>
-                <option value="club/event only">Club / event only</option>
-                <option value="full night plan">Full night plan</option>
-                <option value="low-key">Low-key drinks</option>
-              </select>
-            </div>
-            <div class="field full">
-              <label for="wavebotAccessNeed">Access need</label>
-              <select id="wavebotAccessNeed">
-                <option value="just exploring">Just exploring</option>
-                <option value="reservation">Reservation</option>
-                <option value="guest list">Guest list</option>
-                <option value="tickets">Tickets</option>
-                <option value="VIP/table">VIP / table</option>
-                <option value="Wave Pass">Wave Pass</option>
-              </select>
-            </div>
-            <div class="field full">
-              <label for="wavebotQuestion">Ask WaveBot in your own words</label>
-              <textarea id="wavebotQuestion" placeholder="What should we do tonight in Miami for a birthday group of 6?"></textarea>
-              <div class="field-note">Examples: “Give me a date night plan in NYC.” “What’s good this weekend in NJ?” “I want dinner, lounge, and a club after.”</div>
+        <aside class="panel hero-side">
+          <div class="bot-status">
+            <div class="bot-orb" aria-hidden="true"></div>
+            <div class="bot-status-copy">
+              <strong>WaveBot is online</strong>
+              <span>Concierge mode · Built from WTW city inventory</span>
             </div>
           </div>
-          <div class="form-actions">
-            <button class="btn-primary" type="submit">Build My Plan</button>
-            <button class="btn-outline" type="button" id="wavebotReset">Reset</button>
+          <p class="panel-copy">Tell me the city, vibe, group size, and timing. I’ll build a few WTW routes for the night.</p>
+          <label class="prompt-label" for="wavebotPrompt">Ask WaveBot</label>
+          <textarea id="wavebotPrompt" class="prompt-input" placeholder="What should we do tonight in Miami?"></textarea>
+          <div class="prompt-row" id="quickPrompts" aria-label="Quick prompts"></div>
+        </aside>
+      </section>
+
+      <section class="response-shell panel" aria-live="polite">
+        <div class="response-head">
+          <div>
+            <div class="response-title">WaveBot response</div>
+            <div class="response-note" id="responseNote">Tell me the city, vibe, group size, and timing. I’ll build a few WTW routes for the night.</div>
           </div>
-        </form>
+          <div class="response-note" id="inventoryNote">Loading public inventory...</div>
+        </div>
+        <div class="response-summary" id="responseSummary"></div>
+        <div class="plan-grid" id="planGrid"></div>
+        <div class="footer-cta">
+          <div>
+            <span>Want WTW to prioritize this route? </span>
+            <a href="pass.html">Join Wave Pass.</a>
+          </div>
+          <span>Priority review only. Final access, tables, and reservations remain subject to confirmation.</span>
+        </div>
+      </section>
 
-        <div class="card question-card">
-          <div class="section-kicker">Natural language</div>
-          <h3 class="section-title" style="font-size:30px">Ask it like you would text a concierge.</h3>
-          <textarea id="wavebotNatural" placeholder="What should we do tonight in Miami for a birthday group of 6?"></textarea>
-          <div class="examples">
-            <div class="example">“Give me a date night plan in NYC.”</div>
-            <div class="example">“What is good this weekend in NJ?”</div>
-            <div class="example">“I want dinner, lounge, and a club after.”</div>
-            <div class="example">“Is anything guaranteed?”</div>
-            <div class="example">“What is Wave Pass?”</div>
-            <div class="example">“What should I wear?”</div>
+      <section class="chip-panel panel">
+        <div class="section-label">Quick chips</div>
+        <div class="chip-group">
+          <div>
+            <div class="mini-label">City</div>
+            <div class="chip-row" id="cityChips"></div>
+          </div>
+          <div>
+            <div class="mini-label">Timing</div>
+            <div class="chip-row" id="timingChips"></div>
+          </div>
+          <div>
+            <div class="mini-label">Vibe</div>
+            <div class="chip-row" id="vibeChips"></div>
           </div>
         </div>
-      </div>
+        <details class="more-details">
+          <summary>Refine the night</summary>
+          <div class="advanced-grid">
+            <div class="advanced-stack">
+              <div class="mini-label">Group size</div>
+              <div class="chip-row" id="groupChips"></div>
+            </div>
+            <div class="advanced-stack">
+              <div class="mini-label">Budget</div>
+              <div class="chip-row" id="budgetChips"></div>
+            </div>
+            <div class="advanced-stack">
+              <div class="mini-label">Access need</div>
+              <div class="chip-row" id="accessChips"></div>
+            </div>
+            <div class="advanced-stack">
+              <div class="mini-label">Desired flow</div>
+              <div class="chip-row" id="flowChips"></div>
+            </div>
+            <div class="advanced-stack">
+              <div class="mini-label">Custom date</div>
+              <input id="customDate" class="mini-input" type="date" aria-label="Custom date">
+            </div>
+            <div class="advanced-stack">
+              <div class="mini-label">Music / vibe note</div>
+              <input id="musicNote" class="mini-input" type="text" placeholder="Afrobeats, hip-hop, rooftop, etc.">
+            </div>
+          </div>
+        </details>
+        <div class="status-line" id="statusLine">WaveBot reads public events and venues only. Private request tables stay protected.</div>
+      </section>
     </div>
-  </section>
-
-  <section class="section" id="results">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">WaveBot results</div>
-          <h2 class="section-title">Curated options for the night.</h2>
-        </div>
-        <p class="section-note">WaveBot builds 2–3 route ideas using public inventory. Nothing here guarantees access.</p>
-      </div>
-      <div class="results-wrap">
-        <div class="status-banner" id="inventoryStatus">Loading live inventory and fallback data...</div>
-        <div class="results-grid" id="wavebotResults"></div>
-        <div class="empty-state hide" id="wavebotEmpty">
-          <h3>WaveBot is ready.</h3>
-          <p>Choose a prompt, fill the planner, or ask a natural question to build a night plan.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer class="foot">
-  <div class="wrap">
-    <div class="foot-inner">
-      <div class="foot-copy">© 2026 Where's The Wave. All rights reserved.<br>Requests remain subject to availability and venue/partner confirmation.</div>
-      <div class="foot-badges">
-        <span class="foot-badge">PLAN MY NIGHT</span>
-        <span class="foot-badge">CURATED</span>
-        <span class="foot-badge">REQUEST ACCESS</span>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<div class="modal-bg" id="cityModal" onclick="if(event.target===this)closeCityModal()">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">SELECT YOUR CITY</div>
-    <div id="cityList"></div>
-  </div>
-</div>
-
-<script src="wavebot-data.js"></script>
-<script src="wavebot.js"></script>
+  </main>
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script src="wavebot-data.js"></script>
+  <script src="wavebot.js"></script>
 </body>
 </html>
